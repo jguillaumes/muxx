@@ -29,9 +29,9 @@ go:	nop
 
 	.data
 term:	.byte	0x0d
+	.even
 size:	.word	sbuf
 buffer:	.space	16
 	sbuf = . - buffer
-
 	.end
 
