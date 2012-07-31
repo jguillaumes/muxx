@@ -1,7 +1,6 @@
 *.o
-*~ 
+*~
 *.lst
 *.map
 *.out
 *.lda
-bin2load
