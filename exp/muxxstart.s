@@ -4,7 +4,8 @@
 	.INCLUDE "MUXXMAC.s"
 	
 	.GLOBAL _muxx_setup
-
+	.GLOBAL _otoa
+	
 	.data
 _emt_table:	.WORD	_svc_muxhlt	// 0: Halt system
 		.WORD	_svc_conptchr	// 1: Put char on console	
@@ -12,8 +13,6 @@ _emt_table:	.WORD	_svc_muxhlt	// 0: Halt system
 	_emt_table_size		= . - _emt_table
 	_emt_table_entries	= _emt_table_size/2
 
-hltmsg:		.ASCII "System halted."
-	lhltmsg = . - hltmsg
 
 	.text
 _muxx_setup:
@@ -37,7 +36,10 @@ _muxx_hnd30:
 	br	999$			// Branch to end of handler
 	
 10$:	clr	r3			// R3: parameter stack usage counter
-
+	clr	r4			// R4: parameter list cursor
+	tst	r1			// R1 is null?
+	beq	20$			// Yes: no parmlist
+	
 15$:	mfpd	(r1)+
 	mov	(sp)+,r4
 	tst	r4			// Null parameter?
@@ -58,9 +60,37 @@ _muxx_hnd30:
 	rtt				// Return from trap
 
 _svc_muxhlt:
+	mov	r5,-(sp)		// Push current frame pointer
+	mov	sp,r5			// Set up current FP
+
+	mov	$octval,-(sp)
+	mov	10(r5),-(sp)
+	jsr	pc,_otoa
+	add	$4,sp
+
+	mov	$hexval,-(sp)
+	mov	10(r5),-(sp)
+	jsr	pc,_htoa
+	add	$4,sp
+	
+	mov	$ltrcmsg,-(sp)
+	mov	$trcmsg,-(sp)
+	jsr	pc,_conptstrl
+	add	$4,sp
+
 	mov	$lhltmsg,-(sp)
 	mov	$hltmsg,-(sp)
-	jsr	pc,_conptstr
+	jsr	pc,_conptstrl
 	add	$4,sp
 	halt
+
+	.data
+trcmsg:	.ASCII	"Called from "
+octval:	.SPACE  6
+	.ASCII  " (0x"
+hexval:	.SPACE 4
+	.ASCII ")."
+	ltrcmsg	= . - trcmsg
+hltmsg:	.ASCII  "System halted."
+	lhltmsg = . - hltmsg 
 	.END

@@ -5,14 +5,17 @@
 	.INCLUDE "MUXXMAC.s"
 
 	.GLOBAL start
-
+	.GLOBAL kernsp
+	
 	.text
 
 start:
 	mov	$go, r2
 	jmp	_muxx_init
 
-go:	nop	
+go:	nop
+	jsr	pc,trap_initialize
+		
 	movb	term, -(sp)
 	mov	size, -(sp)
 	mov	$buffer, -(sp)
@@ -25,6 +28,7 @@ go:	nop
 	mov	$buffer,-(sp)
 	jsr	pc,_conptstrl
 	add	$4, sp
+
 	MUXHLT
 
 	.data
@@ -33,5 +37,11 @@ term:	.byte	0x0d
 size:	.word	sbuf
 buffer:	.space	16
 	sbuf = . - buffer
-	.end
 
+
+msgk:	.ASCII	"Kernel SP set to "
+ksp:	.SPACE	6
+	.ASCII ". "
+	lmsgk = . - msgk
+	
+	.end

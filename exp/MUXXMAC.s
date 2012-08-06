@@ -25,9 +25,10 @@
 	.endm
 
 	.macro MUXHLT
-	mov 	$0,-(sp)
-	mov	sp,r1
+	mov 	r1,-(sp)
+	clr	r1
 	emt	0
+	mov	(sp)+,r1
 	.endm
 	
 	.macro	CONPTCHR char
@@ -39,10 +40,8 @@
 	.endm
 
 	.macro	CONGTCHR
-	mov	$0,-(sp)
-	mov	sp,r1
+	clr	r1
 	emt	2
-	add	$2,sp
 	.endm
 	.LIST
 

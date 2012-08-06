@@ -1,47 +1,85 @@
-#ifndef _MUX_H
+#ifndef _MUXX_H
 
-/*
-** "Public" service calls
-*/
+#include "types.h"
+#include "muxxdef.h"
 
-#define SRV_CREPRC   1
-#define SRV_DELPRC   2
-#define SRV_CHGPRC   3
-#define SRV_LOAD     4
-#define SRV_UNLOAD   5
-#define SRV_GETCORE  6
-#define SRV_FREECORE 7
-#define SRV_SUSPEND  8
-#define SRV_AWAKE    9
+struct TCB_S {
+  WORD pid;             // Process id.
+  WORD ppid;            // Parent process id.
 
-#define SRV_OPEN    11
-#define SRV_CLOSE   12
-#define SRV_IOCTL   13
-#define SRV_READ    14
-#define SRV_WRITE   15
-#define SRV_CREATE  16
-#define SRV_DELETE  17
+  LONGWORD uic;             // Process owner (not used now)
 
-#define SRV_SEND    31
-#define SRV_RECEIVE 32
-#define SRV_CRESEM  33
-#define SRV_DELSEM  34
-#define SRV_INCSEM  35
-#define SRV_DECSEM  36
-#define SRV_GETSHM  37
-#define SRV_FREESHM 38
+  union {
+    WORD stword;
+    struct {
+      int ready     :1;
+      int receiving :1;
+      int suspended :1;
+      int msgwait   :1;
+      int filler    :12;
+    } stflags;
+  } status;
 
-/*
-** Kernel service calls
-*/
-#define KRN_HALT     0
+  union {
+    WORD prvword;
+    struct {
+      int operprv  :1;
+      int ioprv    :1;
+      int filler   :14;
+    } prvflags;
+  } privileges;
+  WORD taskType;
 
-#define KRN_DRVREG   1
-#define KRN_DRVUNREG 2
-#define KRN_DEVSTOP  3
+  struct TCB_S *firstChild;
+  struct TCB_S *lastChild;
+  struct TCB_S *nextSibling;
+  
+  WORD regs[6];         // Saved CPU regs 0-5
+  WORD usp;             // Saved User stack pointer
+  WORD ksp;             // Saved Kernel stack pointer
+  WORD ssp;             // Saved Supervisor stack pointer (not used)
+  WORD pc;              // Saved program counter
+  WORD psw;             // Saved processor status word
 
-#define KRN_BUGCHECK 4
-#define KRN_PRINTMSG 5
+  WORD upar[8];         // Saved user mode MMU Page Address Registers
+  WORD spar[8];         // Saved supervisor mode MMU PARs (not used)
+  WORD kpar[8];         // Saved kernel mode MMU PARs 
+ 
+  LONGWORD clock_ticks;
+  LONGWORD created_timestamp;
 
-#define _MUX_H
+};
+
+typedef struct TCB_S TCB;
+typedef struct TCB_S *PTCB;
+
+struct TCTA_S {
+  char tcteye[8];
+  TCB tctTable[MAX_TASKS];
+};
+
+typedef struct TCTA_S TCTA;
+typedef struct TCTA_S *PTCTA;
+
+extern ADDRESS tct;
+extern WORD tctsize;
+extern WORD curtasks;
+extern ADDRESS kstackt;
+extern ADDRESS  kstackb;
+extern ADDRESS  ustackt;
+extern ADDRESS  ustackb;
+
+extern WORD topspid;
+extern WORD minspid;
+extern WORD maxspid;
+
+extern WORD topupid;
+extern WORD minupid;
+extern WORD maxuipd;
+
+extern WORD clkfreq;
+extern LONGWORD utime;
+extern LONGWORD datetime;
+
+#define _MUXX_H
 #endif

@@ -3,12 +3,14 @@
 
 	.INCLUDE "MUXXMAC.s"
 	
-	.GLOBAL _muxx_init
+	.GLOBAL _muxx_init,kernsp
 
+	.text
+	
 _muxx_init:
 	CMKRNL
 	reset				// Reset unibus devices
-	mov 	$020000, sp		// KRNL SP to top of first page
+	mov 	$kernsp, sp		// KRNL SP to reserved area
 	jsr	pc, _mmu_enable		// Enable MMU and interrupts
 	jsr	pc, _muxx_setup		// Set up EMT handler
 	mov	$0xC000,-(sp)		// Usermode PSW
@@ -17,5 +19,12 @@ _muxx_init:
 
 user_init:
 	nop
-	mov	$0177776, sp		// KRNL USR to top of last page
+	mov	$0160000, sp		// USR SP to top of last writeable page
 	jmp	(r2)			// Return to system
+
+
+	.data
+	.space	512
+	kernsp = .
+	.end
+	

@@ -4,14 +4,14 @@ BIN2LOAD=bin2load
 AS=pdp11-aout-as
 CC=pdp11-aout-gcc
 LD=pdp11-aout-ld
-LDFLAGS=-T ldaout.cmd -M --cref --traditional
-CCFLAGS=-c -O3
+LIBS=-lgcc -lc -lpdp11
+LDFLAGS=-T ldaout.cmd -M --cref --traditional $(LIBS) 
+CCFLAGS=-c -O -ffreestanding
 ASMFLAGS=-aghls -am
 
 CONIO=muxx_consvc.o congtstr.o conptstr.o
 MMU=mmu.o
-MUXX=$(CONIO) $(MMU) muxxlib.o muxxstart.o muxx_init.o
-
+MUXX=$(CONIO) $(MMU) muxxlib.o muxxstart.o muxx_init.o ../lib/libmuxx.a ../kernel/libkmuxx.a
 
 .out.lda:	
 	$(BIN2LOAD) -a -f $< -o $@
@@ -19,11 +19,10 @@ MUXX=$(CONIO) $(MMU) muxxlib.o muxxstart.o muxx_init.o
 .s.o:
 	$(AS) $(ASMFLAGS) $< -o $@ -ald > $*.lst
 
-
 all: pdpreadstr.lda
 
 clean:
 	rm *.o *.out *.lda *.map *.lst
 
 pdpreadstr.out:	pdpreadstr.o $(MUXX)
-	$(LD) $(LDFLAGS) $^ -o $@ > pdpreadstr.map
+	$(LD) $(LDFLAGS) $^ -o $@ -lc -lgcc -lpdp11 -lg  > pdpreadstr.map

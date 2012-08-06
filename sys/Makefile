@@ -1,0 +1,27 @@
+.SUFFIXES: .lda .out .o .s .c
+
+BIN2LOAD=bin2load
+AS=pdp11-aout-as
+CC=pdp11-aout-gcc
+LD=pdp11-aout-ld
+LIBS=-lgcc -lc -lpdp11 -L../lib -lmuxx -L../kernel -lkmuxx
+LDFLAGS=-T ldkern.cmd -M --cref --traditional 
+CFLAGS=-c -O -ffreestanding -I../h
+ASMFLAGS=-aghls -am -I../h
+
+MMU=mmu.o
+#MUXXLIBS=../lib/libmuxx.a ../kernel/libkmuxx.a
+
+.out.lda:	
+	$(BIN2LOAD) -a -f $< -o $@
+
+.s.o:
+	$(AS) $(ASMFLAGS) $< -o $@ -ald > $*.lst
+
+all: startup.lda
+
+clean:
+	rm *.o *.out *.lda *.map *.lst
+
+startup.out:	startup.o ../lib/libmuxx.a ../kernel/libkmuxx.a
+	$(LD) $(LDFLAGS) $^ -o $@ $(LIBS) > startup.map
