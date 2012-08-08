@@ -2,8 +2,7 @@
 #include "muxxdef.h"
 #include "muxx.h"
 
-static TCTA tctArea;
-
+extern TCTA tctArea;
 
 void muxx_tcbinit(PTCB tcb) {
   int j=0;

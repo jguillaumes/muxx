@@ -17,9 +17,9 @@ SECTIONS
     data = .;
     *(.data)
     . = ALIGN(0100);
-    PROVIDE(_kernstackb = .);
-    . = . + 1024;
-    PROVIDE(_kernstackt = .);
+    PROVIDE(tempstack = .);
+    . = . + 64;
+    PROVIDE(tempstackt = .);
     . = ALIGN(0100);
   }
   .bss : AT(phys + (bss - code))

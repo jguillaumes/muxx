@@ -1,0 +1,15 @@
+#ifndef _ERRNO_H
+
+/*
+* MUXX Error number definitions
+*/
+
+#define EOK       0
+#define ENOMEM    1
+#define EMAXTASK  2
+#define ENOPID    3
+#define ETCTFULL  4
+
+
+#define _ERRNO_H
+#endif

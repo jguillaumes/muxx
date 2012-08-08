@@ -1,5 +1,6 @@
 #include "muxx.h"
 #include "muxxdef.h"
+#include "errno.h"
 
 int muxx_taskinit(int type, WORD ppid, ADDRESS entry, WORD privs) {
   WORD pid = 0;
@@ -35,10 +36,10 @@ int muxx_taskinit(int type, WORD ppid, ADDRESS entry, WORD privs) {
   }
 
   for (i=0; i<MAX_TASKS & found == 0; i++) {
-    if (ptcta->tctTable.pid == 0) found = 1; 
+    if (ptcta->tctTable[i].pid == 0) found = 1; 
   } 
 
-  if (!found) panic(TCTFULL);
+  if (!found) panic(ETCTFULL);
 
   muxx_tcbinit(&(ptcta->tctTable[i]));
   ptcta->tctTable[i].ppid = ppid;

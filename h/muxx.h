@@ -75,7 +75,7 @@ extern WORD maxspid;
 
 extern WORD topupid;
 extern WORD minupid;
-extern WORD maxuipd;
+extern WORD maxupid;
 
 extern WORD clkfreq;
 extern LONGWORD utime;

@@ -46,8 +46,11 @@
 /*
 ** Kernel configuration constants
 */
-#define MAX_TASKS    64
+#define MAX_TASKS    16
 #define CLOCK_FREQ   50
+#define KRN_STACK  1024
+#define USR_STACK  4096
+#define TOP_STACK  0160000
 
 #define _MUXDEF_H
 #endif

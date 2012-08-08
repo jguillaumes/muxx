@@ -33,6 +33,7 @@ trap_initialize:
 	rts	pc
 
 trap_cpuerr:
+	jsr	pc,kdumpregs
 	mov	$6,r1
 	mov	$NTRAP,r2
 	mov	$CPUERR,r3
@@ -41,6 +42,7 @@ trap_cpuerr:
 	br	trap_common
 
 trap_illins:
+	jsr	pc,kdumpregs
 	mov	$6,r1
 	mov	$NTRAP,r2
 	mov	$ILLINS,r3
@@ -49,6 +51,7 @@ trap_illins:
 	br	trap_common
 
 trap_iot:
+	jsr	pc,kdumpregs
 	mov	$6,r1
 	mov	$NTRAP,r2
 	mov	$IOT,r3
@@ -57,6 +60,7 @@ trap_iot:
 	br	trap_common
 
 trap_buserr:
+	jsr	pc,kdumpregs
 	mov	$6,r1
 	mov	$NTRAP,r2
 	mov	$BUSERR,r3
@@ -65,6 +69,7 @@ trap_buserr:
 	br	trap_common
 
 trap_fperr:
+	jsr	pc,kdumpregs
 	mov	$6,r1
 	mov	$NTRAP,r2
 	mov	$FPERR,r3
@@ -73,12 +78,34 @@ trap_fperr:
 	br	trap_common
 
 trap_mmuerr:
-	mov	$6,r1
-	mov	$NTRAP,r2
-	mov	$MMUERR,r3
-10$:	movb	(r3)+,(r2)+
-	sob	r1,10$
-
+	jsr	pc,kdumpregs
+	mov	MMU.MMR0,r0
+	swab	r0
+	bic	$0xFF00,r0
+	mov	$MMUCODE,-(sp)
+	movb	r0,-(sp)
+	jsr	pc,_htoab
+	add	$4,sp
+	
+	mov	MMU.MMR0,r0
+	asr	r0
+	bic	$0b1111111111111000,r0
+	mov	$MMUPAGE,-(sp)
+	movb	r0,-(sp)
+	jsr	pc,_htoab
+	add	$4,sp
+	
+	mov	MMU.MMR2,r0
+	mov	$MMUADDR,-(sp)
+	mov	r0,-(sp)
+	jsr	pc,_otoa
+	add	$4,sp
+	
+	mov	$LMMUTRAP,-(sp)
+	mov	$MMUTRAP,-(sp)
+	jsr	pc,_kputstrl
+	add	$4,sp
+	halt
 	
 trap_common:	
 	mov	(sp),r1
@@ -101,9 +128,12 @@ trap_common:
 	halt
 
 trap_unimplemented:
+	jsr	pc,kdumpregs
+	br	trap_common
+/*
 	mov	2(sp),r0	// SP => Return address
-	mov	r0,-(sp)
 	mov	$UNIADDR, -(sp)
+	mov	r0,-(sp)
 	jsr	pc,_otoa
 	add	$4,sp
 
@@ -112,7 +142,7 @@ trap_unimplemented:
 	jsr	pc,_kputstrl
 	add	$4,sp
 	halt
-
+*/
 	.data
 	
 PSWTRAP:	.WORD	0x0000
@@ -129,6 +159,14 @@ KPSW:		.SPACE 6
 		.ASCII	". "
 	LKTRAP = . - KTRAP
 
+MMUTRAP:	.ASCII	"Memory access violation trap "
+MMUCODE:	.SPACE  2
+		.ASCII  ", page="
+MMUPAGE:	.SPACE	2
+		.ASCII  " triggered at "
+MMUADDR:	.SPACE  6
+	LMMUTRAP = . - MMUTRAP
+	
 CPUERR:		.ASCII "CPUERR"
 ILLINS:		.ASCII "ILLINS"
 IOT:		.ASCII "IOT   "

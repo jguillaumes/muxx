@@ -4,9 +4,10 @@ BIN2LOAD=bin2load
 AS=pdp11-aout-as
 CC=pdp11-aout-gcc
 LD=pdp11-aout-ld
+SIZE=pdp11-aout-size
 LIBS=-lgcc -lc -lpdp11 -L../lib -lmuxx -L../kernel -lkmuxx
 LDFLAGS=-T ldkern.cmd -M --cref --traditional 
-CFLAGS=-c -O -ffreestanding -I../h
+CFLAGS=-c -Os -ffreestanding -I../h
 ASMFLAGS=-aghls -am -I../h
 
 MMU=mmu.o
@@ -25,3 +26,4 @@ clean:
 
 startup.out:	startup.o ../lib/libmuxx.a ../kernel/libkmuxx.a
 	$(LD) $(LDFLAGS) $^ -o $@ $(LIBS) > startup.map
+	$(SIZE) $@ --format=sysv -o 

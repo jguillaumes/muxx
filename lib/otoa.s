@@ -23,12 +23,18 @@ _otoa:	procentry numregs=4
 	mov	$6,r3			// R3 => Digit counter
 	add	r3,r2			// R2 => End of buffer
 	
+	mov	$5,r3			// First we do the complete 3bit groups
 10$:	mov	r1,r4			
 	bic	$0b1111111111111000,r4	// Clear all bits except digit
 	add	$azero,r4		// Add ASCII value of '0'
 	movb	r4,-(r2)		// Store in buffer
 	ash	$-3,r1			// Shift number to get next digit
 	sob	r3,10$			// Rinse and repeat
+
+	mov	r1,r4			// Last digit (will be 0 or 1)
+	bic	$0b1111111111111110,r4	// Clear all bits except last bit
+	add	$azero,r4		// Add ASCII value of '0'
+	movb	r4,-(r2)		// Store last digit in buffer
 
 	cleanup	numregs=4
 	rts	pc

@@ -47,13 +47,13 @@ _htoa:	procentry numregs=4
 	
 _htoab:	procentry numregs=4
 	clr	r0
-	mov	4(r5),r1		// R1 => Number to convert
+	movb	4(r5),r1		// R1 => Number to convert
 	mov	6(r5),r2		// R2 => Output buffer address
 	mov	$2,r3			// R3 => Digit counter
 	add	r3,r2			// R2 => End of buffer
 	
 10$:	movb	r1,r4			
-	bic	$0b11110000,r4		// Clear all bits except digit
+	bic	$0b1111111111110000,r4	// Clear all bits except digit
 	add	$htab,r4		// R4 => ASCII character
 	movb	(r4),-(r2)		// Store in buffer
 	ash	$-4,r1			// Shift number to get next digit
@@ -65,4 +65,3 @@ _htoab:	procentry numregs=4
 	.data
 htab:	.ASCII "0123456789ABCDEF"
 	.end
-	
