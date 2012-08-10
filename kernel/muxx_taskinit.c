@@ -1,5 +1,6 @@
 #include "muxx.h"
 #include "muxxdef.h"
+#include "externals.h"
 #include "errno.h"
 
 int muxx_taskinit(int type, WORD ppid, ADDRESS entry, WORD privs) {
@@ -45,6 +46,16 @@ int muxx_taskinit(int type, WORD ppid, ADDRESS entry, WORD privs) {
   ptcta->tctTable[i].ppid = ppid;
   ptcta->tctTable[i].taskType = type;
   ptcta->tctTable[i].privileges.prvword = privs;
-  ptcta->tctTable[i].pc = (WORD) entry;
+  ptcta->tctTable[i].cpuState.pc = (WORD) entry;
+  ptcta->tctTable[i].status = TSK_INIT;
 
+  return i;
+}
+
+int reusespid() {
+  panic();
+}
+
+int reuseupid() {
+  panic();
 }

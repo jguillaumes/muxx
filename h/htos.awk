@@ -2,7 +2,7 @@ BEGIN      {
     print "\t.NOLIST ";
     print "/*";
     print " * This is a generated file - DO NOT EDIT ";
-    print " * Edit muxxdef.h and run \"make\" to regenerate it."
+    print " * Edit the .h file and run \"make\" to regenerate the .s"
     print "*/"
 	}
 END        { print "\t.LIST " }

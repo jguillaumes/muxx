@@ -1,7 +1,7 @@
 	.NOLIST
 
 	/*
-	** Interrupt vectors
+	** System Interrupt vectors
 	*/
 	VEC.CPUERR	= 0004		
 	VEC.ILLINS	= 0010
@@ -30,6 +30,24 @@
 	**			00: Kernel
 	**			01: Supervisor
 	**			11: User
+	**
+	** ERR:
+	**	0-1:	Not used
+	**	2:	Stack overflow (red)
+	**	3:	Stack overflow (yellow)
+	**	4:	UNIBUS timeout
+	**	5:	Non-existent memory
+	**	6:	Odd address
+	**	7:	Illegal HALT
+	**	8-15:	Not used
+	**
+	** PIR:
+	**	0:	Not used
+	**	1-3:	PIA
+	**	4:	Not used
+	**	5-7:	PIA
+	**	8:	Not used
+	**	9-15:	Interrupt request
 	*/
 	
 	/*
@@ -41,10 +59,36 @@
 	CON.XBUF 	= 0177566	// DL11 transmit buffer
 
 	/*
+	** Line time Clock (KL11-L) registers and constants
+	*/
+	CLK.LKS		= 0177546	// Clock status register
+	CLK.VECTOR	= 0100		// Interrupt vector
+	CLK.PL		= 06		// Interrupt priority
+
+	/*
+	** Paper tape read/punch registers and constants
+	*/
+	PTP.PRS		= 0177550	// Paper Read status register
+	PTP.PRB		= 0177552	// Paper read buffer
+	PTP.PPS		= 0177554	// Paper Punch status register
+	PTP.PPB		= 0177556	// Paper punch buffer
+	PTP.RVEC	= 070		// Paper reader interrupt vector
+	PTP.PVEC	= 074		// Paper punch interrupt vector
+	PTP.PL		= 04		// Interrupt priority
+	
+	/*
 	** CPU registers
 	*/
+	CPU.LOWER	= 0177760
+	CPU.UPPER	= 0177762
+	CPU.SYSID	= 0177764
+	CPU.ERR		= 0177766
+	CPU.KSP		= 0177706
+	CPU.SSP		= 0177716
+	CPU.USP		= 0177717
+	CPU.PIR		= 0177772
+	CPU.STACKLIM	= 0177774
 	CPU.PSW		= 0177776
-
 	/*
 	** MMU registers
 	**
@@ -87,4 +131,17 @@
 	MMU.KDSDR0	= 0172320	// Kernel D space descriptor reg.
 	MMU.KISAR0	= 0172340	// Kernel I space address reg.
 	MMU.KDSAR0	= 0172360	// Kernel D space address reg.
+
+
+	/*
+	** Kernel config constants
+	*/
+	MAX_TASKS = 16
+	CLK_FREQ = 60
+	CLK_QUANTUM = 6	
+	KRN_STACK = 1024
+	USR_STACK = 3072
+	TOP_STACK = 0160000
+	MEM_BLOCKS = 4096		// 4096 * 64 = 256K
+	MEM_NMCBS = (4096/16)		// 256 MCBs. 1 MCB controls 16 blocks
 	.LIST

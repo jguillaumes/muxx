@@ -39,18 +39,31 @@
 #define KRN_BUGCHECK (SRV_LAST+4)
 #define KRN_PUTCON   (SRV_LAST+5)
 #define KRN_GETCON   (SRV_LAST+6)
+#define KRN_PANIC    (SRV_LAST+7)
 
+/*
+** Task types
+*/
 #define SYS_TASK     0
 #define USR_TASK     1
 
 /*
-** Kernel configuration constants
+** Task states
 */
-#define MAX_TASKS    16
-#define CLOCK_FREQ   50
-#define KRN_STACK  1024
-#define USR_STACK  4096
-#define TOP_STACK  0160000
+#define TSK_INIT     0
+#define TSK_READY    1
+#define TSK_BLOCKED  2
+#define TSK_RUN      3
+#define TSK_DISPOSE  4
+
+/*
+** System latches
+*/
+#define LTC_LATCHES 16
+#define LTC_READYQ   1
+#define LTC_BLOCKQ   2
+#define LTC_SUSPNQ   3
+#define LTC_MCB      4
 
 #define _MUXDEF_H
 #endif

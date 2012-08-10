@@ -9,7 +9,8 @@
 #define EMAXTASK  2
 #define ENOPID    3
 #define ETCTFULL  4
-
+#define EILLINST  5
+#define EINVVAL   6
 
 #define _ERRNO_H
 #endif

@@ -1,7 +1,7 @@
 	.NOLIST 
 /*
  * This is a generated file - DO NOT EDIT 
- * Edit muxxdef.h and run "make" to regenerate it.
+ * Edit the .h file and run "make" to regenerate the .s
 */
 /*
 ** "Public" service calls
@@ -41,14 +41,21 @@
 	KRN_BUGCHECK = (SRV_LAST+4)
 	KRN_PUTCON = (SRV_LAST+5)
 	KRN_GETCON = (SRV_LAST+6)
+	KRN_PANIC = (SRV_LAST+7)
+/*
+** Task types
+*/
 	SYS_TASK = 0
 	USR_TASK = 1
 /*
+** Task states
+*/
+	TSK_INIT = 0
+	TSK_READY = 1
+	TSK_BLOCKED = 2
+	TSK_RUN = 3
+	TSK_DISPOSE = 4
+/*
 ** Kernel configuration constants
 */
-	MAX_TASKS = 16
-	CLOCK_FREQ = 50
-	KRN_STACK = 1024
-	USR_STACK = 4096
-	TOP_STACK = 0160000
 	.LIST 

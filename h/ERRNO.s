@@ -1,7 +1,7 @@
 	.NOLIST 
 /*
  * This is a generated file - DO NOT EDIT 
- * Edit muxxdef.h and run "make" to regenerate it.
+ * Edit the .h file and run "make" to regenerate the .s
 */
 /*
 */
@@ -10,4 +10,5 @@
 	EMAXTASK = 2
 	ENOPID = 3
 	ETCTFULL = 4
+	EILLINST = 5
 	.LIST 

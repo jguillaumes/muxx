@@ -11,7 +11,8 @@ ASMFLAGS=-acmghlsd -I../h -m11/45
 
 TARGETS=libkmuxx.a
 OBJECTS=muxx_mmu.o muxx_cputrap.o muxx_kconio.o muxx_systrap.o muxx_tctinit.o \
-	muxx_taskinit.o muxx_static.o
+	muxx_taskinit.o muxx_static.o muxx_fakeproc.o spl.o muxx_clock.o \
+	muxx_clock_svc.o
 
 .out.lda:	
 	$(BIN2LOAD) -a -f $< -o $@

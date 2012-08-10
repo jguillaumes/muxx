@@ -2,8 +2,10 @@
 	.IDENT "V01.00"
 
 	.INCLUDE "CONFIG.s"
+	.INCLUDE "MUXX.s"
 	.INCLUDE "MACLIB.s"
 
+	
 	.GLOBAL trap_initialize
 	.GLOBAL _otoa
 	.GLOBAL	_kputstrl
@@ -33,16 +35,23 @@ trap_initialize:
 	rts	pc
 
 trap_cpuerr:
-	jsr	pc,kdumpregs
-	mov	$6,r1
-	mov	$NTRAP,r2
-	mov	$CPUERR,r3
-10$:	movb	(r3)+,(r2)+
-	sob	r1,10$
-	br	trap_common
+	procentry trap=yes
+	savecputask
+	jsr	pc,_dumptcbregs
+	mov	$CPUADDR,-(sp)
+	mov	CPU.ERR,-(sp)
+	jsr	pc,_otoa
+	add	$4,sp
+	mov	$LCPUTRAP,-(sp)
+	mov	$CPUTRAP,-(sp)
+	jsr	pc,_kputstrl
+	add	$4,sp
+	halt
 
 trap_illins:
-	jsr	pc,kdumpregs
+	procentry trap=yes
+	savecputask
+	jsr	pc,_dumptcbregs
 	mov	$6,r1
 	mov	$NTRAP,r2
 	mov	$ILLINS,r3
@@ -51,7 +60,9 @@ trap_illins:
 	br	trap_common
 
 trap_iot:
-	jsr	pc,kdumpregs
+	procentry trap=yes
+	savecputask
+	jsr	pc,_dumptcbregs
 	mov	$6,r1
 	mov	$NTRAP,r2
 	mov	$IOT,r3
@@ -60,7 +71,9 @@ trap_iot:
 	br	trap_common
 
 trap_buserr:
-	jsr	pc,kdumpregs
+	procentry trap=yes
+	savecputask
+	jsr	pc,_dumptcbregs
 	mov	$6,r1
 	mov	$NTRAP,r2
 	mov	$BUSERR,r3
@@ -69,7 +82,9 @@ trap_buserr:
 	br	trap_common
 
 trap_fperr:
-	jsr	pc,kdumpregs
+	procentry trap=yes
+	savecputask
+	jsr	pc,_dumptcbregs
 	mov	$6,r1
 	mov	$NTRAP,r2
 	mov	$FPERR,r3
@@ -78,7 +93,9 @@ trap_fperr:
 	br	trap_common
 
 trap_mmuerr:
-	jsr	pc,kdumpregs
+	procentry trap=yes
+	savecputask
+	jsr	pc,_dumptcbregs
 	mov	MMU.MMR0,r0
 	swab	r0
 	bic	$0xFF00,r0
@@ -128,21 +145,11 @@ trap_common:
 	halt
 
 trap_unimplemented:
-	jsr	pc,kdumpregs
+	procentry trap=yes
+	savecputask
+	jsr	pc,_dumptcbregs
 	br	trap_common
-/*
-	mov	2(sp),r0	// SP => Return address
-	mov	$UNIADDR, -(sp)
-	mov	r0,-(sp)
-	jsr	pc,_otoa
-	add	$4,sp
 
-	mov	$LUNITRAP,-(sp)
-	mov	$UNITRAP,-(sp)
-	jsr	pc,_kputstrl
-	add	$4,sp
-	halt
-*/
 	.data
 	
 PSWTRAP:	.WORD	0x0000
@@ -166,8 +173,12 @@ MMUPAGE:	.SPACE	2
 		.ASCII  " triggered at "
 MMUADDR:	.SPACE  6
 	LMMUTRAP = . - MMUTRAP
+
+CPUTRAP:	.ASCII	"CPU trap, code="
+CPUADDR:	.SPACE	6
+		.ASCII  "."
+	LCPUTRAP = . - CPUTRAP
 	
-CPUERR:		.ASCII "CPUERR"
 ILLINS:		.ASCII "ILLINS"
 IOT:		.ASCII "IOT   "
 POWER:		.ASCII "POWER "
@@ -176,5 +187,3 @@ FPERR:		.ASCII "FPERR "
 MMUERR:		.ASCII "MMUERR"
 
 		.END
-
-	

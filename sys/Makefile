@@ -9,9 +9,8 @@ LIBS=-lgcc -lc -lpdp11 -L../lib -lmuxx -L../kernel -lkmuxx
 LDFLAGS=-T ldkern.cmd -M --cref --traditional 
 CFLAGS=-c -Os -ffreestanding -I../h
 ASMFLAGS=-aghls -am -I../h
-
-MMU=mmu.o
-#MUXXLIBS=../lib/libmuxx.a ../kernel/libkmuxx.a
+MACROS=../h/SCB.s ../h/MUXXDEF.s ../h/MACLIB.s ../h/MUXXMAC.s
+OBJECTS=taska.o taskb.o
 
 .out.lda:	
 	$(BIN2LOAD) -a -f $< -o $@
@@ -24,6 +23,8 @@ all: startup.lda
 clean:
 	rm *.o *.out *.lda *.map *.lst
 
-startup.out:	startup.o ../lib/libmuxx.a ../kernel/libkmuxx.a
+startup.o:	startup.s $(MACROS)
+
+startup.out:	startup.o $(OBJECTS) ../lib/libmuxx.a ../kernel/libkmuxx.a
 	$(LD) $(LDFLAGS) $^ -o $@ $(LIBS) > startup.map
 	$(SIZE) $@ --format=sysv -o 

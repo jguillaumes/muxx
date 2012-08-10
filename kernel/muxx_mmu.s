@@ -35,7 +35,9 @@
 					// 0 011 111 100 001 110
 mmu_initialize:
 	procentry numregs=3
-	spl	7			// Inhibit interrupts
+	mov	$7,-(sp)
+	jsr	pc,_setpl		// Inhibit interrupts
+	add	$2,sp
 	clr 	MMU.MMR0		// MMU disabled
 	mov	$MMU.UISAR0,r0		// R0 => @User Page Addr. Reg #0
 	mov	$MMU.KISAR0,r1		// R1 => @Kernel Page Addr. Reg #0
@@ -83,11 +85,12 @@ mmu_initialize:
 	mov	$PDRPROT,MMU.UIDR0+016	// Protect IOSPACE in User mode
 	mov	$PDRSTAT,MMU.KISDR0+016	// IOSPACE accessible in kernel mode
 
-
 	mov	MMU.MMR0, r0		// Enable memory management
 	bis	$0x0001, r0
 	mov	r0, MMU.MMR0
-	spl	0			// Enable interrupts
+	clr	-(sp)
+	jsr	pc,_setpl		// Enable interrupts
+	add	$2,sp
 
 	cleanup	numregs=3
 	rts	pc

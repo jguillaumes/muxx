@@ -11,7 +11,7 @@ ASMFLAGS=-acmghlsd -I../h
 
 TARGETS=libmuxx.a
 OBJECTS=memblocks.o otoa.o htoa.o dtoa.o kmsgaddr.o kconio.o lib_syscalls.o \
-	dumpregs.o kdumpregs.o
+	dumpregs.o queues.o
 
 .out.lda:	
 	$(BIN2LOAD) -a -f $< -o $@
@@ -24,6 +24,8 @@ all:	$(TARGETS)
 
 clean:
 	@rm *.a *.o *.lst *.map *.out *.lda
+
+queues.o:	queues.c ../h/queues.h
 
 libmuxx.a:	$(OBJECTS)
 	$(AR) rs $@ $^ 

@@ -18,6 +18,7 @@ SECTIONS
     *(.data)
     . = ALIGN(0100);
     PROVIDE(tempstack = .);
+    PROVIDE(scratchpad = .);
     . = . + 64;
     PROVIDE(tempstackt = .);
     . = ALIGN(0100);

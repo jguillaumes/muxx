@@ -1,6 +1,8 @@
 #include <string.h>
-#include "muxxdef.h"
+#include "config.h"
 #include "muxx.h"
+#include "muxxdef.h"
+#include "externals.h"
 
 extern TCTA tctArea;
 
@@ -10,27 +12,16 @@ void muxx_tcbinit(PTCB tcb) {
    tcb->pid  = 0;
     tcb->ppid = 0;
     tcb->uic  = 0L;
-    tcb->status.stword = 0;
+    tcb->status = TSK_INIT;
+    tcb->flags.flword = 0;
     tcb->privileges.prvword = 0;
     tcb->firstChild = 0;
     tcb->lastChild = 0;
     tcb->nextSibling = 0;
-    for (j=0;j<6;j++) {
-      tcb->regs[j] = 0;
-    }
-    tcb->usp = 0;
-    tcb->ksp = 0;
-    tcb->ssp = 0;
-    tcb->pc  = 0;
-    tcb->psw = 0;
-    for (j=0;j<8;j++) {
-      tcb->upar[j] = 0;
-      tcb->spar[j] = 0;
-      tcb->kpar[j] = 0;
-    }
+    memset(&tcb->cpuState,0,sizeof(tcb->cpuState));
+    memset(&tcb->mmuState,0,sizeof(tcb->mmuState));
     tcb->clock_ticks = 0L;
     tcb->created_timestamp = 0L;
- 
 }
 
 
@@ -38,7 +29,7 @@ void muxx_tctinit() {
   int i=0;
   PTCB tcb;
 
-  tct = &tctArea;
+  // tct = &tctArea;
   tctsize = sizeof(tctArea);
   memcpy(tctArea.tcteye,"TCTAREA*",8);
 
@@ -47,4 +38,3 @@ void muxx_tctinit() {
     muxx_tcbinit(tcb);
   }
 }
-

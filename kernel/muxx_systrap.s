@@ -3,6 +3,8 @@
 
 	.INCLUDE "CONFIG.s"
 	.INCLUDE "MACLIB.s"
+	.INCLUDE "MUXX.s"
+	.INCLUDE "ERRNO.s"
 	
 	.GLOBAL muxx_systrap
 	
@@ -39,6 +41,7 @@ _trap_table:	.WORD	svc_muxhlt	//  0: Halt system
 		.WORD	muxx_unimpl	// KRNL 04
 		.WORD	srv_conputc	// KRNL 05
 		.WORD	muxx_unimpl	// KRNL 06
+		.WORD	srv_panic	// KRNL 07
 	
 	_trap_table_size	= . - _trap_table
 	_trap_table_entries	= _trap_table_size/2
@@ -125,6 +128,30 @@ svc_muxhlt:				// Note no procentry
 	
 	halt
 
+srv_panic:
+	bit	$0b1100000000000000,CPU.PSW	// CM = kernel?
+	bne	nopanic				// No:> No panic!
+	procentry
+	savecputask
+	jsr	pc,_dumptcbregs
+	mov	$cpanic,-(sp)
+	mov	4(r5),-(sp)
+	jsr	pc,_otoa
+	add	$4,sp
+	mov	$lmpanic,-(sp)
+	mov	$mpanic,-(sp)
+	jsr	pc,_kputstrl
+	add	$4,sp
+	halt
+1$:	br	1$
+nopanic:
+	mov	$lmnopan,-(sp)
+	mov	$mnopan,-(sp)
+	jsr	pc,_kputstrl
+	add	$4,pc
+	mov	$EILLINST,r0
+	rts	pc
+	
 muxx_unimpl:
 	mov	$nscall,-(sp)
 	mov	r0,-(sp)
@@ -173,4 +200,13 @@ unimpl:	.ASCII "Unimplemented syscall ("
 nscall:	.SPACE 6
 	.ASCII ")."
 	lunimpl = . - unimpl
+
+mpanic:	.ASCII "Unrecoverable error - System panic ("
+cpanic:	.SPACE 6
+	.ASCII ")"
+	lmpanic = . - mpanic
+
+mnopan:	.ASCII "PANIC syscall issued from non-kernel mode. Continuing"
+	lmnopan = . - mnopan
+	
 	.END

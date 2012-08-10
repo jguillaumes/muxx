@@ -1,24 +1,46 @@
 #ifndef _MUXX_H
 
 #include "types.h"
+#include "config.h"
 #include "muxxdef.h"
 
+struct CPUSTATE_S {
+  WORD gpr[6];
+  WORD sp;
+  WORD pc;
+  WORD psw;
+  WORD usp;
+  WORD ssp;
+  WORD ksp;
+};
+
+typedef struct CPUSTATE_S CPUSTATE;
+
+struct MMUSTATE_S {
+  WORD upar[8];
+  WORD spar[8];
+  WORD kpar[8];
+};
+
+typedef struct MMUSTATE_S MMUSTATE;
+
 struct TCB_S {
+  char taskname[8];     // Process name
   WORD pid;             // Process id.
   WORD ppid;            // Parent process id.
+  LONGWORD uic;         // Process owner (not used now)
 
-  LONGWORD uic;             // Process owner (not used now)
-
+  WORD status;
   union {
-    WORD stword;
+    WORD flword;
     struct {
-      int ready     :1;
+      int sending   :1;
       int receiving :1;
       int suspended :1;
       int msgwait   :1;
       int filler    :12;
-    } stflags;
-  } status;
+    } flflags;
+  } flags;
 
   union {
     WORD prvword;
@@ -33,17 +55,11 @@ struct TCB_S {
   struct TCB_S *firstChild;
   struct TCB_S *lastChild;
   struct TCB_S *nextSibling;
+  struct TCB_S *nextInQueue;
+  struct TCB_S *prevInQueue;
   
-  WORD regs[6];         // Saved CPU regs 0-5
-  WORD usp;             // Saved User stack pointer
-  WORD ksp;             // Saved Kernel stack pointer
-  WORD ssp;             // Saved Supervisor stack pointer (not used)
-  WORD pc;              // Saved program counter
-  WORD psw;             // Saved processor status word
-
-  WORD upar[8];         // Saved user mode MMU Page Address Registers
-  WORD spar[8];         // Saved supervisor mode MMU PARs (not used)
-  WORD kpar[8];         // Saved kernel mode MMU PARs 
+  CPUSTATE cpuState;  // Saved CPU status
+  MMUSTATE mmuState;  // Saved MMU status
  
   LONGWORD clock_ticks;
   LONGWORD created_timestamp;
@@ -61,25 +77,23 @@ struct TCTA_S {
 typedef struct TCTA_S TCTA;
 typedef struct TCTA_S *PTCTA;
 
-extern ADDRESS tct;
-extern WORD tctsize;
-extern WORD curtasks;
-extern ADDRESS kstackt;
-extern ADDRESS  kstackb;
-extern ADDRESS  ustackt;
-extern ADDRESS  ustackb;
+struct MCBE_S {
+  WORD owner;
+  BYTE mode;
+  BYTE page;
+};
 
-extern WORD topspid;
-extern WORD minspid;
-extern WORD maxspid;
+typedef struct MCBE_S MCBE;
+typedef struct MCBE_S *PMCBE;
 
-extern WORD topupid;
-extern WORD minupid;
-extern WORD maxupid;
+struct MCB_S {
+  WORD blocks;
+  WORD freeBlocks;
+  MCBE mcb[MEM_MCBS];
+};
 
-extern WORD clkfreq;
-extern LONGWORD utime;
-extern LONGWORD datetime;
+typedef struct MCB_S MCB;
+typedef struct MCB_S *PMCB;
 
 #define _MUXX_H
 #endif
