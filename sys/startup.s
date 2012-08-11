@@ -22,10 +22,15 @@ start:
 	jsr	pc,muxx_systrap			// Setup syscall handlers
 	jsr	pc,_muxx_tctinit		// Initialize task table
 	jsr	pc,_muxx_fakeproc		// Set up STARTUP task
-	jsr	pc,_muxx_clock_setup
-	jsr	pc,_muxx_clock_enable
-loop:	br	loop
+	jsr	pc,_muxx_clock_setup		// Setup clock interrupt...
+	jsr	pc,_muxx_clock_enable		// ... and enable it
+	
+loop:	wait					// Wait for interrupts...
+	br	loop
 
+
+//	jsr	pc,_empty_proc
+	
 	/*
 	mov	$EILLINST,-(sp)
 	jsr	pc,_panic
@@ -36,6 +41,7 @@ loop:	br	loop
 	mov	r0,077777			// Odd address
 	*/
 	
+	/*
 	mov	$0,r0
 	mov	$1,r1
 	mov	$2,r2
@@ -43,7 +49,7 @@ loop:	br	loop
 	mov	$4,r4
 	mov	$5,r5
 	mov	r0,0120000			// Illegal memory
-
+	*/
 
 	mov	$linitmsg,-(sp)			// Send halt message to console
 	mov	$initmsg,-(sp)

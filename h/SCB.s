@@ -58,8 +58,6 @@ _clkcountdown:	.WORD CLK_QUANTUM	// Ticks remaining in currrent quantum
 _utimeticks:	.LONG 0			// Ticks of uptime
 _datetime:	.LONG 0			// Ticks of datetime (1/1/1970 based)
 
-_mcbaddr	.WORD _mcb		// Address of memory control area
-
 	.ALIGN 6			// Align to 64 byte boundary
 end_scb:
 	.ENDM

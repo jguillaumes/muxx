@@ -35,8 +35,8 @@ _muxx_clock_disable:
 	rts	pc
 	
 muxx_clock_svc:
-	procentry trap=yes
-	savecputask
+	procentry saver0=yes
+//	savecputask
 	inc	_utimeticks
 	dec	_clkcountdown
 	bne	10$
@@ -44,7 +44,8 @@ muxx_clock_svc:
 	jsr	pc,_muxx_check_quantums
 	mov	_clkquantum,_clkcountdown
 10$:	jsr	pc,_muxx_check_timers
-	cleanup trap=yes
+
+	cleanup saver0=yes
 	rti
 
 	.end

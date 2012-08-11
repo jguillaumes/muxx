@@ -9,7 +9,42 @@
 	mov	(sp)+,reg
 	.endm
 
-	.macro procentry numregs=4,local=0,trap=no
+	/*
+	** Procedure call/trap frame setup
+	**
+	** This macro creates the standard frame in the stack after a
+	** procedure call or a trap/interrupt service.
+	**
+	** The stack frame after the macro expansion for a procedure call
+	** is:
+	**
+	**  +  8...	Parameter...
+	**  +  6	Parameter 2
+	**  +  4	Parameter 1
+	**  +  2	Return address
+	**  R5 =>       Old R5
+	**  -  2	[ Local variables ]
+	**  -  2+L	Saved R1    \
+	**  -  4+L	Saved R2    | Depending on the value of
+	**  -  6+L 	Saved R3    | the macro parameter numregs
+	**  -  8+L	Saved R4    /
+	**  - 10+L	[Saved R0]    If saver0=yes 
+	**  - 12+L 	Current R5
+	**
+	** For a trap/interrupt the stack will be:
+	**
+	**  +  4	Old PSW
+	**  +  2	Return address
+	**  R5 =>       Old R5
+	**  -  2	[ Local variables ]
+	**  -  2+L	Saved R1    \
+	**  -  4+L	Saved R2    | Depending on the value of
+	**  -  6+L 	Saved R3    | the macro parameter numregs
+	**  -  8+L	Saved R4    /
+	**  - 10+L	[Saved R0]    If saver0=yes 
+	**  - 12+L 	Current R5
+	*/
+	.macro procentry numregs=4,local=0,saver0=no
 	;	// Prologue
 	mov	r5,-(sp)
 	mov	sp,r5
@@ -31,16 +66,23 @@
 	.endif
 	.endif
 	.endif
-	.ifc	\trap,yes
+	.ifc	\saver0,yes
 	mov	r0,-(sp)
 	.endif
 	mov	r5,-(sp)
 	.endm
 
-	.macro cleanup numregs=4,trap=no
+	/*
+	** Procedure call / trap stack cleanup
+	** The numregs and saver0 parameters must be the same
+	** used in the corresponding procentry call.
+	** The macro expansion DOES NOT include the RTS nor RTT/RTI
+	** instruction
+	*/
+	.macro cleanup numregs=4,saver0=no
 	;	// Epilogue
 	mov	(sp)+,r5
- 	.ifc	\trap,yes
+ 	.ifc	\saver0,yes
 	mov	(sp)+,r0
 	.endif
 	.ifgt	\numregs - 4
@@ -92,7 +134,6 @@
 	**     -10/12	R5	(Current FP)
 	**     -12/14	SP-2	(SP after pushing R5)
 	*/
-	
 	.macro copyregs dest,type=trap
 	mov	CPU.PSW,-(sp)	// Push current PSW
 	mov	$7,-(sp)	
@@ -110,11 +151,7 @@
 	mov	-6(r5),6(r0)	// Save R3
 	mov	-8(r5),8(r0)	// Save R4
 	mov	(r5),10(r0)	// Save R5
-	.ifc	\type,trap
 	mov	r5,12(r0)	// Save old current SP...
-	.else
-	mov	r5,12(r0)	// Save old current SP...
-	.endif
 	add	$2,12(r0)	// ... adjusting it 
 	mov	2(r5),14(r0)	// Save PC
 
@@ -145,11 +182,9 @@
 	mfpi	r6
 	mov	(sp)+,20(r0)
 
-	bic	$0b0001000000000000,r1	// Set previous mode to kernel
-	mov	r1,CPU.PSW
-	mfpi	r6
-	mov	(sp)+,22(r0)
+	mov	12(r0),22(r0)	// Copy KSP from saved SP
 	mov	(sp)+,r1
+	
 	/*
 	** Final cleanup
 	*/
@@ -165,4 +200,57 @@
 	mov	(sp)+,r1
 	.endm
 
+
+	/*
+	** End of trap processing
+	**
+	** Restore CPU state from a specified area and transfer control
+	** back to the PC contained in that area, restoring the PSW.
+	*/
+	.macro endtrap area
+	mov	$7,-(sp)	// No interrupts
+	jsr	pc,_setpl	// No need to keep PSW since we will overwrite
+				// it at the end of the macro.
+	mov	\area,r0	// R0 points to the CPU saved state area
+
+	/*
+	** Restore user and supervisor mode SP
+	*/
+	mov	CPU.PSW,r1	
+	bis	$0b0011000000000000,r1	// Set previous mode to user
+	mov	r1,CPU.PSW
+	mov	18(r0),-(sp)
+	mtpi	r6
+
+	bic	$0b0010000000000000,r1	// Set previous mode to super
+	mov	r1,CPU.PSW
+	mov	20(r0),-(sp)
+	mtpi	r6
+
+	/*
+	** Set up kernel mode stack (current mode) to top of stack
+	** We will not return, so we can thrash the stack and initialize it
+	** WARNING: We CAN NOT return to kernel mode from this macro!!
+	*/
+	mov	_kstackt,sp
+	
+	/*
+	* Restore the GPRs 0-5
+	*/
+	mov	2(r0),r1
+	mov	4(r0),r2
+	mov	6(r0),r3
+	mov	8(r0),r4
+	mov	10(r0),r5
+
+	/*
+	** Prepare to transfer control back
+	*/
+	mov	16(r0),-(sp)		// Push old PSW
+	mov	14(r0),-(sp)		// Push old PC
+	mov	(r0),r0			// Restore r0
+	rti				// ... and transfer control!
+	
+	.endm
+		
 	.LIST

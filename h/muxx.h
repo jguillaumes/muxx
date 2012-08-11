@@ -61,7 +61,7 @@ struct TCB_S {
   CPUSTATE cpuState;  // Saved CPU status
   MMUSTATE mmuState;  // Saved MMU status
  
-  LONGWORD clock_ticks;
+  LONGWORD clockTicks;
   LONGWORD created_timestamp;
 
 };
@@ -89,7 +89,7 @@ typedef struct MCBE_S *PMCBE;
 struct MCB_S {
   WORD blocks;
   WORD freeBlocks;
-  MCBE mcb[MEM_MCBS];
+  MCBE mcb[MEM_NMCBS];
 };
 
 typedef struct MCB_S MCB;

@@ -35,7 +35,7 @@ trap_initialize:
 	rts	pc
 
 trap_cpuerr:
-	procentry trap=yes
+	procentry saver0=yes
 	savecputask
 	jsr	pc,_dumptcbregs
 	mov	$CPUADDR,-(sp)
@@ -49,7 +49,7 @@ trap_cpuerr:
 	halt
 
 trap_illins:
-	procentry trap=yes
+	procentry saver0=yes
 	savecputask
 	jsr	pc,_dumptcbregs
 	mov	$6,r1
@@ -60,7 +60,7 @@ trap_illins:
 	br	trap_common
 
 trap_iot:
-	procentry trap=yes
+	procentry saver0=yes
 	savecputask
 	jsr	pc,_dumptcbregs
 	mov	$6,r1
@@ -71,7 +71,7 @@ trap_iot:
 	br	trap_common
 
 trap_buserr:
-	procentry trap=yes
+	procentry saver0=yes
 	savecputask
 	jsr	pc,_dumptcbregs
 	mov	$6,r1
@@ -82,7 +82,7 @@ trap_buserr:
 	br	trap_common
 
 trap_fperr:
-	procentry trap=yes
+	procentry saver0=yes
 	savecputask
 	jsr	pc,_dumptcbregs
 	mov	$6,r1
@@ -93,7 +93,7 @@ trap_fperr:
 	br	trap_common
 
 trap_mmuerr:
-	procentry trap=yes
+	procentry saver0=yes
 	savecputask
 	jsr	pc,_dumptcbregs
 	mov	MMU.MMR0,r0
@@ -145,7 +145,7 @@ trap_common:
 	halt
 
 trap_unimplemented:
-	procentry trap=yes
+	procentry saver0=yes
 	savecputask
 	jsr	pc,_dumptcbregs
 	br	trap_common

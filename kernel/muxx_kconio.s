@@ -99,7 +99,6 @@ srv_conputc:
 
 _congetc:
 	procentry numregs=1
-	mov	r1,-(sp)	// Push R1
 
 10$:
 	mov	CON.RCSR,r1	// Wait for a character to read
@@ -111,10 +110,6 @@ _congetc:
 
 	cleanup numregs=1
 	rts	pc
-
-
-
-
 	
 	.end
 

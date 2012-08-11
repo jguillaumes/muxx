@@ -20,7 +20,7 @@ void muxx_tcbinit(PTCB tcb) {
     tcb->nextSibling = 0;
     memset(&tcb->cpuState,0,sizeof(tcb->cpuState));
     memset(&tcb->mmuState,0,sizeof(tcb->mmuState));
-    tcb->clock_ticks = 0L;
+    tcb->clockTicks = 0L;
     tcb->created_timestamp = 0L;
 }
 

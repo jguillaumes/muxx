@@ -56,6 +56,11 @@
 	TSK_RUN = 3
 	TSK_DISPOSE = 4
 /*
-** Kernel configuration constants
+** System latches
 */
+	LTC_LATCHES = 16
+	LTC_READYQ = 1
+	LTC_BLOCKQ = 2
+	LTC_SUSPNQ = 3
+	LTC_MCB = 4
 	.LIST 

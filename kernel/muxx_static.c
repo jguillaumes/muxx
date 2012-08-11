@@ -9,7 +9,7 @@ TQUEUE readyQueue  __attribute__ ((common));   // Ready queue
 TQUEUE blockedQueue  __attribute__ ((common)); // Blocked list
 TQUEUE suspQueue  __attribute__ ((common));    // Suspended list
 
-MCB _mcb __attribute__ ((common));
+MCB mcb __attribute__ ((common));
 
 BYTE muxx_latches[LTC_LATCHES] __attribute__ ((common)); // System latches
 

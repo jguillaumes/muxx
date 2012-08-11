@@ -127,7 +127,8 @@ svc_muxhlt:				// Note no procentry
 	add	$2,sp
 	
 	halt
-
+	jmp	$01000			// Restart if continue
+	
 srv_panic:
 	bit	$0b1100000000000000,CPU.PSW	// CM = kernel?
 	bne	nopanic				// No:> No panic!
