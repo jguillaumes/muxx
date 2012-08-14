@@ -16,6 +16,7 @@
 	.global _kstackb
 	.global	_ustackt
 	.global	_ustackb
+	.global _mmcbtaddr
 	.global _topspid
 	.global _maxspid
 	.global _minspid
@@ -42,7 +43,7 @@ _kstackb:	.WORD TOP_STACK-KRN_STACK	// Bottom of kernel stack
 _ustackt:	.WORD TOP_STACK-KRN_STACK-2		// Top of user stack
 _ustackb:	.WORD TOP_STACK-KRN_STACK-USR_STACK	// Bottom of user stack
 
-_mcbaddr:	.WORD _mcb		// Address of MCB
+_mmcbtaddr:	.WORD _mmcbt		// Address of MMCBT
 	
 _topspid:	.WORD 0			// Highest assigned system PID
 _minspid:	.WORD 00001		// Minimal assignable system PID

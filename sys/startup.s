@@ -18,13 +18,14 @@ start:
 	mov	$tempstackt,sp			// Temporary stack
 	jsr	pc,mmu_initialize		// Memory mapping
 	mov	_kstackt,sp			// Final kernel stack
+	jsr	pc,_muxx_mem_init		// Set up MMCBs
 	jsr	pc,trap_initialize		// Setup trap handlers
 	jsr	pc,muxx_systrap			// Setup syscall handlers
 	jsr	pc,_muxx_tctinit		// Initialize task table
 	jsr	pc,_muxx_fakeproc		// Set up STARTUP task
 	jsr	pc,_muxx_clock_setup		// Setup clock interrupt...
 	jsr	pc,_muxx_clock_enable		// ... and enable it
-	
+
 loop:	wait					// Wait for interrupts...
 	br	loop
 

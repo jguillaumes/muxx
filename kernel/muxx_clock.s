@@ -17,32 +17,39 @@ _muxx_clock_setup:
 	jsr	pc,_setpl
 	add	$2,sp
 	mov	$muxx_clock_svc,CLK.VECTOR
-	mov	$0040,CLK.VECTOR+2
+	mov	$0040,CLK.VECTOR+2		// Kernel mode, IPL=4
 	mov	(sp)+,CPU.PSW
 	cleanup numregs=0
 	rts	pc
 
 _muxx_clock_enable:
 	procentry numregs=0
-	bis	$000100,CLK.LKS
+	bis	$000100,CLK.LKS			// Set interrupt enable
 	cleanup	numregs=0
 	rts	pc
 
 _muxx_clock_disable:
 	procentry numregs=0
-	bic	$000100,CLK.LKS
+	bic	$000100,CLK.LKS			// Clear interrupt enable
 	cleanup	numregs=0
 	rts	pc
 	
 muxx_clock_svc:
 	procentry saver0=yes
-//	savecputask
 	inc	_utimeticks
-	dec	_clkcountdown
+	bne	5$
+	inc	_utimeticks+2
+
+5$:	dec	_clkcountdown
 	bne	10$
 
+	halt
+	savecputask
+	halt
+	
 	jsr	pc,_muxx_check_quantums
 	mov	_clkquantum,_clkcountdown
+
 10$:	jsr	pc,_muxx_check_timers
 
 	cleanup saver0=yes

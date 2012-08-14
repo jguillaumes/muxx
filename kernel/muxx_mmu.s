@@ -3,8 +3,9 @@
 
 	.INCLUDE "CONFIG.s"
 	.INCLUDE "MACLIB.s"
-
-	.GLOBAL	mmu_initialize
+	.INCLUDE "MUXX.s"
+	
+	.GLOBAL	mmu_initialize,_muxx_getmap,_muxx_setmap 
 /**
 	Memory management initialization
 
@@ -94,5 +95,80 @@ mmu_initialize:
 
 	cleanup	numregs=3
 	rts	pc
+	.PAGE
+	.SBTTL	"muxx_getmap - Save the current MMU map"
+	
+
+_muxx_getmap:
+	procentry numregs=3
+	jsr	pc,_setpl7		// No interrupts
+	mov	r0,r3			// Save previous IPL
+	
+	mov	4(r5),r0		// R0: address of TCB
+	mov	$MMU.UISAR0,r1		// R1: Address of first user PAR
+	mov	$8,r2			// R2: Number of words to move
+	add	$TCB.UPAR0,r0		// R0: Address of UPAR in TCB
+10$:	mov	(r1)+, (r0)+		// Move PAR to store area
+	sob	r2,10$
+	
+	mov	4(r5),r0
+	mov	$MMU.KISAR0,r1		// R1: Address of first kernel PAR
+	mov	$8,r2			// R2: Words to move
+	add	$TCB.KPAR0,r0
+20$:	mov	(r1)+, (r0)+
+	sob 	r2,20$
+
+	mov	4(r5),r0
+	mov	$MMU.SISAR0,r1		// R1: Address of first kernel PAR
+	mov	$8,r2			// R2: Words to move
+	add	$TCB.SPAR0,r0
+30$:	mov	(r1)+, (r0)+
+	sob 	r2,30$
+
+	mov	r3,-(sp)		// Restore previous IPL
+	jsr	pc,_setpl
+	add	$2,sp
+	
+	cleanup numregs=3	
+	rts	pc
+	
+	.PAGE
+	.SBTTL	"muxx_setmap - Modify the current MMU map"
+
+	
+_muxx_setmap:	
+	procentry numregs=3
+	jsr	pc,_setpl7		// No interrupts
+	mov	r0,r3			// Save previous IPL
+	
+	mov	4(r5),r0		// R0: address of TCB
+	mov	$MMU.UISAR0,r1		// R1: Address of first user PAR
+	mov	$8,r2			// R2: Number of words to move
+	add	$TCB.UPAR0,r0
+10$:	mov	(r0)+,(r1)+		// Store PAR value
+	sob	r2,10$
+	
+	mov	4(r5),r0
+	mov	$MMU.KISAR0,r1		// R1: Address of first kernel PAR
+	mov	$8,r2			// R2: Words to move
+	add	$TCB.KPAR0,r0
+20$:	mov	(r0)+,(r1)+
+	sob 	r2,20$
+
+	mov	4(r5),r0
+	mov	$MMU.SISAR0,r1		// R1: Address of first kernel PAR
+	mov	$8,r2			// R2: Words to move
+	add	$TCB.SPAR0,r0
+30$:	mov	(r0)+,(r1)+
+	sob 	r2,30$
+
+	mov	r3,-(sp)		// Restore previous IPL
+	jsr	pc,_setpl
+	add	$2,sp
+	
+	cleanup numregs=3	
+	rts	pc
+
+
 
 	.end

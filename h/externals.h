@@ -17,6 +17,8 @@ extern ADDRESS kstackb;
 extern ADDRESS ustackt;
 extern ADDRESS ustackb;
 
+extern ADDRESS mmcbtaddr;
+
 extern WORD topspid;
 extern WORD minspid;
 extern WORD maxspid;

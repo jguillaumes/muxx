@@ -2,14 +2,13 @@
 #include "queues.h"
 #include "muxxdef.h"
 
-TCTA tctArea __attribute__ ((common));
+TCTA tctArea __attribute__ ((common)) = {0};
 int tctSize __attribute__ ((common)) = sizeof(tctArea);
 
-TQUEUE readyQueue  __attribute__ ((common));   // Ready queue
-TQUEUE blockedQueue  __attribute__ ((common)); // Blocked list
-TQUEUE suspQueue  __attribute__ ((common));    // Suspended list
+TQUEUE readyQueue  __attribute__ ((common)) = {0};   // Ready queue
+TQUEUE blockedQueue  __attribute__ ((common)) = {0}; // Blocked list
+TQUEUE suspQueue  __attribute__ ((common)) = {0};    // Suspended list
 
-MCB mcb __attribute__ ((common));
+MMCBT mmcbt __attribute__ ((common)) = {0};
 
-BYTE muxx_latches[LTC_LATCHES] __attribute__ ((common)); // System latches
-
+BYTE muxx_latches[LTC_LATCHES] __attribute__ ((common)) = {0}; // System latches

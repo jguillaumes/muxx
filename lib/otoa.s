@@ -9,8 +9,8 @@
 //
 // Stack at entry
 //	Offset	Datatype	Content
-//	+4	ADDRESS		Pointer to output buffer (6 bytes)
-//	+2	WORD		Value to convert
+//	+6	ADDRESS		Pointer to output buffer (6 bytes)
+//	+4	WORD		Value to convert
 // SP=>	0	ADDRESS		Return address
 // FP=>         ADDRESS		Old FP
 //**********************************************************************

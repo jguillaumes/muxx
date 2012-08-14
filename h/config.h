@@ -60,6 +60,6 @@
 #define USR_STACK		3072
 #define TOP_STACK		0160000
 #define MEM_BLOCKS		4096
-#define MEM_NMCBS		256
+#define MEM_NMCBS		128
 #define _CONFIG_H
 #endif

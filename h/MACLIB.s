@@ -136,10 +136,10 @@
 	*/
 	.macro copyregs dest,type=trap
 	mov	CPU.PSW,-(sp)	// Push current PSW
-	mov	$7,-(sp)	
-	jsr	pc,_setpl	// No interrupts
+	jsr	pc,_setpl7
 	add	$2,sp
 	mov	r0,-(sp)	// Push current R0 to use it
+
 	mov	\dest,r0	// R5 => Save area
 	.ifc	\type,trap
 	mov	-10(r5),(r0)	// Save R0
@@ -171,6 +171,7 @@
 	** If it is called in user/super mode BAD THINGS will happen.
 	*/
 	mov	r1,-(sp)
+
 	mov	CPU.PSW,r1	// R0: Current PSW
 	bis	$0b0011000000000000,r1	// Set previous mode to user
 	mov	r1,CPU.PSW
@@ -183,6 +184,7 @@
 	mov	(sp)+,20(r0)
 
 	mov	12(r0),22(r0)	// Copy KSP from saved SP
+
 	mov	(sp)+,r1
 	
 	/*
@@ -199,7 +201,7 @@
 	copyregs dest=r1,type=trap
 	mov	(sp)+,r1
 	.endm
-
+	
 
 	/*
 	** End of trap processing
@@ -208,9 +210,7 @@
 	** back to the PC contained in that area, restoring the PSW.
 	*/
 	.macro endtrap area
-	mov	$7,-(sp)	// No interrupts
-	jsr	pc,_setpl	// No need to keep PSW since we will overwrite
-				// it at the end of the macro.
+	jsr	pc,_setpl7	// No interrupts
 	mov	\area,r0	// R0 points to the CPU saved state area
 
 	/*
