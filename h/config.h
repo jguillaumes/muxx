@@ -61,5 +61,7 @@
 #define TOP_STACK		0160000
 #define MEM_BLOCKS		4096
 #define MEM_NMCBS		128
+#define CPU_HAS_SPL		0
+#define CPU_HAS_ERROR		1
 #define _CONFIG_H
 #endif

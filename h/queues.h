@@ -18,5 +18,9 @@ struct TQUEUE_S {
 typedef struct TQUEUE_S TQUEUE;
 typedef struct TQUEUE_S *PTQUEUE;
 
+void muxx_qAddTask(PTQUEUE, PTCB);
+PTCB muxx_qGetTask(PTQUEUE);
+
+
 #define _TASK_QUEUES_H
 #endif

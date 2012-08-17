@@ -1,0 +1,11 @@
+start:	mov	#ind,r0
+	jsr	pc,@(r0)
+	halt
+
+
+ind:	.WORD	dest
+
+dest:	rts	pc
+
+	.END
+	

@@ -2,7 +2,7 @@
 #include "muxx.h"
 #include "queues.h"
 
-void addTask(PTQUEUE queue, PTCB task) {
+void muxx_qAddTask(PTQUEUE queue, PTCB task) {
   PTCB last;
 
   if (queue->count != 0) {
@@ -21,7 +21,7 @@ void addTask(PTQUEUE queue, PTCB task) {
   }
 }
 
-PTCB getTask(PTQUEUE queue) {
+PTCB muxx_qGetTask(PTQUEUE queue) {
   PTCB theTask=NULL;
 
   if (queue->count > 0) {

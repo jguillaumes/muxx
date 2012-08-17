@@ -9,56 +9,53 @@
 
 
 _setpl7:
-	procentry numregs=0
+	procentry
 	.if  CPU_HAS_SPL==1
 	mov	CPU.PSW,r0
 	spl	7
-	bic	$0xFF8F,r0
-	ash	$-4,r0
+	bic	$0xFF1F,r0
+	ash	$-5,r0
 	.else
 	mov	$7,-(sp)
 	jsr	pc,_setpl
 	add	$2,sp
 	.endif
-	cleanup numregs=0
-	rts	pc
+	procexit
 
 _setpl0:
-	procentry numregs=0
+	procentry
+	halt
 	.if CPU_HAS_SPL==1
 	mov	CPU.PSW,r0
 	spl	0
-	bic	$0xFF8F,r0
-	ash	$-4,r0
+	bic	$0xFF1F,r0
+	ash	$-5,r0
 	.else
 	clr	-(sp)
 	jsr	pc,_setpl
 	add	$2,sp
 	.endif
-	cleanup numregs=0
-	rts	pc
+	procexit
 
-_setpl:	procentry numregs=2
+_setpl:	procentry
 	mov	4(r5),r0		// R0: New IPL
 	mov	CPU.PSW,r2		// R2: Current PSW
 	mov	r2,r1			// R1: Current PSW 
-	bic	$0x0070,r1		// Clear IPL bits in R1
-	ash	$4,r0			// Shift new IPL value to position
-	bic	$0xff8f,r0		// CLear non-IPL bits in R0
+	bic	$0x00E0,r1		// Clear IPL bits in R1
+	ash	$5,r0			// Shift new IPL value to position
+	bic	$0xff1f,r0		// CLear non-IPL bits in R0
 	bis	r0,r1			// Set new IPL bits in R1
 	mov	r1,CPU.PSW		// ... and store it to the PSW
 	mov	r2,r0			// R0: Old PSW value
-	bic	$0xff8f,r0		// Clear non-IPL bits
-	ash	$-4,r0			// Shift to get integer value
-	cleanup numregs=2
-	rts	pc		
+	bic	$0xff1f,r0		// Clear non-IPL bits
+	ash	$-5,r0			// Shift to get integer value
+	procexit
 
-_getpl:	procentry numregs=0
+_getpl:	procentry
 	mov	CPU.PSW,r0
-	bic	$0xFF8F,r0
-	ash	$-4,r0
-	cleanup numregs=0
-	rts	pc
+	bic	$0xFF1F,r0
+	ash	$-5,r0
+	procexit
 
 	.end
 

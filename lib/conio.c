@@ -1,13 +1,14 @@
 #include <types.h>
 #include <muxxlib.h>
+#include <string.h>
  
-int kgetlin(char *buffer, int size, char *term, int termsiz) {
+int getlin(char *buffer, int size, char *term, int termsiz) {
 
   BYTE inchar;
   int i=0,j=0,end=0;
 
   while(i<size && end==0) {
-    inchar = congetc();
+    inchar = kcongetc();
     for (j=0;j<termsiz && end==0; j++) {
       if (inchar == term[i]) end = 1;
     } 
@@ -18,7 +19,7 @@ int kgetlin(char *buffer, int size, char *term, int termsiz) {
   return (i);
 }
 
-int kputstr(char *buffer, int size) {
+int putstr(char *buffer, int size) {
   int i=0,rc=0;
   char *ptr=buffer;
 
@@ -28,11 +29,22 @@ int kputstr(char *buffer, int size) {
   return rc;
 }
 
-int kputstrl(char *buffer, int size) {
+int putstrl(char *buffer, int size) {
   static char *cr="\n\r";
   int rc=0;
  
   rc = kputstr(buffer, size);
   if (rc==0) rc = kputstr(cr, 2);
+  return rc;
+}
+
+int putstrz(char *buffer) {
+  int s = strlen(buffer);
+  return putstr(buffer,s);
+}
+
+int putstrzl(char *buffer) {
+  int rc = putstrz(buffer);
+  if (rc == 0) rc = putstr("\n",1);
   return rc;
 }

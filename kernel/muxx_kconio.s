@@ -4,9 +4,8 @@
 	.INCLUDE "CONFIG.s"
 	.INCLUDE "MACLIB.s"
 	
-	.SBTTL conputc : synchronously send a byte to the system console
-	.GLOBAL conputc
-	.GLOBAL	srv_conputc
+	.SBTTL kconputc : synchronously send a byte to the system console
+	.GLOBAL _kconputc
 	
 	/************************************************** 
 	** Input interface:
@@ -38,8 +37,8 @@
 
 	.text
 
-conputc:
-	procentry numregs=2
+_kconputc:
+	procentry
 	mov 	$NRETRY, r1	// R1 <= Retries (wait loop)
 10$:
 	mov	CON.XCSR,r2	// R2 <= Transmit control register
@@ -60,14 +59,9 @@ conputc:
 
 40$:	mov	$0, r0		// Everything OK, RC=0
 999$:
-	cleanup numregs=2
-	rts	pc		// Return!
+	procexit
 
 
-srv_conputc:
-	movb	2(sp),r0
-	br	conputc
-	
 	.PAGE
 	
 	.SBTTL congetc: synchronously read a byte from the system console
@@ -90,15 +84,15 @@ srv_conputc:
 	** 	ch = congtchr();
 	**************************************************/ 
 
-	.GLOBAL _congetc
+	.GLOBAL _kcongetc
 
 	RCDONE	= 0x0080	// DL11 receive ready bit
 	RCENAB  = 0x0001	// DL11 receive enable
 
 	.text
 
-_congetc:
-	procentry numregs=1
+_kcongetc:
+	procentry
 
 10$:
 	mov	CON.RCSR,r1	// Wait for a character to read
@@ -108,8 +102,56 @@ _congetc:
 	movb	CON.RBUF,r0	//
 	bis	$RCENAB, r1	// Enable  
 
-	cleanup numregs=1
-	rts	pc
-	
+	procexit
+
+
+	.PAGE
+	.SBTTL kputstr - Print a string to console
+	.GLOBAL _kputstr,_kputstrz,_kputstrl,_kputstrzl
+
+_kputstr:
+	procentry
+	mov	6(r5),r2
+	mov	4(r5),r3
+10$:	movb	(r3)+,r0
+	jsr	pc,_kconputc
+	sob	r2,10$
+	procexit
+
+_kputstrz:
+	procentry
+	mov	4(r5),r2
+10$:	movb	(r2)+,r0
+	beq	20$
+	jsr	pc,_kconputc
+	br	10$
+20$:	procexit
+
+_kputstrl:
+	procentry
+	mov	6(r5),-(sp)
+	mov	4(r5),-(sp)
+	jsr	pc,_kputstr
+	sub	$4,sp
+	mov	$2,-(sp)
+	mov	$crlf,-(sp)
+	jsr	pc,_kputstr
+	add	$4,sp
+	procexit
+
+_kputstrzl:
+	procentry
+	mov	4(r5),-(sp)
+	jsr	pc,_kputstrz
+	add	$2,sp
+	mov	$2,-(sp)
+	mov	$crlf,-(sp)
+	jsr	pc,_kputstr
+	add	$4,sp
+	procexit
+
+	.data
+crlf:	.ascii	"\n\r"
+
 	.end
 

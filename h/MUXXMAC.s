@@ -23,12 +23,16 @@
 	add	$4,sp			// cleanup stack
 	.endm
 
-	.macro	PANIC code
-	sub	$4,sp			// Make room for parms
-	mov	$1,(sp)			// 1 parm
-	mov	\code,2(sp)		// Error code
+	.macro	CREPRC name,type,entry,privs
+	sub	$10,sp			// Room for 4 members parmlist
+	mov	$4,(sp)			// size = 4
+	mov	\privs,2(sp)
+	mov	\entry,4(sp)
+	mov	\type,6(sp)
+	mov	\name,8(sp)
 	mov	sp,r0
-	trap	$KRN_PANIC
+	trap	$SRV_CREPRC
+	add	$10,sp
 	.endm
 
 	.LIST

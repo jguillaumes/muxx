@@ -8,7 +8,7 @@
 
 _empty_proc:
 	HALT		// Halt to debug
-	procentry numregs=4,saver0=yes
+	procentry 
 	HALT		// New halt
 	mov	$10,r0	// Clobber registers
 	mov	$11,r1
@@ -16,6 +16,7 @@ _empty_proc:
 	mov	$13,r3
 	mov	$14,r4
 	HALT		//
-	cleanup numregs=4,saver0=yes
-	HALT
-	rts	pc
+	procexit
+
+	.end
+

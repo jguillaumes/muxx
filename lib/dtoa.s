@@ -7,7 +7,7 @@
 	.GLOBAL _dtoa
 
 _dtoa:
-	procentry numregs=3
+	procentry 
 
 	mov	4(r5),r3
 	mov	6(r5),r1
@@ -21,13 +21,12 @@ _dtoa:
 	mov 	r2,r3
 	sob	r0,10$
 	
-	cleanup	numregs=3
-	rts	pc
+	procexit
 
 	.GLOBAL _dtoab
 
 _dtoab:
-	procentry numregs=3
+	procentry
 	movb	4(r5),r3
 	mov	6(r5),r1
 	mov	$3,r0
@@ -40,8 +39,7 @@ _dtoab:
 	movb	r3,r2
 	sob	r0,10$
 
-	cleanup	numregs=3
-	rts	pc
+	procexit
 
 
 	.end

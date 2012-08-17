@@ -35,7 +35,7 @@
 	STACKPDR= 037416		// Stack page (4KB, downward)
 					// 0 011 111 100 001 110
 mmu_initialize:
-	procentry numregs=3
+	procentry
 	mov	$7,-(sp)
 	jsr	pc,_setpl		// Inhibit interrupts
 	add	$2,sp
@@ -93,14 +93,15 @@ mmu_initialize:
 	jsr	pc,_setpl		// Enable interrupts
 	add	$2,sp
 
-	cleanup	numregs=3
-	rts	pc
+	procexit
+
+	
 	.PAGE
 	.SBTTL	"muxx_getmap - Save the current MMU map"
 	
 
 _muxx_getmap:
-	procentry numregs=3
+	procentry 
 	jsr	pc,_setpl7		// No interrupts
 	mov	r0,r3			// Save previous IPL
 	
@@ -129,15 +130,14 @@ _muxx_getmap:
 	jsr	pc,_setpl
 	add	$2,sp
 	
-	cleanup numregs=3	
-	rts	pc
+	procexit
 	
 	.PAGE
 	.SBTTL	"muxx_setmap - Modify the current MMU map"
 
 	
 _muxx_setmap:	
-	procentry numregs=3
+	procentry 
 	jsr	pc,_setpl7		// No interrupts
 	mov	r0,r3			// Save previous IPL
 	
@@ -166,9 +166,6 @@ _muxx_setmap:
 	jsr	pc,_setpl
 	add	$2,sp
 	
-	cleanup numregs=3	
-	rts	pc
-
-
+	procexit
 
 	.end

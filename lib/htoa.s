@@ -16,7 +16,7 @@
 //**********************************************************************
 	azero = 0x30
 	
-_htoa:	procentry numregs=4
+_htoa:	procentry 
 	clr	r0			// Return value
 	mov	4(r5),r1		// R1 => Number to convert
 	mov	6(r5),r2		// R2 => Output buffer address
@@ -30,8 +30,8 @@ _htoa:	procentry numregs=4
 	ash	$-4,r1			// Shift number to get next digit
 	sob	r3,10$			// Rinse and repeat
 
-	cleanup	numregs=4
-	rts	pc
+	procexit
+
 
 //**********************************************************************
 // Conversion from an hexadecimal byte to an ASCII string
@@ -45,7 +45,7 @@ _htoa:	procentry numregs=4
 //**********************************************************************
 	.GLOBAL	_htoab
 	
-_htoab:	procentry numregs=4
+_htoab:	procentry 
 	clr	r0
 	movb	4(r5),r1		// R1 => Number to convert
 	mov	6(r5),r2		// R2 => Output buffer address
@@ -59,8 +59,8 @@ _htoab:	procentry numregs=4
 	ash	$-4,r1			// Shift number to get next digit
 	sob	r3,10$			// Rinse and repeat
 
-	cleanup	numregs=4
-	rts	pc
+	procexit
+
 
 	.data
 htab:	.ASCII "0123456789ABCDEF"

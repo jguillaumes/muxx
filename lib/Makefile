@@ -10,8 +10,8 @@ CFLAGS=-c -Os -I../h
 ASMFLAGS=-acmghlsd -I../h 
 
 TARGETS=libmuxx.a
-OBJECTS=memblocks.o otoa.o htoa.o dtoa.o kmsgaddr.o kconio.o lib_syscalls.o \
-	dumpregs.o queues.o empty_proc.o
+OBJECTS=memblocks.o otoa.o htoa.o dtoa.o kmsgaddr.o conio.o lib_syscalls.o \
+	empty_proc.o
 
 .out.lda:	
 	$(BIN2LOAD) -a -f $< -o $@

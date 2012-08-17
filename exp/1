@@ -1,0 +1,43 @@
+Usant especificacions internes.
+COLLECT_GCC=pdp11-aout-gcc
+COLLECT_LTO_WRAPPER=/usr/local/libexec/gcc/pdp11-aout/4.6.4/lto-wrapper
+Target: pdp11-aout
+Configurat amb: ../gcc/configure --enable-languages=c --target=pdp11-aout --with-newlib
+Model de fils: single
+gcc version 4.6.4 20120725 (prerelease) (GCC) 
+COLLECT_GCC_OPTIONS='-v' '-save-temps' '-c' '-S' '-Os' '-Wall' '-Wextra'
+ /usr/local/libexec/gcc/pdp11-aout/4.6.4/cc1 -E -quiet -v indirect_call_table.c -Wall -Wextra -Os -fpch-preprocess -o indirect_call_table.i
+ignorant el directori inexistent "/usr/local/lib/gcc/pdp11-aout/4.6.4/../../../../pdp11-aout/sys-include"
+la recerca de #include  "..." s'inicia aquí:
+la recerca de #include <...> s'inicia aquí:
+ /usr/local/lib/gcc/pdp11-aout/4.6.4/include
+ /usr/local/lib/gcc/pdp11-aout/4.6.4/include-fixed
+ /usr/local/lib/gcc/pdp11-aout/4.6.4/../../../../pdp11-aout/include
+Fi de la llista de recerca.
+COLLECT_GCC_OPTIONS='-v' '-save-temps' '-c' '-S' '-Os' '-Wall' '-Wextra'
+ /usr/local/libexec/gcc/pdp11-aout/4.6.4/cc1 -fpreprocessed indirect_call_table.i -quiet -dumpbase indirect_call_table.c -auxbase indirect_call_table -Os -Wall -Wextra -version -o indirect_call_table.s
+GNU C (GCC) version 4.6.4 20120725 (prerelease) (pdp11-aout)
+	compiled by GNU C version 4.6.3, GMP version 5.0.2, MPFR version 3.1.0-p3, MPC version 0.9
+GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+GNU C (GCC) version 4.6.4 20120725 (prerelease) (pdp11-aout)
+	compiled by GNU C version 4.6.3, GMP version 5.0.2, MPFR version 3.1.0-p3, MPC version 0.9
+GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+Compiler executable checksum: 4e94c29ebf077b5bb93c64c5b111b8f7
+indirect_call_table.c: In function ‘muxx_systrap_handler’:
+indirect_call_table.c:30:7: avís: variable ‘rc’ set but not used [-Wunused-but-set-variable]
+indirect_call_table.c: In function ‘muxx_svc_conputc’:
+indirect_call_table.c:48:1: avís: no hi ha una declaració de retorn en una funció que retorna "non-void" [-Wreturn-type]
+indirect_call_table.c:44:33: avís: unused parameter ‘np’ [-Wunused-parameter]
+indirect_call_table.c: In function ‘muxx_svc_muxxhlt’:
+indirect_call_table.c:52:1: avís: no hi ha una declaració de retorn en una funció que retorna "non-void" [-Wreturn-type]
+indirect_call_table.c:50:33: avís: unused parameter ‘np’ [-Wunused-parameter]
+indirect_call_table.c:50:45: avís: unused parameter ‘args’ [-Wunused-parameter]
+indirect_call_table.c: In function ‘muxx_unimpl’:
+indirect_call_table.c:55:28: avís: unused parameter ‘np’ [-Wunused-parameter]
+indirect_call_table.c:55:40: avís: unused parameter ‘args’ [-Wunused-parameter]
+indirect_call_table.c: In function ‘muxx_systrap_handler’:
+indirect_call_table.c:42:1: avís: el control arriba a el final d'una funció que no és void [-Wreturn-type]
+COMPILER_PATH=/usr/local/libexec/gcc/pdp11-aout/4.6.4/:/usr/local/libexec/gcc/pdp11-aout/4.6.4/:/usr/local/libexec/gcc/pdp11-aout/:/usr/local/lib/gcc/pdp11-aout/4.6.4/:/usr/local/lib/gcc/pdp11-aout/:/usr/local/lib/gcc/pdp11-aout/4.6.4/../../../../pdp11-aout/bin/
+LIBRARY_PATH=/usr/local/lib/gcc/pdp11-aout/4.6.4/:/usr/local/lib/gcc/pdp11-aout/4.6.4/../../../../pdp11-aout/lib/
+COLLECT_GCC_OPTIONS='-v' '-save-temps' '-c' '-S' '-Os' '-Wall' '-Wextra'
+pdp11-aout-gcc: avís: 2: fitxer d'entrada de l'enllaçador sense ùs perquè no es va fer enllaç

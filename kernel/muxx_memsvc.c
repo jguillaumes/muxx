@@ -15,49 +15,52 @@ static findFreeMMCB();               // Forward declaration
 ** 
 ** The routine DOES NOT set up the real PARs
 */
-WORD muxx_mem_getblock(WORD owner, WORD numBlocks, WORD flags, WORD page) {
+PMMCB muxx_mem_getblock(PTCB owner, WORD numBlocks, WORD flags, WORD page) {
   PMMCBT pmmcbt = mmcbtaddr;
   PMMCB  first = &(pmmcbt->mmcbt[0]); // First element of array is first in list
   PMMCB  cur = NULL, new=NULL;
+  WORD addr = 0;
   int found = 0;
   int numMMCB = 0;
   int curPL = 0;
 
-  if (numBlocks > 128) return (EINVVAL);
-  cur = first;
+  // Check limit of blocks (128 = 8KB)
+  if (numBlocks > 128) return (NULL);
 
-  curPL = setpl7();
+  cur = first;                        // Start scan of MMCBT
 
-  do {
-    if (cur->blockSize >= numBlocks) 
+  curPL = setpl7();                   // Interrupts off 
+
+  do {                                // Loop until we find a MMCB with
+    if (cur->blockSize >= numBlocks)  // enough free memory
       found = 1;
     else
       cur = cur->nextBlock;
   } while(cur != NULL && found == 0);
-  if (cur == NULL) return(ENOMEM);
+  if (cur == NULL) return(NULL);    // No luck: error
   
-  numMMCB = findFreeMMCB();
-  if (numMMCB == 0) return (ENOMEM);
+  numMMCB = findFreeMMCB();           // Find a free MMCB in the table
+  if (numMMCB == 0) return (NULL);  // If not, error
 
-  new = &pmmcbt->mmcbt[numMMCB];
-  cur->blockSize -= numBlocks;
-  new->blockSize = numBlocks;
+  new = &pmmcbt->mmcbt[numMMCB];      // Prepare new MMCB with the allocated
+  cur->blockSize -= numBlocks;        // memory, and modify old MMCB with
+  new->blockSize = numBlocks;         // the memory we are taking
   new->blockAddr = cur->blockAddr;
   cur->blockAddr += numBlocks;
 
-  new->ownerPID = owner;
+  new->ownerPID = owner->pid;         // Establish ownership of new MMCB
   new->ownerPAR = page;
   new->prevBlock = cur;
   if (cur->nextBlock != NULL) {
     cur->nextBlock->prevBlock = new;
   }
-  cur->nextBlock = new;
+  cur->nextBlock = new;               // Link new MMCB in the chain
   new->nextBlock = cur->nextBlock;
   new->mmcbFlags.word = flags;
 
-  setpl(curPL);
+  setpl(curPL);                       // Restore IPL
 
-  return (EOK);
+  return (new);
 }
 
 /*
@@ -147,6 +150,59 @@ int muxx_mem_init() {
   pmmcbt->mmcbt[4].mmcbFlags.flags.privBlock = 0;
   pmmcbt->mmcbt[4].mmcbFlags.flags.iopage = 1; 
 }
+
+/*
+** Setup the shared memory space for a new task
+*/
+int muxx_setup_task(PTCB task) {
+  PMMCB mcb = NULL;
+  int rc = EOK;
+
+  /*
+  ** Kernel common blocks
+  */
+  task->mmuState.upar[0] = 0;
+  task->mmuState.upar[1] = 0200;
+  task->mmuState.kpar[0] = 0;
+  task->mmuState.kpar[1] = 0200;
+
+
+  /*
+  ** Task private space
+  */
+  mcb = muxx_mem_getblock(task, 0200, 0, 2);
+  if (mcb != null) {
+    task->mmuState.upar[2] = mcb->blockAddr;
+    task->mmuState.kpar[2] = mcb->blockAddr;
+  } else {
+    return (ENOMEM);
+  }
+
+  /*
+  ** Task stack space
+  */
+  mcb = muxx_mem_getblock(task, 0100, 0, 6);
+  if (mcb != null) {
+    task->mmuState.upar[6] = mcb->blockAddr;
+    task->mmuState.kpar[6] = mcb->blockAddr;
+  } else {
+    return (ENOMEM);
+  }
+
+
+  /*
+  ** IOspace block
+  ** 
+  ** Map to user mode only if privileged process
+  */
+  task->mmustate.kpar[7] = 07600;
+  if (task->privileges.prvflags.ioprv || task->privileges.prvflags.oper) {
+    task->mmustate.upar[7] = 07600;
+  }
+
+  return (rc);
+}
+
 
 void muxx_mem_freeblock(WORD firstBlock, WORD blocks) {
 

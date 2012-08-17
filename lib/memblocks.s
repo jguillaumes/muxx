@@ -24,7 +24,7 @@
 //	
 	
 _memcopy:
-	procentry 3
+	procentry
 	clr	r0
 	
 	mov	2(r5),r1
@@ -48,8 +48,8 @@ _memcopy:
 	sob	r3,10$
 
 999$:
-	cleanup	3
-	rts	pc
+	procexit
+
 	.PAGE
 
 	.SBTTL memfill - Fill a	memory block
@@ -65,7 +65,7 @@ _memcopy:
 //	
 
 _memfill:
-	procentry 3
+	procentry
 	clr	r0
 	mov	2(r5),r1
 	movb	4(r5),r2
@@ -74,8 +74,8 @@ _memfill:
 10$:	mov	r2,(r1)+
 	sob	r3,10$
 
-	cleanup	3
-	rts	pc
+	procexit
+
 	.PAGE
 	
 	.SBTTL memclear - Zero fill a memory block
@@ -89,7 +89,7 @@ _memfill:
 //	
 
 _memclear:
-	procentry 2
+	procentry
 	clr	r0
 	mov	2(r5),r1
 	mov	4(r5),r2
@@ -97,8 +97,7 @@ _memclear:
 10$:	clr	(r1)+
 	sob	r2,10$
 
-	cleanup 2
-	rts	pc
+	procexit
 
 	.end
 	

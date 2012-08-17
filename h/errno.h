@@ -12,5 +12,8 @@
 #define EILLINST  5
 #define EINVVAL   6
 
+
+#define ENOIMPL   999
+
 #define _ERRNO_H
 #endif

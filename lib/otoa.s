@@ -16,7 +16,7 @@
 //**********************************************************************
 	azero = 0x30
 	
-_otoa:	procentry numregs=4
+_otoa:	procentry
 	clr	r0			// Return value
 	mov	4(r5),r1		// R1 => Number to convert
 	mov	6(r5),r2		// R2 => Output buffer address
@@ -36,5 +36,6 @@ _otoa:	procentry numregs=4
 	add	$azero,r4		// Add ASCII value of '0'
 	movb	r4,-(r2)		// Store last digit in buffer
 
-	cleanup	numregs=4
-	rts	pc
+	procexit
+
+	.end

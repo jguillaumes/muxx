@@ -10,102 +10,46 @@
 	.endm
 
 	/*
-	** Procedure call/trap frame setup
-	**
-	** This macro creates the standard frame in the stack after a
-	** procedure call or a trap/interrupt service.
-	**
-	** The stack frame after the macro expansion for a procedure call
-	** is:
-	**
-	**  +  8...	Parameter...
-	**  +  6	Parameter 2
-	**  +  4	Parameter 1
-	**  +  2	Return address
-	**  R5 =>       Old R5
-	**  -  2	[ Local variables ]
-	**  -  2+L	Saved R1    \
-	**  -  4+L	Saved R2    | Depending on the value of
-	**  -  6+L 	Saved R3    | the macro parameter numregs
-	**  -  8+L	Saved R4    /
-	**  - 10+L	[Saved R0]    If saver0=yes 
-	**  - 12+L 	Current R5
-	**
-	** For a trap/interrupt the stack will be:
-	**
-	**  +  4	Old PSW
-	**  +  2	Return address
-	**  R5 =>       Old R5
-	**  -  2	[ Local variables ]
-	**  -  2+L	Saved R1    \
-	**  -  4+L	Saved R2    | Depending on the value of
-	**  -  6+L 	Saved R3    | the macro parameter numregs
-	**  -  8+L	Saved R4    /
-	**  - 10+L	[Saved R0]    If saver0=yes 
-	**  - 12+L 	Current R5
+	** Procedure call frame setup
 	*/
-	.macro procentry numregs=4,local=0,saver0=no
-	;	// Prologue
-	mov	r5,-(sp)
-	mov	sp,r5
-	.ifgt	\local
-	sub	$\local,sp
+	.macro procentry local=0
+	mov	r5,-(sp)		// Save previous frame pointer
+	mov	sp,r5			// Set up current frame pointer
+	.ifgt \local
+	sub	$2*\local,sp		// Allocate space for local variables
 	.endif
-	.ifgt	\numregs
-	mov	r1,-(sp)
-	.ifgt	\numregs - 1
-	mov	r2,-(sp)
-	.ifgt	\numregs - 2
-	mov	r3,-(sp)
-	.ifgt	\numregs - 3
-	mov	r4,-(sp)
-	.ifgt	\numregs - 4
-	.error	"The upper limit for the number of pushed regs is 4"
-	.endif
-	.endif
-	.endif
-	.endif
-	.endif
-	.ifc	\saver0,yes
-	mov	r0,-(sp)
-	.endif
-	mov	r5,-(sp)
+	mov 	r2,-(sp)		// Push the GPRs...
+	mov	r3,-(sp)		//
+	mov	r4,-(sp)		//
+	mov	r5,-(sp)		// Push the current FP 
 	.endm
 
 	/*
-	** Procedure call / trap stack cleanup
-	** The numregs and saver0 parameters must be the same
-	** used in the corresponding procentry call.
-	** The macro expansion DOES NOT include the RTS nor RTT/RTI
-	** instruction
+	** Procedure clenaup and exit
 	*/
-	.macro cleanup numregs=4,saver0=no
-	;	// Epilogue
-	mov	(sp)+,r5
- 	.ifc	\saver0,yes
-	mov	(sp)+,r0
-	.endif
-	.ifgt	\numregs - 4
-	.error	"The upper limit for the number of pushed regs is 4"
-	.else
-	.ifgt	\numregs - 3
-	mov	(sp)+,r4
-	.endif
-	.ifgt	\numregs - 2
-	mov	(sp)+,r3
-	.endif
-	.ifgt	\numregs - 1
-	mov	(sp)+,r2
-	.endif
-	.ifgt	\numregs
-	mov	(sp)+,r1
-	.endif
-	.endif
-	mov	r5,sp
-	mov	(sp)+,r5
+	.macro procexit local=0
+	mov	(sp)+,r5		// Pull the current Frame Pointer
+	mov	-2*\local-6(r5),r4	// Pull the saved GPRs, 
+	mov	-2*\local-4(r5),r3	// relative to the frame pointer
+	mov	-2*\local-2(r5),r2
+	mov	r5,sp			// Cleanup local variables/saved GPRs
+	mov	(sp)+,r5		// Pull the previous frame pointer
+	rts	pc		 	// Return to caller
 	.endm
 
 
+	.macro traphandle handler
+	mov	r0,-(sp)		// Push R0
+	mov	r1,-(sp)		// Push R1
+	mov	sp,-(sp)		// Push current SP...
+	sub	$4,(sp)			// ... and make it point to FP
+	jsr	pc,\handler		// Call the real handler
+	add	$2,sp			// Toss FP in stack 
+	mov	(sp)+,r1		// Pull R1
+	mov	(sp)+,r0		// Pull R0
+	.endm
+
+	
 	/*
 	** Copy state of processor to specified area
 	**

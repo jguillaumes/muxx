@@ -31,6 +31,10 @@ extern WORD clkfreq;
 extern LONGWORD utime;
 extern LONGWORD datetime;
 
+extern LONGWORD utimeticks;
+extern WORD clkcountdown;
+extern WORD clkquantum;
+
 extern BYTE muxx_latches[LTC_LATCHES];
 
 #define _EXTERNALS_H

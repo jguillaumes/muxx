@@ -21,17 +21,24 @@ start:
 	jsr	pc,_muxx_mem_init		// Set up MMCBs
 	jsr	pc,trap_initialize		// Setup trap handlers
 	jsr	pc,muxx_systrap			// Setup syscall handlers
+
+	mov	$linitmsg,-(sp)			// Send init message to console
+	mov	$initmsg,-(sp)
+	jsr	pc,_putstrl
+	
 	jsr	pc,_muxx_tctinit		// Initialize task table
 	jsr	pc,_muxx_fakeproc		// Set up STARTUP task
-	jsr	pc,_muxx_clock_setup		// Setup clock interrupt...
+	jsr	pc,_muxx_clock_setup		// Setup clock interrupt..
 	jsr	pc,_muxx_clock_enable		// ... and enable it
 
-loop:	wait					// Wait for interrupts...
-	br	loop
-
-
-//	jsr	pc,_empty_proc
+	CREPRC $NTASKA,$0,$_taska,$0
+	CREPRC $NTASKB,$0,$_taskb,$0
 	
+loop:	wait					// Wait for interrupts...
+
+
+	
+
 	/*
 	mov	$EILLINST,-(sp)
 	jsr	pc,_panic
@@ -52,12 +59,16 @@ loop:	wait					// Wait for interrupts...
 	mov	r0,0120000			// Illegal memory
 	*/
 
-	mov	$linitmsg,-(sp)			// Send halt message to console
-	mov	$initmsg,-(sp)
-	jsr	pc,_kputstrl
+	br	loop
 	SYSHALT					// HALT syscall
 	
 	.data
 initmsg:
 	.ASCII	"Muxx starting up..."
 	linitmsg = . - initmsg
+NTASKA:	.ASCII	"TASKA   "
+NTASKB:	.ASCII 	"TASKB   "
+
+	.END
+
+	

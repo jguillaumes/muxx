@@ -47,7 +47,7 @@ _mmcbtaddr:	.WORD _mmcbt		// Address of MMCBT
 	
 _topspid:	.WORD 0			// Highest assigned system PID
 _minspid:	.WORD 00001		// Minimal assignable system PID
-_maxspid:	.WORD 00077		// Maximim assignable system PID
+_maxspid:	.WORD 00077		// Maximum assignable system PID
 
 _topupid:	.WORD 0			// Highest assigned user PID
 _minupid:	.WORD 00100		// Minimal assignable user PID

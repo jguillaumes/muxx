@@ -11,48 +11,35 @@
 	.GLOBAL _muxx_clock_disable
 	
 _muxx_clock_setup:
-	procentry numregs=0
+	procentry
 	mov	CPU.PSW,-(SP)
 	mov	$6,-(sp)
 	jsr	pc,_setpl
 	add	$2,sp
 	mov	$muxx_clock_svc,CLK.VECTOR
-	mov	$0040,CLK.VECTOR+2		// Kernel mode, IPL=4
+	mov	$0x0040,CLK.VECTOR+2		// Kernel mode, IPL=4
 	mov	(sp)+,CPU.PSW
-	cleanup numregs=0
-	rts	pc
+	procexit
 
 _muxx_clock_enable:
-	procentry numregs=0
+	procentry
 	bis	$000100,CLK.LKS			// Set interrupt enable
-	cleanup	numregs=0
-	rts	pc
+	procexit
 
 _muxx_clock_disable:
-	procentry numregs=0
+	procentry 
 	bic	$000100,CLK.LKS			// Clear interrupt enable
-	cleanup	numregs=0
-	rts	pc
+	procexit
 	
 muxx_clock_svc:
-	procentry saver0=yes
-	inc	_utimeticks
-	bne	5$
-	inc	_utimeticks+2
-
-5$:	dec	_clkcountdown
-	bne	10$
-
-	halt
-	savecputask
-	halt
-	
-	jsr	pc,_muxx_check_quantums
-	mov	_clkquantum,_clkcountdown
-
-10$:	jsr	pc,_muxx_check_timers
-
-	cleanup saver0=yes
-	rti
+	mov	r0,-(sp)		// Push R0
+	mov	r1,-(sp)		// Push R1
+	mov	sp,-(sp)		// Push current SP...
+	sub	$4,(sp)			// ... and make it point to FP
+	jsr	pc,_muxx_clock_handler	// Call C clockhandler
+	add	$2,sp			// Toss FP in stack 
+	mov	(sp)+,r1		// Pull R1
+	mov	(sp)+,r0		// Pull R0
+	rti 				// Interrupt done
 
 	.end
