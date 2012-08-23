@@ -2,6 +2,18 @@
 #include "muxxdef.h"
 #include "externals.h"
 #include "errno.h"
+#include "kernfuncs.h"
+
+int reusespid() {
+  panic("REUSESPID");
+  return(0);
+}
+
+int reuseupid() {
+  panic("REUSEUPID");
+  return(0);
+}
+
 
 int muxx_taskinit(int type, WORD ppid, ADDRESS entry, WORD privs) {
   WORD pid = 0;
@@ -49,17 +61,12 @@ int muxx_taskinit(int type, WORD ppid, ADDRESS entry, WORD privs) {
   ptcta->tctTable[found].privileges.prvword = privs;
   ptcta->tctTable[found].cpuState.pc = (WORD) entry;
   ptcta->tctTable[found].cpuState.psw = 0xC000;      // User mode, interrupts on
-  ptcta->tctTable[found].cpuState.sp = ustackt;
-  ptcta->tctTable[found].cpuState.usp = ustackt;
-  ptcta->tctTable[found].cpuState.ksp = kstackt;
+  ptcta->tctTable[found].cpuState.sp =  (WORD) ustackt;
+  ptcta->tctTable[found].cpuState.usp = (WORD) ustackt;
+  ptcta->tctTable[found].cpuState.ksp = (WORD) kstackt;
   ptcta->tctTable[found].status = TSK_INIT;
+
+
   return found;
 }
 
-int reusespid() {
-  panic("REUSESPID");
-}
-
-int reuseupid() {
-  panic("REUSEUPID");
-}

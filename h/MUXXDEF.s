@@ -54,7 +54,8 @@
 	TSK_READY = 1
 	TSK_BLOCKED = 2
 	TSK_RUN = 3
-	TSK_DISPOSE = 4
+	TSK_SUSP = 4
+	TSK_DISPOSE = 5
 /*
 ** System latches
 */

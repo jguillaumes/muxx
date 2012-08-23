@@ -2,9 +2,9 @@
 #include "muxxdef.h"
 #include "errno.h"
 #include "config.h"
-
-extern int conputc(char);
-extern int muxx_svc_creprc(char *, int, ADDRESS, WORD);
+#include "kernfuncs.h"
+#include "muxxlib.h"
+#include "externals.h"
 
 typedef int (*SVC)(int,...);
 
@@ -14,11 +14,36 @@ struct SVC_S {
 };
 
 static int muxx_svc_conputc(char c) {
- kconputc(c);
+ return kconputc(c);
 }
 
 static int muxx_svc_muxxhlt() {
   asm("halt");
+  return 0;
+}
+
+static int muxx_svc_suspend(PTCB task) {
+  PTCB theTask = NULL;
+
+  if (task == NULL) {
+    theTask = curtcb;
+  } else {
+    theTask = task;
+    if (curtcb->privileges.prvflags.operprv ||
+        (curtcb->uic == theTask->uic)) {
+      muxx_qRemoveTask(readyq, theTask);
+    } else {
+      return ENOPRIV;
+    }
+  }
+  
+  theTask->status = TSK_SUSP;
+  muxx_qAddTask(suspq, theTask);
+  if (theTask == curtcb) {
+    copyMMUstate();
+    muxx_schedule();
+  }
+  return EOK;
 }
 
 static int muxx_unimpl() {
@@ -35,7 +60,7 @@ int muxx_systrap_handler(int numtrap, WORD p1, WORD p2, WORD p3, WORD p4) {
     {(SVC) muxx_unimpl, 0},	  //  5:
     {(SVC) muxx_unimpl, 0},	  //  6:
     {(SVC) muxx_unimpl, 0},	  //  7:
-    {(SVC) muxx_unimpl, 0},	  //  8:
+    {(SVC) muxx_svc_suspend, 1},  //  8:
     {(SVC) muxx_unimpl, 0},	  //  9:
     {(SVC) muxx_unimpl, 0},	  // 10:
     {(SVC) muxx_unimpl, 0},	  // 11:
@@ -63,15 +88,15 @@ int muxx_systrap_handler(int numtrap, WORD p1, WORD p2, WORD p3, WORD p4) {
   
   static int trap_table_entries = sizeof(trap_table)/sizeof(void *());	
 
-  struct SVC_S *syssvc;
-  int (*svcimpl)();
+  //  struct SVC_S *syssvc;
+  // int (*svcimpl)();
   int rc=0;
 
   if (numtrap < 0 || numtrap > trap_table_entries) {
     return(EINVVAL);
   }
 
-  syssvc = &(trap_table[numtrap]);
+  // syssvc = &(trap_table[numtrap]);
  
   // Temporary fix for gas assembler bug (it does not assemble
   // correctly JSR PC,@(R0) ).
@@ -87,6 +112,9 @@ int muxx_systrap_handler(int numtrap, WORD p1, WORD p2, WORD p3, WORD p4) {
       break;
     case SRV_CREPRC:
       rc = muxx_svc_creprc((char *) p1,(int) p2,(ADDRESS) p3,(WORD) p4);
+      break;
+    case SRV_SUSPEND:
+      rc = muxx_svc_suspend((PTCB) p1);
       break;
     default:
       rc = muxx_unimpl();

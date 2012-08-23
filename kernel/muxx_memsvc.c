@@ -4,9 +4,22 @@
 #include "muxxdef.h"
 #include "externals.h"
 #include "errno.h"
+#include "spl.h"
 
-static findFreeMMCB();               // Forward declaration
+#define PDR_ACC_RW 0x0006
+#define PDR_ACC_RO 0x0004
+#define PDR_ACC_NA 0x0000
 
+#define PDR_DIR_UP 0x0000 
+#define PDR_DIR_DN 0x0008
+
+#define PDR_SIZ_0K 0x0000
+#define PDR_SIZ_1K 0x1000
+#define PDR_SIZ_2K 0x2000
+#define PDR_SIZ_4K 0x4000
+#define PDR_SIZ_8K 0x7F00
+
+int findFreeMMCB();               // Forward declaration
 
 /*
 ** Get free memory.
@@ -19,7 +32,6 @@ PMMCB muxx_mem_getblock(PTCB owner, WORD numBlocks, WORD flags, WORD page) {
   PMMCBT pmmcbt = mmcbtaddr;
   PMMCB  first = &(pmmcbt->mmcbt[0]); // First element of array is first in list
   PMMCB  cur = NULL, new=NULL;
-  WORD addr = 0;
   int found = 0;
   int numMMCB = 0;
   int curPL = 0;
@@ -29,18 +41,18 @@ PMMCB muxx_mem_getblock(PTCB owner, WORD numBlocks, WORD flags, WORD page) {
 
   cur = first;                        // Start scan of MMCBT
 
-  curPL = setpl7();                   // Interrupts off 
-
   do {                                // Loop until we find a MMCB with
-    if (cur->blockSize >= numBlocks)  // enough free memory
+    if (cur->ownerPID == 0  &&        // Non-owned memory 
+	cur->blockSize >= numBlocks)  // enough free memory
       found = 1;
     else
-      cur = cur->nextBlock;
+      cur = cur->nextBlock;           // Check next MMCB in the chain
   } while(cur != NULL && found == 0);
-  if (cur == NULL) return(NULL);    // No luck: error
+
+  if (cur == NULL) return(NULL);      // No luck: error
   
   numMMCB = findFreeMMCB();           // Find a free MMCB in the table
-  if (numMMCB == 0) return (NULL);  // If not, error
+  if (numMMCB == 0) panic("PANIC2"); // return (NULL);    // If not, error
 
   new = &pmmcbt->mmcbt[numMMCB];      // Prepare new MMCB with the allocated
   cur->blockSize -= numBlocks;        // memory, and modify old MMCB with
@@ -58,8 +70,6 @@ PMMCB muxx_mem_getblock(PTCB owner, WORD numBlocks, WORD flags, WORD page) {
   new->nextBlock = cur->nextBlock;
   new->mmcbFlags.word = flags;
 
-  setpl(curPL);                       // Restore IPL
-
   return (new);
 }
 
@@ -72,7 +82,7 @@ PMMCB muxx_mem_getblock(PTCB owner, WORD numBlocks, WORD flags, WORD page) {
 ** 
 */
 int muxx_mem_init() {
-  int i = 0;
+  int i = 0, rc=0;
   PMMCBT pmmcbt = mmcbtaddr;
 
   memset((void *) pmmcbt ,0 ,sizeof(MMCBT));
@@ -108,27 +118,24 @@ int muxx_mem_init() {
   pmmcbt->mmcbt[1].mmcbFlags.flags.privBlock = 1;
   pmmcbt->mmcbt[1].mmcbFlags.flags.iopage = 0;
 
-  /*
-  ** Stack block
-  */
   pmmcbt->mmcbt[2].blockAddr = 0400;     // Next block of physical memory
-  pmmcbt->mmcbt[2].blockSize = 0100;     // 4 KB for stack
+  pmmcbt->mmcbt[2].blockSize = 0200;
   pmmcbt->mmcbt[2].ownerPID = 1;
-  pmmcbt->mmcbt[2].ownerPAR = 6;         // Page 6, just below iospace
+  pmmcbt->mmcbt[2].ownerPAR = 1;
   pmmcbt->mmcbt[2].prevBlock = &(pmmcbt->mmcbt[1]);
   pmmcbt->mmcbt[2].nextBlock = &(pmmcbt->mmcbt[3]);
-  pmmcbt->mmcbt[2].mmcbFlags.flags.sharedBlock = 0;
-  pmmcbt->mmcbt[2].mmcbFlags.flags.fixedBlock = 0;
-  pmmcbt->mmcbt[2].mmcbFlags.flags.privBlock = 0;
+  pmmcbt->mmcbt[2].mmcbFlags.flags.sharedBlock = 1;
+  pmmcbt->mmcbt[2].mmcbFlags.flags.fixedBlock = 1;
+  pmmcbt->mmcbt[2].mmcbFlags.flags.privBlock = 1;
   pmmcbt->mmcbt[2].mmcbFlags.flags.iopage = 0;
 
   /*
-  ** Free space
+  ** Stack block
   */
-  pmmcbt->mmcbt[3].blockAddr = 00500;    // Next block of physical memory
-  pmmcbt->mmcbt[3].blockSize = 07500;    // Rest of physical up to 256K
-  pmmcbt->mmcbt[3].ownerPID = 0;         // Unallocated         
-  pmmcbt->mmcbt[3].ownerPAR = 0;         // Not mapped
+  pmmcbt->mmcbt[3].blockAddr = 0600;     // Next block of physical memory
+  pmmcbt->mmcbt[3].blockSize = 0100;     // 4 KB for stack
+  pmmcbt->mmcbt[3].ownerPID = 1;
+  pmmcbt->mmcbt[3].ownerPAR = 6;         // Page 6, just below iospace
   pmmcbt->mmcbt[3].prevBlock = &(pmmcbt->mmcbt[2]);
   pmmcbt->mmcbt[3].nextBlock = &(pmmcbt->mmcbt[4]);
   pmmcbt->mmcbt[3].mmcbFlags.flags.sharedBlock = 0;
@@ -137,24 +144,41 @@ int muxx_mem_init() {
   pmmcbt->mmcbt[3].mmcbFlags.flags.iopage = 0;
 
   /*
+  ** Free space
+  */
+  pmmcbt->mmcbt[4].blockAddr = 00700;    // Next block of physical memory
+  pmmcbt->mmcbt[4].blockSize = 07100;    // Rest of physical up to 256K
+  pmmcbt->mmcbt[4].ownerPID = 0;         // Unallocated         
+  pmmcbt->mmcbt[4].ownerPAR = 0;         // Not mapped
+  pmmcbt->mmcbt[4].prevBlock = &(pmmcbt->mmcbt[3]);
+  pmmcbt->mmcbt[4].nextBlock = &(pmmcbt->mmcbt[5]);
+  pmmcbt->mmcbt[4].mmcbFlags.flags.sharedBlock = 0;
+  pmmcbt->mmcbt[4].mmcbFlags.flags.fixedBlock = 0;
+  pmmcbt->mmcbt[4].mmcbFlags.flags.privBlock = 0;
+  pmmcbt->mmcbt[4].mmcbFlags.flags.iopage = 0;
+
+  /*
   ** IOSPACE mapping
   */
-  pmmcbt->mmcbt[4].blockAddr = 07600;     // IOSPACE block
-  pmmcbt->mmcbt[4].blockSize = 00200;     // 8 KB, architecture defined
-  pmmcbt->mmcbt[4].ownerPID = 1;
-  pmmcbt->mmcbt[4].ownerPAR = 7;         // Page 7, IOSPACE mapping
-  pmmcbt->mmcbt[4].prevBlock = &(pmmcbt->mmcbt[3]);
-  pmmcbt->mmcbt[4].nextBlock = NULL;
-  pmmcbt->mmcbt[4].mmcbFlags.flags.sharedBlock = 1;
-  pmmcbt->mmcbt[4].mmcbFlags.flags.fixedBlock = 1;
-  pmmcbt->mmcbt[4].mmcbFlags.flags.privBlock = 0;
-  pmmcbt->mmcbt[4].mmcbFlags.flags.iopage = 1; 
+  pmmcbt->mmcbt[5].blockAddr = 07600;     // IOSPACE block
+  pmmcbt->mmcbt[5].blockSize = 00200;     // 8 KB, architecture defined
+  pmmcbt->mmcbt[5].ownerPID = 1;
+  pmmcbt->mmcbt[5].ownerPAR = 7;         // Page 7, IOSPACE mapping
+  pmmcbt->mmcbt[5].prevBlock = &(pmmcbt->mmcbt[4]);
+  pmmcbt->mmcbt[5].nextBlock = NULL;
+  pmmcbt->mmcbt[5].mmcbFlags.flags.sharedBlock = 1;
+  pmmcbt->mmcbt[5].mmcbFlags.flags.fixedBlock = 1;
+  pmmcbt->mmcbt[5].mmcbFlags.flags.privBlock = 0;
+  pmmcbt->mmcbt[5].mmcbFlags.flags.iopage = 1; 
+
+  return rc;
+
 }
 
 /*
 ** Setup the shared memory space for a new task
 */
-int muxx_setup_task(PTCB task) {
+int muxx_setup_taskmem (PTCB task) {
   PMMCB mcb = NULL;
   int rc = EOK;
 
@@ -162,18 +186,23 @@ int muxx_setup_task(PTCB task) {
   ** Kernel common blocks
   */
   task->mmuState.upar[0] = 0;
+  task->mmuState.updr[0] = PDR_ACC_RW | PDR_SIZ_8K; // Should be RO
   task->mmuState.upar[1] = 0200;
+  task->mmuState.updr[1] = PDR_ACC_RW | PDR_SIZ_8K; // Should be RO
   task->mmuState.kpar[0] = 0;
+  task->mmuState.kpdr[0] = PDR_ACC_RW | PDR_SIZ_8K;
   task->mmuState.kpar[1] = 0200;
-
+  task->mmuState.kpdr[1] = PDR_ACC_RW | PDR_SIZ_8K;
 
   /*
   ** Task private space
   */
   mcb = muxx_mem_getblock(task, 0200, 0, 2);
-  if (mcb != null) {
+  if (mcb != NULL) {
     task->mmuState.upar[2] = mcb->blockAddr;
+    task->mmuState.updr[2] = PDR_ACC_RW | PDR_SIZ_8K;
     task->mmuState.kpar[2] = mcb->blockAddr;
+    task->mmuState.kpdr[2] = PDR_ACC_RW | PDR_SIZ_8K;
   } else {
     return (ENOMEM);
   }
@@ -182,9 +211,11 @@ int muxx_setup_task(PTCB task) {
   ** Task stack space
   */
   mcb = muxx_mem_getblock(task, 0100, 0, 6);
-  if (mcb != null) {
+  if (mcb != NULL) {
     task->mmuState.upar[6] = mcb->blockAddr;
+    task->mmuState.updr[6] = PDR_ACC_RW | PDR_SIZ_4K | PDR_DIR_DN;
     task->mmuState.kpar[6] = mcb->blockAddr;
+    task->mmuState.kpdr[6] = PDR_ACC_RW | PDR_SIZ_4K | PDR_DIR_DN;
   } else {
     return (ENOMEM);
   }
@@ -195,11 +226,18 @@ int muxx_setup_task(PTCB task) {
   ** 
   ** Map to user mode only if privileged process
   */
-  task->mmustate.kpar[7] = 07600;
-  if (task->privileges.prvflags.ioprv || task->privileges.prvflags.oper) {
-    task->mmustate.upar[7] = 07600;
+  task->mmuState.kpar[7] = 07600;
+  task->mmuState.kpdr[7] = PDR_ACC_RW | PDR_SIZ_8K;
+  if (task->privileges.prvflags.ioprv || task->privileges.prvflags.operprv) {
+    task->mmuState.upar[7] = 07600;
+    task->mmuState.updr[7] = PDR_ACC_RW | PDR_SIZ_8K;
+  } else if (task->privileges.prvflags.auditprv) {
+    task->mmuState.upar[7] = 07600;
+    task->mmuState.updr[7] = PDR_ACC_RO | PDR_SIZ_8K;
+  } else {
+    task->mmuState.upar[7] = 0;
+    task->mmuState.updr[7] = PDR_ACC_NA | PDR_SIZ_0K;
   }
-
   return (rc);
 }
 
@@ -208,13 +246,13 @@ void muxx_mem_freeblock(WORD firstBlock, WORD blocks) {
 
 }
 
-static int findFreeMMCB() {
+int findFreeMMCB() {
   PMMCBT pmmcbt = mmcbtaddr;
   int i=0;
   int found=0; 
 
-  for (i=0; i<pmmcbt->numEntries && (!found) ; i++) {
-    if (pmmcbt->mmcbt[i].ownerPID == 0) found = i;
+  for (i=0; (i < pmmcbt->numEntries) && (!found) ; i++) {
+    if (pmmcbt->mmcbt[i].ownerPID == -1) found=i;
   }
   return found;
 }

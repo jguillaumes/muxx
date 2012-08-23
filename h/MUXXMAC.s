@@ -35,4 +35,17 @@
 	add	$10,sp
 	.endm
 
+	.macro SUSPEND tcb
+	sub	$4,sp			// Room for parmlist
+	mov	$1,sp			// Size = 1
+	tst	\tcb			// null pointer?
+	bne	10$			// No, use its value
+	mov	_curtcb,2(sp)
+	br	20$
+10$:	mov	\tcb,2(sp)
+20$:	mov	sp, r0
+	trap	$SRV_SUSPEND
+	add	$4,sp
+	.endm
+	
 	.LIST

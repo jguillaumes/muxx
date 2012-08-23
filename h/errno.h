@@ -11,7 +11,7 @@
 #define ETCTFULL  4
 #define EILLINST  5
 #define EINVVAL   6
-
+#define ENOPRIV   7
 
 #define ENOIMPL   999
 

@@ -4,9 +4,7 @@
 int congetc();
 int conputc(char);
 
-int kgetlin(char *buffer, int size, char *terms, int termsize);
-int kputstr(char *buffer, int size);
-int kputstrl(char *buffer, int size);
+
 
 void otoa(WORD const, char *);
 void htoa(WORD const, char *);

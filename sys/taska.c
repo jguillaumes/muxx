@@ -1,7 +1,10 @@
 #include "muxx.h"
 
-static char msga[] = ">>> AAA - This is task A - AAA <<<"; 
+static char msga[] = ">>> AAA - This is task A - AAA <<<\r\n"; 
 
 taska() {
-  for(;;)   kputstr(msga,sizeof(msga)-1);
+  for(;;) {
+    // asm ("wait");
+    putstrz(msga);
+  }
 }

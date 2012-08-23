@@ -119,19 +119,47 @@
 	MMU.MMR2	= 0177576 	// Mem. Mgt. Reg #2
 	MMU.MMR3	= 0172516	// Mem. Mgt. Reg #3
 
-	MMU.UIDR0	= 0177600	// User I space descriptor reg
+	MMU.UISDR0	= 0177600	// User I space descriptor reg
+	MMU.UISDR1	= 0177602	// User I space descriptor reg
+	MMU.UISDR2	= 0177604	// User I space descriptor reg
+	MMU.UISDR3	= 0177606	// User I space descriptor reg
+	MMU.UISDR4	= 0177610	// User I space descriptor reg
+	MMU.UISDR5	= 0177612	// User I space descriptor reg
+	MMU.UISDR6	= 0177614	// User I space descriptor rge
+	MMU.UISDR7	= 0177616	// User I space descriptor rge
 	MMU.UDSDR0	= 0177620	// User D space descriptor reg.
 	MMU.UISAR0	= 0177640	// User I space address reg.
+	MMU.UISAR1	= 0177642	// User I space address reg.
+	MMU.UISAR2	= 0177644	// User I space address reg.
+	MMU.UISAR3	= 0177646	// User I space address reg.
+	MMU.UISAR4	= 0177650	// User I space address reg.
+	MMU.UISAR5	= 0177652	// User I space address reg.
+	MMU.UISAR6	= 0177654	// User I space address reg.
+	MMU.UISAR7	= 0177656	// User I space address reg.
+	
 	MMU.UDSAR0	= 0177660	// User D space address reg.
 	MMU.SISDR0	= 0172200	// Supervisor I space descriptor reg.
-	MMU.SDDR0	= 0172220	// Supervisor D space descriptor reg.
+	MMU.SDSDR0	= 0172220	// Supervisor D space descriptor reg.
 	MMU.SISAR0	= 0172240	// Supervisor I space address reg.
 	MMU.SDSAR0	= 0172260	// Supervisor D space address reg.
 	MMU.KISDR0	= 0172300	// Kernel I space descriptor reg.
+	MMU.KISDR1	= 0172302	// Kernel I space descriptor reg.
+	MMU.KISDR2	= 0172304	// Kernel I space descriptor reg.
+	MMU.KISDR3	= 0172306	// Kernel I space descriptor reg.
+	MMU.KISDR4	= 0172310	// Kernel I space descriptor reg.
+	MMU.KISDR5	= 0172312	// Kernel I space descriptor reg.
+	MMU.KISDR6	= 0172314	// Kernel I space descriptor reg.
+	MMU.KISDR7	= 0172316	// Kernel I space descriptor reg.
 	MMU.KDSDR0	= 0172320	// Kernel D space descriptor reg.
 	MMU.KISAR0	= 0172340	// Kernel I space address reg.
+	MMU.KISAR1	= 0172342	// Kernel I space address reg.
+	MMU.KISAR2	= 0172344	// Kernel I space address reg.
+	MMU.KISAR3	= 0172346	// Kernel I space address reg.
+	MMU.KISAR4	= 0172350	// Kernel I space address reg.
+	MMU.KISAR5	= 0172352	// Kernel I space address reg.
+	MMU.KISAR6	= 0172354	// Kernel I space address reg.
+	MMU.KISAR7	= 0172356	// Kernel I space address reg.
 	MMU.KDSAR0	= 0172360	// Kernel D space address reg.
-
 
 	/*
 	** Kernel config constants
@@ -147,5 +175,7 @@
 
 	CPU_HAS_SPL = 0
 	CPU_HAS_ERROR = 1
-
+	CPU_HAS_SUPER = 0
+	CPU_HAS_SEPID = 0
+	
 	.LIST

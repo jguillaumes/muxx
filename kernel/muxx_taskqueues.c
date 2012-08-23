@@ -39,3 +39,34 @@ PTCB muxx_qGetTask(PTQUEUE queue) {
   theTask->nextInQueue = NULL;
   return theTask;
 }
+
+PTCB muxx_qRemoveTask(PTQUEUE queue, PTCB task) {
+  PTCB theTask = NULL;
+
+  if (queue->count == 0) return NULL;
+
+  theTask = queue->head;
+
+  while(theTask != task && theTask != NULL) {
+    theTask = theTask->nextInQueue;
+  }
+
+  if (theTask == NULL) {
+    return NULL;
+  } else {
+    if (theTask->prevInQueue != NULL) {
+      theTask->prevInQueue = theTask->nextInQueue;
+    } else {
+      queue->head = theTask->nextInQueue;
+    }
+    if (theTask->nextInQueue != NULL) {
+      theTask->nextInQueue->prevInQueue = theTask->prevInQueue;
+    } else {
+      queue->tail = theTask->prevInQueue;
+    }
+    queue->count--;
+    theTask->nextInQueue = NULL;
+    theTask->prevInQueue = NULL;
+    return theTask;
+  }
+}

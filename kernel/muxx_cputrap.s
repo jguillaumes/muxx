@@ -25,9 +25,9 @@ trap_initialize:
 
 	setvec	VEC.CPUERR,$trap_cpuerr,r1
 	setvec	VEC.ILLINS,$trap_illins,r1
-	setvec	VEC.TRACE,r0,r1
+	setvec	VEC.TRACE,$trap_trace,r1
 	setvec	VEC.IOT,$trap_iot,r1
-	setvec	VEC.POWER,r0,r1
+	setvec	VEC.POWER,$trap_power,r1
 	setvec	VEC.BUSERR,$trap_buserr,r1
 	setvec	VEC.FPERR,$trap_fperr,r1
 	setvec	VEC.MMUERR,$trap_mmuerr,r1
@@ -63,6 +63,18 @@ trap_mmuerr:
 	traphandle _muxx_handle_mmuerr
 	halt
 0$:	br	0$
+
+
+trap_trace:
+	traphandle _muxx_handle_trace
+	halt
+0$:	br	0$
+
+trap_power:
+	traphandle _muxx_handle_power
+	halt
+0$:	br	0$
+
 	
 trap_unimplemented:
 	traphandle _muxx_handle_unimpl

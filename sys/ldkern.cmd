@@ -19,7 +19,7 @@ SECTIONS
     . = ALIGN(0100);
     PROVIDE(tempstack = .);
     PROVIDE(scratchpad = .);
-    . = . + 64;
+    . = . + 256;
     PROVIDE(tempstackt = .);
     . = ALIGN(0100);
   }

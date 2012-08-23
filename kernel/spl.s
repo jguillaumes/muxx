@@ -24,7 +24,6 @@ _setpl7:
 
 _setpl0:
 	procentry
-	halt
 	.if CPU_HAS_SPL==1
 	mov	CPU.PSW,r0
 	spl	0

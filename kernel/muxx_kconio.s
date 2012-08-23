@@ -39,6 +39,12 @@
 
 _kconputc:
 	procentry
+	mov	4(r5),r0
+	jsr	pc,kconputch
+	procexit
+	
+kconputch:
+	mov	r2,-(sp)
 	mov 	$NRETRY, r1	// R1 <= Retries (wait loop)
 10$:
 	mov	CON.XCSR,r2	// R2 <= Transmit control register
@@ -59,8 +65,8 @@ _kconputc:
 
 40$:	mov	$0, r0		// Everything OK, RC=0
 999$:
-	procexit
-
+	mov	(sp)+,r2
+	rts	pc
 
 	.PAGE
 	
@@ -114,7 +120,7 @@ _kputstr:
 	mov	6(r5),r2
 	mov	4(r5),r3
 10$:	movb	(r3)+,r0
-	jsr	pc,_kconputc
+	jsr	pc,kconputch
 	sob	r2,10$
 	procexit
 
@@ -123,7 +129,7 @@ _kputstrz:
 	mov	4(r5),r2
 10$:	movb	(r2)+,r0
 	beq	20$
-	jsr	pc,_kconputc
+	jsr	pc,kconputch
 	br	10$
 20$:	procexit
 
@@ -132,7 +138,7 @@ _kputstrl:
 	mov	6(r5),-(sp)
 	mov	4(r5),-(sp)
 	jsr	pc,_kputstr
-	sub	$4,sp
+	add	$4,sp
 	mov	$2,-(sp)
 	mov	$crlf,-(sp)
 	jsr	pc,_kputstr
@@ -150,8 +156,8 @@ _kputstrzl:
 	add	$4,sp
 	procexit
 
+	
 	.data
 crlf:	.ascii	"\n\r"
 
-	.end
-
+	.END

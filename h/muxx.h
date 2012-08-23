@@ -9,13 +9,13 @@
 ** Contains the values of all the GPRs and the three stack pointers
 */
 struct CPUSTATE_S {
-  WORD gpr[6];
-  WORD sp;
-  WORD pc;
-  WORD psw;
-  WORD usp;
-  WORD ssp;
-  WORD ksp;
+  WORD gpr[6];          //   0
+  WORD sp;              // +12
+  WORD pc;              // +14
+  WORD psw;             // +16
+  WORD usp;             // +18
+  WORD ssp;             // +20
+  WORD ksp;             // +22
 };
 
 typedef struct CPUSTATE_S CPUSTATE;
@@ -29,8 +29,13 @@ typedef struct CPUSTATE_S CPUSTATE;
 */
 struct MMUSTATE_S {
   WORD upar[8];
+  WORD updr[8];
+#if CPU_HAS_SUPER == 1
   WORD spar[8];
+  WORD spdr[8];
+#endif
   WORD kpar[8];
+  WORD kpdr[8];
 };
 
 typedef struct MMUSTATE_S MMUSTATE;
@@ -65,9 +70,10 @@ struct TCB_S {
   union {
     WORD prvword;
     struct {
-      int operprv  :1;       // Operation privilege (full access)
+       int operprv  :1;       // Operation privilege (full access)
       int ioprv    :1;       // I/O privilege (access to iospace)
-      int filler   :14;
+      int auditprv :1;       // Can see any memory page 
+      int filler   :13;
     } prvflags;
   } privileges;
   WORD taskType;             // Kernel or User task
@@ -148,6 +154,9 @@ typedef struct MMCB_S *PMMCB;
 
 typedef struct MMCBT_S MMCBT;
 typedef struct MMCBT_S *PMMCBT;
+
+void panic(char *);
+
 
 
 #define _MUXX_H

@@ -2,6 +2,9 @@
 #include <muxxlib.h>
 #include <string.h>
  
+static char CRLF[]="\r\n";
+
+
 int getlin(char *buffer, int size, char *term, int termsiz) {
 
   BYTE inchar;
@@ -30,21 +33,25 @@ int putstr(char *buffer, int size) {
 }
 
 int putstrl(char *buffer, int size) {
-  static char *cr="\n\r";
   int rc=0;
  
   rc = kputstr(buffer, size);
-  if (rc==0) rc = kputstr(cr, 2);
+  if (rc==0) rc = putstr(CRLF, 2);
   return rc;
 }
 
 int putstrz(char *buffer) {
-  int s = strlen(buffer);
-  return putstr(buffer,s);
+  int rc=0;
+  char *ptr=buffer;
+
+  while((*ptr != 0) && (rc==0)) {
+    rc = conputc(*ptr++);
+  }
+  return rc;
 }
 
 int putstrzl(char *buffer) {
   int rc = putstrz(buffer);
-  if (rc == 0) rc = putstr("\n",1);
+  if (rc == 0) rc = putstr(CRLF,2);
   return rc;
 }

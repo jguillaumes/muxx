@@ -54,7 +54,8 @@
 #define TSK_READY    1
 #define TSK_BLOCKED  2
 #define TSK_RUN      3
-#define TSK_DISPOSE  4
+#define TSK_SUSP     4
+#define TSK_DISPOSE  5
 
 /*
 ** System latches
