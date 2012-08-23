@@ -1,925 +1,0 @@
-Logging to file "pdp11.log"
-sim> g
-Muxx starting up...
-001340
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle002176
- task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle tas002176
-k
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-I002176
-dle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle 002176
-task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task002176
-
-TCB at address 025662 (STARTUP ) PID   : 000001 
-Status: 000001 
-Flags : 155732 
-Privs : 000007 
-Type  : 000001 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002176 
- PSW=140010,USP=155732,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002176 
-157774: 140010 
-157776: 000000 
-
-TCB at address 026064 (TASKA   ) PID   : 000002 
-Status: 000000 
-Flags : 000000 
-Privs : 000000 
-Type  : 000002 
- 
-  R0=000000, R1=000000, R2=000000, R3=000000 
-  R4=000000, R5=000000, SP=155776, PC=001200 
- PSW=140000,USP=155776,SSP=000000,KSP=157776 
- CM:3 PM:0 IPL:0 C- V- Z- N- T-
-
-8 top stack words:
-155776: 000000 
-156000: 000000 
-156002: 000000 
-156004: 000000 
-156006: 000000 
-156010: 000000 
-156012: 000000 
-001200
->>> AAA - This is task A - AAA <<<
->>> AAA - This is002176
- task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is002176
- task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This i002176
-s task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This 002210
-is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This 002176
-
-TCB at address 026064 (TASKA   ) PID   : 000002 
-Status: 000001 
-Flags : 155736 
-Privs : 000000 
-Type  : 000002 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002176 
- PSW=140010,USP=155736,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002176 
-157774: 140010 
-157776: 000000 
-
-TCB at address 025662 (STARTUP ) PID   : 000001 
-Status: 000001 
-Flags : 155732 
-Privs : 000007 
-Type  : 000001 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002176 
- PSW=140010,USP=155732,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002176 
-157774: 140010 
-157776: 000000 
-002176
-
-Idle task
-Idle002176
- task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle tas002176
-k
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-I002176
-dle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle 002176
-task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task002176
-
-TCB at address 025662 (STARTUP ) PID   : 000001 
-Status: 000001 
-Flags : 155732 
-Privs : 000007 
-Type  : 000001 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002176 
- PSW=140010,USP=155732,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002176 
-157774: 140010 
-157776: 000000 
-
-TCB at address 026064 (TASKA   ) PID   : 000002 
-Status: 000001 
-Flags : 155736 
-Privs : 000000 
-Type  : 000002 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002176 
- PSW=140010,USP=155736,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002176 
-157774: 140010 
-157776: 000000 
-002176
-is task A - AAA <<002176
-<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<002176
-<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <002176
-<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA 002220
-<<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA 002176
-
-TCB at address 026064 (TASKA   ) PID   : 000002 
-Status: 000001 
-Flags : 155736 
-Privs : 000000 
-Type  : 000002 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002176 
- PSW=140010,USP=155736,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002176 
-157774: 140010 
-157776: 000000 
-
-TCB at address 025662 (STARTUP ) PID   : 000001 
-Status: 000001 
-Flags : 155732 
-Privs : 000007 
-Type  : 000001 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002176 
- PSW=140010,USP=155732,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002176 
-157774: 140010 
-157776: 000000 
-002176
-
-Idle task
-Idle002176
- task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle tas002176
-k
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-I002176
-dle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle 002176
-task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task002176
-
-TCB at address 025662 (STARTUP ) PID   : 000001 
-Status: 000001 
-Flags : 155732 
-Privs : 000007 
-Type  : 000001 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002176 
- PSW=140010,USP=155732,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002176 
-157774: 140010 
-157776: 000000 
-
-TCB at address 026064 (TASKA   ) PID   : 000002 
-Status: 000001 
-Flags : 155736 
-Privs : 000000 
-Type  : 000002 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002176 
- PSW=140010,USP=155736,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002176 
-157774: 140010 
-157776: 000000 
-002176
-<<<
->>> AAA - Thi002176
-s is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - Th002174
-js is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - Th002176
-is is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - T002176
-his is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - T002176
-
-TCB at address 026064 (TASKA   ) PID   : 000002 
-Status: 000001 
-Flags : 155736 
-Privs : 000000 
-Type  : 000002 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002176 
- PSW=140010,USP=155736,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002176 
-157774: 140010 
-157776: 000000 
-
-TCB at address 025662 (STARTUP ) PID   : 000001 
-Status: 000001 
-Flags : 155732 
-Privs : 000007 
-Type  : 000001 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002176 
- PSW=140010,USP=155732,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002176 
-157774: 140010 
-157776: 000000 
-002176
-
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task001636
-
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle002176
- task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task002176
-
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle002176
- task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task002176
-
-TCB at address 025662 (STARTUP ) PID   : 000001 
-Status: 000001 
-Flags : 155732 
-Privs : 000007 
-Type  : 000001 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002176 
- PSW=140010,USP=155732,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002176 
-157774: 140010 
-157776: 000000 
-
-TCB at address 026064 (TASKA   ) PID   : 000002 
-Status: 000001 
-Flags : 155736 
-Privs : 000000 
-Type  : 000002 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002176 
- PSW=140010,USP=155736,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002176 
-157774: 140010 
-157776: 000000 
-002176
-002176
-his is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>>002176
- AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<002176
-
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <002176
-<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - A002176
-
-TCB at address 026064 (TASKA   ) PID   : 000002 
-Status: 000001 
-Flags : 155736 
-Privs : 000000 
-Type  : 000002 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002176 
- PSW=140010,USP=155736,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002176 
-157774: 140010 
-157776: 000000 
-
-TCB at address 025662 (STARTUP ) PID   : 000001 
-Status: 000001 
-Flags : 155732 
-Privs : 000007 
-Type  : 000001 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002176 
- PSW=140010,USP=155732,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002176 
-157774: 140010 
-157776: 000000 
-002176
-002176
-
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task002176
-
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle002176
- task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task002176
-
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle002176
-
-TCB at address 025662 (STARTUP ) PID   : 000001 
-Status: 000001 
-Flags : 155732 
-Privs : 000007 
-Type  : 000001 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002176 
- PSW=140010,USP=155732,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002176 
-157774: 140010 
-157776: 000000 
-
-TCB at address 026064 (TASKA   ) PID   : 000002 
-Status: 000001 
-Flags : 155736 
-Privs : 000000 
-Type  : 000002 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002176 
- PSW=140010,USP=155736,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002176 
-157774: 140010 
-157776: 000000 
-002176
-002176
-AA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is ta002176
-sk A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This i002176
-s task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - Thi002176
-s is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA -002176
-
-TCB at address 026064 (TASKA   ) PID   : 000002 
-Status: 000001 
-Flags : 155736 
-Privs : 000000 
-Type  : 000002 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002176 
- PSW=140010,USP=155736,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002176 
-157774: 140010 
-157776: 000000 
-
-TCB at address 025662 (STARTUP ) PID   : 000001 
-Status: 000001 
-Flags : 155732 
-Privs : 000007 
-Type  : 000001 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002176 
- PSW=140010,USP=155732,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002176 
-157774: 140010 
-157776: 000000 
-002176
-002176
- task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle 002176
-task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task002152
-
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle 002176
-task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task002176
-
-TCB at address 025662 (STARTUP ) PID   : 000001 
-Status: 000001 
-Flags : 155724 
-Privs : 000007 
-Type  : 000001 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002176 
- PSW=140010,USP=155724,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002176 
-157774: 140010 
-157776: 000000 
-
-TCB at address 026064 (TASKA   ) PID   : 000002 
-Status: 000001 
-Flags : 155736 
-Privs : 000000 
-Type  : 000002 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002176 
- PSW=140010,USP=155736,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002176 
-157774: 140010 
-157776: 000000 
-002176
-002176
- This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->002176
->> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<002176
-
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA002176
- <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A -002176
-
-TCB at address 026064 (TASKA   ) PID   : 000002 
-Status: 000001 
-Flags : 155736 
-Privs : 000000 
-Type  : 000002 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002176 
- PSW=140010,USP=155736,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002176 
-157774: 140010 
-157776: 000000 
-
-TCB at address 025662 (STARTUP ) PID   : 000001 
-Status: 000001 
-Flags : 155724 
-Privs : 000007 
-Type  : 000001 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002176 
- PSW=140010,USP=155724,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002176 
-157774: 140010 
-157776: 000000 
-002176
-002176
-
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-002176
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle t002176
-ask
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-002176
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle task
-Idle 002032
-
-TCB at address 025662 (STARTUP ) PID   : 000001 
-Status: 000001 
-Flags : 155732 
-Privs : 000007 
-Type  : 000001 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002032 
- PSW=140010,USP=155754,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002032 
-157774: 140010 
-157776: 000000 
-
-TCB at address 026064 (TASKA   ) PID   : 000002 
-Status: 000001 
-Flags : 155736 
-Privs : 000000 
-Type  : 000002 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002176 
- PSW=140010,USP=155736,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002032 
-157774: 140010 
-157776: 000000 
-002176
-002176
- AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is 002176
-task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This 002176
-is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - T002176
-his is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA - This is task A - AAA <<<
->>> AAA002176
-
-TCB at address 026064 (TASKA   ) PID   : 000002 
-Status: 000001 
-Flags : 155736 
-Privs : 000000 
-Type  : 000002 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002176 
- PSW=140010,USP=155736,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002176 
-157774: 140010 
-157776: 000000 
-
-TCB at address 025662 (STARTUP ) PID   : 000001 
-Status: 000001 
-Flags : 155732 
-Privs : 000007 
-Type  : 000001 
- 
-  R0=000000, R1=011557, R2=157760, R3=157760 
-  R4=013746, R5=157760, SP=157772, PC=002032 
- PSW=140010,USP=155754,SSP=000000,KSP=157772 
- CM:3 PM:0 IPL:0 C- V- Z- N+ T-
-
-8 top stack words:
-157772: 002176 
-157774: 140010 
-157776: 000000 
-002032
-002032
-p_2
-HALT instruction, PC: 012164 (MOV 4(R5),-(SP))
-sim> q
-Goodbye
-Log file closed
