@@ -10,7 +10,7 @@
 
 _startup:
 	CREPRC $NTASKA,$0,$_taska,$0
-//	CREPRC $NTASKB,$0,$_taskb,$0
+	CREPRC $NTASKB,$0,$_taskb,$0
 
 loop:	mov	$MSG,-(sp)
 	jsr	pc,_putstrzl

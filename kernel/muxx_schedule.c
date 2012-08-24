@@ -13,7 +13,7 @@ void muxx_schedule() {
   
   tcb = muxx_qGetTask(readyq);
   curtcb = tcb;
-  muxx_dumptcb(tcb);
+  // muxx_dumptcb(tcb);
   muxx_switch();
   panic("Switch didn't switch");
 }

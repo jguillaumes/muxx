@@ -20,9 +20,17 @@ void muxx_dumptcb(PTCB tcb) {
   kputstrz("Privs : "); kputoct(tcb->privileges.prvword); kputstrl(" ",1);
   kputstrz("Type  : "); kputoct(tcb->pid); kputstrl(" ",1);
   muxx_dumpregs(&(tcb->cpuState));
-  kputstrzl("\r\n8 top stack words:");
-  wptr = (WORD *) tcb->cpuState.sp;
-  for(i=0;i<7 && wptr <= (WORD *) kstackt;i++) {
+  kputstrzl("\r\n16 top Kernel stack words:");
+  wptr = (WORD *) tcb->cpuState.ksp;
+  for(i=0;i<15 && wptr <= (WORD *) kstackt;i++) {
+    kputoct((WORD) wptr);
+    kputstr(": ", 2);
+    kputoct(*wptr++);
+    kputstrl(" ",1);
+  }
+  kputstrzl("\r\n16 top User stack words:");
+  wptr = (WORD *) tcb->cpuState.usp;
+  for(i=0;i<15 && wptr <= (WORD *) ustackt;i++) {
     kputoct((WORD) wptr);
     kputstr(": ", 2);
     kputoct(*wptr++);

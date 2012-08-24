@@ -30,6 +30,7 @@ void muxx_switch();
 void muxx_dumpregs(CPUSTATE *);
 void muxx_dumptcbregs();
 void muxx_dumptcb(PTCB);
+void muxx_dumpctcb();
 void muxx_dumpmmu(MMUSTATE *);
 
 void muxx_qAddTask(PTQUEUE,PTCB);

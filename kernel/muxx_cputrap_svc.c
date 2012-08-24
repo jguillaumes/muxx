@@ -57,8 +57,7 @@ void muxx_handle_fperr(void *fp) {
 }
 
 void muxx_handle_mmuerr(void *fp) {
-  asm("halt");
-  copytrapf(fp);
+  copytrapfp(fp);
   copyMMUstate();
  
   WORD *mmr0 = (WORD *) MMU_MMR0;
@@ -80,24 +79,22 @@ void muxx_handle_mmuerr(void *fp) {
 }
 
 void muxx_handle_trace(void *fp) {
-  copytrapf();
+  copytrapfp(fp);
   kputstrl("\r\n",2);
   kputstrl("TRACE trap", 16);
   panic("TRACE");
 }
 
 void muxx_handle_power(void *fp) {
-  copytrapf();
+  copytrapfp(fp);
   kputstrl("\r\n",2);
   kputstrl("POWER exception", 16);
   panic("POWER");
 }
 
 void muxx_handle_unimpl(void *fp) {
-  copytrapf();
+  copytrapfp(fp);
   kputstrl("\r\n",2);
   kputstrl("UNIMPL exception", 16);
   panic("unimplemented");
 }
-
-

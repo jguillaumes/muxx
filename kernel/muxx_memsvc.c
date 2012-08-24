@@ -19,6 +19,12 @@
 #define PDR_SIZ_4K 0x4000
 #define PDR_SIZ_8K 0x7F00
 
+#define MMCB_FLG_SHR 0x0001
+#define MMCB_FLG_FIX 0x0002
+#define MMCB_FLG_PRV 0x0004
+#define MMCB_FLG_IO  0x0008
+#define MMCB_FLG_STK 0x0010
+
 int findFreeMMCB();               // Forward declaration
 
 /*
@@ -121,7 +127,7 @@ int muxx_mem_init() {
   pmmcbt->mmcbt[2].blockAddr = 0400;     // Next block of physical memory
   pmmcbt->mmcbt[2].blockSize = 0200;
   pmmcbt->mmcbt[2].ownerPID = 1;
-  pmmcbt->mmcbt[2].ownerPAR = 1;
+  pmmcbt->mmcbt[2].ownerPAR = 2;
   pmmcbt->mmcbt[2].prevBlock = &(pmmcbt->mmcbt[1]);
   pmmcbt->mmcbt[2].nextBlock = &(pmmcbt->mmcbt[3]);
   pmmcbt->mmcbt[2].mmcbFlags.flags.sharedBlock = 1;
@@ -142,6 +148,7 @@ int muxx_mem_init() {
   pmmcbt->mmcbt[3].mmcbFlags.flags.fixedBlock = 0;
   pmmcbt->mmcbt[3].mmcbFlags.flags.privBlock = 0;
   pmmcbt->mmcbt[3].mmcbFlags.flags.iopage = 0;
+  pmmcbt->mmcbt[3].mmcbFlags.flags.stack = 1;
 
   /*
   ** Free space
@@ -210,7 +217,7 @@ int muxx_setup_taskmem (PTCB task) {
   /*
   ** Task stack space
   */
-  mcb = muxx_mem_getblock(task, 0100, 0, 6);
+  mcb = muxx_mem_getblock(task, 0100, MMCB_FLG_STK, 6);
   if (mcb != NULL) {
     task->mmuState.upar[6] = mcb->blockAddr;
     task->mmuState.updr[6] = PDR_ACC_RW | PDR_SIZ_4K | PDR_DIR_DN;

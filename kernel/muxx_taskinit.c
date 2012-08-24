@@ -59,13 +59,13 @@ int muxx_taskinit(int type, WORD ppid, ADDRESS entry, WORD privs) {
   ptcta->tctTable[found].ppid = ppid;
   ptcta->tctTable[found].taskType = type;
   ptcta->tctTable[found].privileges.prvword = privs;
+  ptcta->tctTable[found].flags.flword = 0;
   ptcta->tctTable[found].cpuState.pc = (WORD) entry;
   ptcta->tctTable[found].cpuState.psw = 0xC000;      // User mode, interrupts on
   ptcta->tctTable[found].cpuState.sp =  (WORD) ustackt;
   ptcta->tctTable[found].cpuState.usp = (WORD) ustackt;
   ptcta->tctTable[found].cpuState.ksp = (WORD) kstackt;
   ptcta->tctTable[found].status = TSK_INIT;
-
 
   return found;
 }

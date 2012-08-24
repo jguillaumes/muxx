@@ -131,7 +131,8 @@ struct MMCB_S {
       int fixedBlock: 1;    // This block is fixed in physical memory
       int privBlock: 1;     // Privilege (oper) required to access this block
       int iopage: 1;        // This is an iopage block (requires iopriv)
-      int filler: 12;
+      int stack: 1;         // This is a stack page
+      int filler: 11;
     } flags;
     WORD word;
   } mmcbFlags;

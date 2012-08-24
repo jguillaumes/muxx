@@ -8,8 +8,7 @@
 
 void muxx_check_quantums();
 void muxx_check_timers(); 
-void muxx_clock_handler(void *fp) 
-  __attribute__ ((optimize("no-omit-frame-pointer")));
+void muxx_clock_handler(void *fp) ;
 
 /*
 ** PSW
