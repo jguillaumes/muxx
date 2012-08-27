@@ -38,10 +38,10 @@
 	.text
 
 _kconputc:
-	procentry
+	procentry saver3=no,saver4=no
 	mov	4(r5),r0
 	jsr	pc,kconputch
-	procexit
+	procexit getr3=no,getr4=no
 	
 kconputch:
 	mov	r2,-(sp)
@@ -116,25 +116,25 @@ _kcongetc:
 	.GLOBAL _kputstr,_kputstrz,_kputstrl,_kputstrzl
 
 _kputstr:
-	procentry
+	procentry saver4=no
 	mov	6(r5),r2
 	mov	4(r5),r3
 10$:	movb	(r3)+,r0
 	jsr	pc,kconputch
 	sob	r2,10$
-	procexit
+	procexit getr4=no
 
 _kputstrz:
-	procentry
+	procentry saver3=no,saver4=no
 	mov	4(r5),r2
 10$:	movb	(r2)+,r0
 	beq	20$
 	jsr	pc,kconputch
 	br	10$
-20$:	procexit
+20$:	procexit getr3=no,getr4=no
 
 _kputstrl:
-	procentry
+	procentry saver2=no,saver3=no,saver4=no
 	mov	6(r5),-(sp)
 	mov	4(r5),-(sp)
 	jsr	pc,_kputstr
@@ -143,10 +143,10 @@ _kputstrl:
 	mov	$crlf,-(sp)
 	jsr	pc,_kputstr
 	add	$4,sp
-	procexit
+	procexit getr2=no,getr3=no,getr4=no
 
 _kputstrzl:
-	procentry
+	procentry saver2=no,saver3=no,saver4=no
 	mov	4(r5),-(sp)
 	jsr	pc,_kputstrz
 	add	$2,sp
@@ -154,9 +154,8 @@ _kputstrzl:
 	mov	$crlf,-(sp)
 	jsr	pc,_kputstr
 	add	$4,sp
-	procexit
+	procexit getr2=no,getr3=no,getr4=no
 
-	
 	.data
 crlf:	.ascii	"\n\r"
 

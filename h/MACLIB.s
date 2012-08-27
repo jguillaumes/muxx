@@ -12,26 +12,38 @@
 	/*
 	** Procedure call frame setup
 	*/
-	.macro procentry local=0
+	.macro procentry saver2=yes,saver3=yes,saver4=yes,local=0
 	mov	r5,-(sp)		// Save previous frame pointer
 	mov	sp,r5			// Set up current frame pointer
 	.ifgt \local
 	sub	$2*\local,sp		// Allocate space for local variables
 	.endif
+	.ifc	\saver2,yes
 	mov 	r2,-(sp)		// Push the GPRs...
+	.endif
+	.ifc	\saver3,yes
 	mov	r3,-(sp)		//
+	.endif
+	.ifc	\saver4,yes
 	mov	r4,-(sp)		//
+	.endif
 	mov	r5,-(sp)		// Push the current FP 
 	.endm
 
 	/*
 	** Procedure clenaup and exit
 	*/
-	.macro procexit local=0
+	.macro procexit getr2=yes,getr3=yes,getr4=yes,local=0
 	mov	(sp)+,r5		// Pull the current Frame Pointer
+	.ifc	\getr4,yes
 	mov	-2*\local-6(r5),r4	// Pull the saved GPRs, 
+	.endif
+	.ifc	\getr3,yes
 	mov	-2*\local-4(r5),r3	// relative to the frame pointer
+	.endif
+	.ifc	\getr2,yes
 	mov	-2*\local-2(r5),r2
+	.endif
 	mov	r5,sp			// Cleanup local variables/saved GPRs
 	mov	(sp)+,r5		// Pull the previous frame pointer
 	rts	pc		 	// Return to caller

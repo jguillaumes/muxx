@@ -9,18 +9,19 @@
 	.text
 
 _startup:
-	CREPRC $NTASKA,$0,$_taska,$0
-	CREPRC $NTASKB,$0,$_taskb,$0
+//	CREPRC $NTASKA,$1,$_taska,$0
+	CREPRC $NTASKB,$1,$_taskb,$0
 
 loop:	mov	$MSG,-(sp)
 	jsr	pc,_putstrzl
 	add	$2,sp
 //	wait
+	YIELD
 	br loop
 
 
 	.data
 NTASKA:	.ASCII	"TASKA   "
 NTASKB:	.ASCII 	"TASKB   "
-MSG:	.ASCIZ	"Idle task"
+MSG:	.ASCIZ	"\r\nIdle task"
 	.END

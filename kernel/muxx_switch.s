@@ -11,7 +11,6 @@
 _muxx_switch:
 
 //	jsr	pc,_muxx_dumpctcb
-	halt
 	mov	_curtcb,r0		// R0: Current TCB
 
 	mov	TCB.R1(r0),r1		// Set GPRS 1 to 6

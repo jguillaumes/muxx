@@ -5,19 +5,37 @@
 #include "kernfuncs.h"
 #include "muxxlib.h"
 #include "externals.h"
+#include <string.h>
 
 typedef int (*SVC)(int,...);
+
+static int muxx_svc_yield() __attribute__ ((noreturn));
+static int muxx_svc_muxxhlt() __attribute__ ((noreturn));
 
 struct SVC_S {
   SVC svc;
   int nparams;
 };
 
+static int muxx_svc_gettpi(WORD pid, PTCB area) {
+  PTCB source = NULL;
+
+  if (pid == 0) {
+    source = curtcb;
+  } else {
+    return ENOIMPL;
+  }
+  memcpy(source, area, sizeof(TCB));
+  return EOK;
+}
+
 static int muxx_svc_conputc(char c) {
  return kconputc(c);
 }
 
 static int muxx_svc_muxxhlt() {
+  asm("halt");
+  asm("halt");  
   asm("halt");
   return 0;
 }
@@ -44,6 +62,13 @@ static int muxx_svc_suspend(PTCB task) {
     muxx_schedule();
   }
   return EOK;
+}
+
+static int muxx_svc_yield() {
+  curtcb->status = TSK_READY;
+  muxx_qAddTask(readyq, curtcb);
+  copyMMUstate();
+  muxx_schedule();
 }
 
 static int muxx_unimpl() {
@@ -77,7 +102,9 @@ int muxx_systrap_handler(int numtrap, WORD p1, WORD p2, WORD p3, WORD p4) {
     {(SVC) muxx_unimpl, 0},	  // 22:
     {(SVC) muxx_unimpl, 0},	  // 23:
     {(SVC) muxx_unimpl, 0},	  // 24:
-    
+    {(SVC) muxx_svc_yield,0},     // 25
+    {(SVC) muxx_svc_gettpi,2},     // 26
+
     {(SVC) muxx_unimpl, 0},	  // KRNL 01
     {(SVC) muxx_unimpl, 0},	  // KRNL 02
     {(SVC) muxx_unimpl, 0},	  // KRNL 03
@@ -115,6 +142,12 @@ int muxx_systrap_handler(int numtrap, WORD p1, WORD p2, WORD p3, WORD p4) {
       break;
     case SRV_SUSPEND:
       rc = muxx_svc_suspend((PTCB) p1);
+      break;
+    case SRV_YIELD:
+      rc = muxx_svc_yield();
+      break;
+    case SRV_GETTPI:
+      rc = muxx_svc_gettpi((WORD) p1, (PTCB) p2);
       break;
     default:
       rc = muxx_unimpl();

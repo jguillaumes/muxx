@@ -2,7 +2,7 @@
 #include "kernfuncs.h"
 #include "externals.h"
 
-void panic(char *) __attribute__ ((noreturn,optimize("no-omit-frame-pointer")));
+void panic(char *) __attribute__ ((noreturn));
 
 void panic(char *msg) {
   int i=0;

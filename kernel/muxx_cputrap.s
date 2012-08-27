@@ -19,7 +19,7 @@
 	
 	.text
 trap_initialize:
-	procentry
+	procentry saver2=no,saver3=no,saver4=no
 	mov	$trap_unimplemented, r0
 	mov	$PSWTRAP, r1
 
@@ -32,7 +32,7 @@ trap_initialize:
 	setvec	VEC.FPERR,$trap_fperr,r1
 	setvec	VEC.MMUERR,$trap_mmuerr,r1
 	
-	procexit
+	procexit getr2=no,getr3=no,getr4=no
 
 trap_cpuerr:
 	traphandle _muxx_handle_cpuerr

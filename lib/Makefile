@@ -6,7 +6,7 @@ CC=pdp11-aout-gcc
 LD=pdp11-aout-ld
 AR=pdp11-aout-ar
 LDFLAGS=-T ldkern.cmd -M --cref --traditional -lgcc -lpdp11
-CFLAGS=-c -Os -I../h
+CFLAGS=-c -Os -I../h -fomit-frame-pointer
 ASMFLAGS=-acmghlsd -I../h 
 
 TARGETS=libmuxx.a

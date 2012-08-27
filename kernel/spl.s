@@ -9,7 +9,7 @@
 
 
 _setpl7:
-	procentry
+	procentry saver2=no,saver3=no,saver4=no
 	.if  CPU_HAS_SPL==1
 	mov	CPU.PSW,r0
 	spl	7
@@ -20,10 +20,10 @@ _setpl7:
 	jsr	pc,_setpl
 	add	$2,sp
 	.endif
-	procexit
+	procexit getr2=no,getr3=no,getr4=no
 
 _setpl0:
-	procentry
+	procentry saver2=no,saver3=no,saver4=no
 	.if CPU_HAS_SPL==1
 	mov	CPU.PSW,r0
 	spl	0
@@ -34,9 +34,9 @@ _setpl0:
 	jsr	pc,_setpl
 	add	$2,sp
 	.endif
-	procexit
+	procexit getr2=no,getr3=no,getr4=no
 
-_setpl:	procentry
+_setpl:	procentry saver3=no,saver4=no
 	mov	4(r5),r0		// R0: New IPL
 	mov	CPU.PSW,r2		// R2: Current PSW
 	mov	r2,r1			// R1: Current PSW 
@@ -48,13 +48,13 @@ _setpl:	procentry
 	mov	r2,r0			// R0: Old PSW value
 	bic	$0xff1f,r0		// Clear non-IPL bits
 	ash	$-5,r0			// Shift to get integer value
-	procexit
+	procexit getr3=no,getr4=no
 
-_getpl:	procentry
+_getpl:	procentry saver2=no,saver3=no,saver4=no 
 	mov	CPU.PSW,r0
 	bic	$0xFF1F,r0
 	ash	$-5,r0
-	procexit
+	procexit getr2=no,getr3=no,getr4=no
 
 	.end
 

@@ -31,7 +31,9 @@
 	SRV_DECSEM = 22
 	SRV_GETSHM = 23
 	SRV_FREESHM = 24
-	SRV_LAST = 24
+	SRV_YIELD = 25
+	SRV_GETTPI = 26
+	SRV_LAST = 26
 /*
 ** Kernel service calls
 */
@@ -41,7 +43,7 @@
 	KRN_BUGCHECK = (SRV_LAST+4)
 	KRN_PUTCON = (SRV_LAST+5)
 	KRN_GETCON = (SRV_LAST+6)
-	KRN_PANIC = (SRV_LAST+7)
+	#define = KRN_PANIC(SRV_LAST+7)
 /*
 ** Task types
 */

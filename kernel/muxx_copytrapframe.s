@@ -50,7 +50,7 @@ _copytrapfp:
 	**
 	*/
 _copyMMUstate:
-	procentry
+	procentry saver3=no,saver4=no
 	
 	mov	_curtcb,r0			// Copy user PARs
 	add	$TCB.MMUSTATE,r0
@@ -87,6 +87,6 @@ _copyMMUstate:
 60$:	mov	(r1)+,(r0)+
 	sob	r2,60$
 	
-	procexit
+	procexit getr3=no,getr4=no
 	
 	.END

@@ -4,6 +4,11 @@
 	clr	r0
 	trap	$KRN_HALT
 	.endm
+
+	.macro	YIELD
+	clr	r0
+	trap	$SRV_YIELD
+	.endm
 	
 	.macro	CONPUTC char
 	sub	$4,sp			// Make space for parmlist
@@ -35,9 +40,19 @@
 	add	$10,sp
 	.endm
 
+	.macro GETTPI pid,tcb
+	sub	$6,sp
+	mov	$2,(sp)
+	mov	\tcb,4(sp)
+	mov	\pid,2(sp)
+	mov	sp,r0
+	trap	$SRV_GETTPI
+	add	$6,sp
+	.endm
+	
 	.macro SUSPEND tcb
 	sub	$4,sp			// Room for parmlist
-	mov	$1,sp			// Size = 1
+	mov	$1,(sp)			// Size = 1
 	tst	\tcb			// null pointer?
 	bne	10$			// No, use its value
 	mov	_curtcb,2(sp)

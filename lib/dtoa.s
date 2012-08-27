@@ -7,7 +7,7 @@
 	.GLOBAL _dtoa
 
 _dtoa:
-	procentry 
+	procentry saver4=no 
 
 	mov	4(r5),r3
 	mov	6(r5),r1
@@ -21,11 +21,11 @@ _dtoa:
 	mov 	r2,r3
 	sob	r0,10$
 	
-	procexit
+	procexit getr4=no
 
 	.GLOBAL _dtoab
 
-_dtoab:
+_dtoab: saver4=no
 	procentry
 	movb	4(r5),r3
 	mov	6(r5),r1
@@ -39,8 +39,7 @@ _dtoab:
 	movb	r3,r2
 	sob	r0,10$
 
-	procexit
-
+	procexit getr4=no
 
 	.end
 	

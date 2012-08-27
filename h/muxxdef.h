@@ -28,7 +28,9 @@
 #define SRV_DECSEM  22
 #define SRV_GETSHM  23
 #define SRV_FREESHM 24
-#define SRV_LAST    24
+#define SRV_YIELD   25
+#define SRV_GETTPI  26
+#define SRV_LAST    26
 
 /*
 ** Kernel service calls
@@ -39,7 +41,7 @@
 #define KRN_BUGCHECK (SRV_LAST+4)
 #define KRN_PUTCON   (SRV_LAST+5)
 #define KRN_GETCON   (SRV_LAST+6)
-#define KRN_PANIC    (SRV_LAST+7)
+// #define KRN_PANIC    (SRV_LAST+7)
 
 /*
 ** Task types

@@ -22,6 +22,7 @@ int getlin(char *buffer, int size, char *term, int termsiz) {
   return (i);
 }
 
+
 int putstr(char *buffer, int size) {
   int i=0,rc=0;
   char *ptr=buffer;
@@ -30,6 +31,12 @@ int putstr(char *buffer, int size) {
     rc = conputc(*ptr++);
   }
   return rc;
+}
+
+int putoct(WORD w) {
+  char buffer[6];
+  otoa(w,buffer);
+  putstr(buffer,6);
 }
 
 int putstrl(char *buffer, int size) {
