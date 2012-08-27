@@ -9,7 +9,7 @@
 	.text
 
 _startup:
-//	CREPRC $NTASKA,$1,$_taska,$0
+	CREPRC $NTASKA,$1,$_taska,$0
 	CREPRC $NTASKB,$1,$_taskb,$0
 
 loop:	mov	$MSG,-(sp)

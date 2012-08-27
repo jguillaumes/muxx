@@ -1,12 +1,12 @@
-	.TITLE dtoa - Binary to decimal string conversion
+	.TITLE itod - Binary to decimal string conversion
 	.IDENT "V01.00"
 
 	.INCLUDE "MACLIB.s"
 
 	
-	.GLOBAL _dtoa
+	.GLOBAL _itod
 
-_dtoa:
+_itod:
 	procentry saver4=no 
 
 	mov	4(r5),r3
@@ -23,9 +23,9 @@ _dtoa:
 	
 	procexit getr4=no
 
-	.GLOBAL _dtoab
+	.GLOBAL _itodb
 
-_dtoab: saver4=no
+_itodb: saver4=no
 	procentry
 	movb	4(r5),r3
 	mov	6(r5),r1

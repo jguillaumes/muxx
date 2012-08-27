@@ -19,13 +19,12 @@ struct SVC_S {
 
 static int muxx_svc_gettpi(WORD pid, PTCB area) {
   PTCB source = NULL;
-
   if (pid == 0) {
     source = curtcb;
   } else {
     return ENOIMPL;
   }
-  memcpy(source, area, sizeof(TCB));
+  memcpy(area, source, sizeof(TCB));
   return EOK;
 }
 

@@ -6,12 +6,12 @@ CC=pdp11-aout-gcc
 LD=pdp11-aout-ld
 AR=pdp11-aout-ar
 LDFLAGS=-T ldkern.cmd -M --cref --traditional -lgcc -lpdp11
-CFLAGS=-c -Os -I../h -fomit-frame-pointer
+CFLAGS=-c -Wall -I../h -Os -ffreestanding -fomit-frame-pointer
 ASMFLAGS=-acmghlsd -I../h 
 
 TARGETS=libmuxx.a
-OBJECTS=memblocks.o otoa.o htoa.o dtoa.o kmsgaddr.o conio.o lib_syscalls.o \
-	empty_proc.o
+OBJECTS=memblocks.o itoo.o itoh.o itod.o kmsgaddr.o conio.o lib_syscalls.o \
+	empty_proc.o printf.o
 
 .out.lda:	
 	$(BIN2LOAD) -a -f $< -o $@

@@ -1,42 +1,48 @@
 /*
-** Very basic printf() implementation for kernel/basic OS output
+* Very basic printf() implementation for kernel/basic OS output
 */
 
 #include <string.h>
 #include <limits.h>
 #include <stdarg.h>
+#include "types.h"
+#include "kernfuncs.h"
+#include "muxxlib.h"
 
+#ifdef MUXX_KERNEL
+#define PRINTF	kprintf
+#define PUTC(c)	kconputc(c)
+#define PUTSTR(s,l)	kputstr(s,l)
+#define PUTSTRZ(s)	kputstrz(s)
+#else
+#define	PRINTF	printf
+#define	PUTC(c)	conputc(c)
+#define PUTSTR(s,l)	putstr(s,l)
+#define PUTSTRZ(s)	putstrz(s)
+#endif
 
-int printf(char *fmt,...) {
+int PRINTF(char *fmt,...) {
   int numc = 0;
   int rc=0;
   char buffer[16];
-  char *chr = NULL;
+  char c=0;
+  char *chr = fmt;
   va_list arglist;
-  int narg=0;
 
   va_start(arglist, fmt);
 
-  chr = fmt;
-  while(*chr != '\0') {
-    switch(*chr) {
+  while(*chr != 0) {
+    c = *(chr++);
+    switch(c) {
     case '%':
-      switch(*++chr) {
+      switch(*chr++) {
       case 'c':
-#ifdef _MUXX_KERNEL
-	rc = kputcon(va_arg(arglist,char));
-#else
-	rc = putcon(va_arg(arglist,char));
-#endif
+	rc = PUTC(va_arg(arglist,int));
 	if (rc == 0) numc++;
 	break;
       case 's':
-#ifdef _MUXX_KERNEL
-	rc = kputstr(va_arg(arglist,char));
-#else
-	rc = putstr(va_arg(arglist,char));
-#endif
-	if (rc >=0 ) {
+	rc = PUTSTRZ(va_arg(arglist,char *));
+	if (rc >=0) {
 	  numc += rc;
 	} else {
 	  va_end(arglist);
@@ -44,12 +50,8 @@ int printf(char *fmt,...) {
 	}
 	break;
       case 'o':
-	otoa(va_arg(arglist,WORD),buffer);
-#ifdef _MUXX_KERNEL
-	rc = kputstr(buffer,6);
-#else
-	rc = putstr(buffer,6);
-#endif
+	itoo(va_arg(arglist,unsigned int),buffer);
+	rc = PUTSTR(buffer,6);
 	if (rc >= 0) {
 	  numc += rc;
 	} else {
@@ -58,12 +60,8 @@ int printf(char *fmt,...) {
 	}
 	break;
       case 'd':
-	dtoa(va_arg(arglist,WORD),buffer);
-#ifdef _MUXX_KERNEL
-	kputstr(buffer,5);
-#else
-	putstr(buffer,5);
-#endif
+	itod(va_arg(arglist,unsigned int),buffer);
+	PUTSTR(buffer,5);
 	if (rc >= 0) {
 	  numc += rc;
 	} else {
@@ -73,27 +71,38 @@ int printf(char *fmt,...) {
 	break;
       case 'x':
       case 'X':
-      default:
-	htoa(va_arg(arglist,WORD),buffer);
-#ifdef _MUXX_KERNEL
-      if (rc = kputcon('%')) {
-#else
-      if (rc = putcon('%')) {
-#endif
-      }
+	itoh(va_arg(arglist,unsigned int),buffer);
+	PUTSTR(buffer,4);
 	if (rc >= 0) {
 	  numc += rc;
 	} else {
 	  va_end(arglist);
 	  return rc;
 	}
-      break;
+	break;
       default:
-#ifdef _MUXX_KERNEL
-      if (rc = kputcon(*chr++)) {
-#else
-      if (rc = putcon(*chr++)) {
-#endif
+	if ((rc = PUTC('%'))==0) {
+	    numc++;
+	} else {
+	  va_end(arglist);
+	  return rc;
+	}
+	break;
+      }
+      break;
+    case '\n':
+      rc = PUTSTR("\r\n",2);
+      if (rc == 0) {
+	numc += 2;
+      } else {
+	va_end(arglist);
+	return(rc);
+      }
+      break;
+    case 0:
+      break;
+    default:
+      if ((rc = PUTC(c))==0) {
 	numc++;
       } else {
 	va_end(arglist);
@@ -101,5 +110,6 @@ int printf(char *fmt,...) {
       }
     }
   }
+  va_end(arglist);
+  return numc;
 }
-

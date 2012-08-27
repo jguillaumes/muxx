@@ -9,9 +9,10 @@ taskb() {
 
   for (;;) {
     for(i=0;i<3;i++) {
-//      gettpi(0,&myself);
-//      putstrz("\n\rPID: "); putoct(myself.pid); putstrzl(".");
-      putstrzl(msgb);
+      printf("\nPID buffer address: %o\n", &myself);
+      gettpi(0,&myself);
+      printf("\nTASK B. Name: %s, PID: %o, ticks: %d\n", 
+	     myself.taskname,myself.pid,myself.clockTicks);
     }
     yield();
   }

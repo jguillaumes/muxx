@@ -11,40 +11,30 @@ void muxx_dumpregs(CPUSTATE *cpus) {
   WORD *ptrreg;
   WORD w;
 
-  static char nregs[12][6]={"  R0=",", R1=",", R2=",", R3=","  R4=",", R5=",", SP=",", PC="," PSW=",",USP=",",SSP=",",KSP="};
+
   int i=0;
 
   ptrreg = (WORD *) cpus;
 
-  kputstrzl(" ");
+  kprintf("\n");
 
-  for (i=0;i<4;i++) {
-    kputstr(nregs[i],5);
-    otoa(ptrreg[i],cword);
-    kputstr(cword,6);
-  }
-  kputstrzl(" ");
-  for (i=4;i<8;i++) {
-    kputstr(nregs[i],5);
-    otoa(ptrreg[i],cword);
-    kputstr(cword,6);
-  }
-  kputstrzl(" ");
-  for (i=8;i<12;i++) {
-    kputstr(nregs[i],5);
-    otoa(ptrreg[i],cword);
-    kputstr(cword,6);
-  }
-  kputstrzl(" ");
+  kprintf(" R0=%o, R1=%o, R2=%o, R3=%o\n",
+	  ptrreg[0], ptrreg[1], ptrreg[2], ptrreg[3]);
+
+  kprintf(" R4=%o, R5=%o, SP=%o, PC=%o\n",
+	  ptrreg[4], ptrreg[5], ptrreg[6], ptrreg[7]);
+
+  kprintf("PSW=%o,USP=%o,SSP=%o,KSP=%o\n",
+	  ptrreg[8], ptrreg[9], ptrreg[10], ptrreg[11]);
 
   w = (cpus->psw) >> 14;
-  otoa(w,cword);
+  itoo(w,cword);
   kputstrz(" CM:"); kputstr(lastc,1);
   w = (cpus->psw & 0x3000) >> 12;  
-  otoa(w,cword);
+  itoo(w,cword);
   kputstrz(" PM:"); kputstr(lastc,1);
   w = (cpus->psw & 0x00E0) >> 5;  
-  otoa(w,cword);
+  itoo(w,cword);
   kputstrz(" IPL:"); kputstr(lastc,1);
   if ((cpus->psw & 0x0001) != 0) {
     kputstr(" C+",3);

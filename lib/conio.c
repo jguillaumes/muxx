@@ -35,14 +35,14 @@ int putstr(char *buffer, int size) {
 
 int putoct(WORD w) {
   char buffer[6];
-  otoa(w,buffer);
-  putstr(buffer,6);
+  itoo(w,buffer);
+  return putstr(buffer,6);
 }
 
 int putstrl(char *buffer, int size) {
   int rc=0;
  
-  rc = kputstr(buffer, size);
+  rc = putstr(buffer, size);
   if (rc==0) rc = putstr(CRLF, 2);
   return rc;
 }

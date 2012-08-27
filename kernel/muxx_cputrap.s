@@ -7,8 +7,6 @@
 
 	
 	.GLOBAL trap_initialize
-	.GLOBAL _otoa
-	.GLOBAL	_kputstrl
 
 	.macro setvec vector,address,psw
 	mov	\address, \vector

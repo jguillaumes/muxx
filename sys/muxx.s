@@ -31,7 +31,7 @@ start:
 	jsr	pc,_muxx_clock_setup		// Setup clock interrupt..
 	jsr	pc,_muxx_clock_enable		// ... and enable it
 
-	jsr	pc,_muxx_switch
+	jsr	pc,_muxx_switch			// Switch to STARTUP task
 	
 loop:	br	loop				// Endless loop...
 	

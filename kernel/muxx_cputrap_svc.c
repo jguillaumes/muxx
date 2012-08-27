@@ -11,11 +11,8 @@ void muxx_handle_cpuerr(void *fp) {
   kputstrl("CPUERR exception", 16);
 #if CPU_HAS_ERROR == 1
   WORD *cpuerr = (WORD *) CPU_ERR;
-  char errmask[6];
 
-  otoa(*cpuerr, errmask);
-  kputstrz("Error mask: ");
-  kputstrl(errmask,6);
+  kprintf("Error mask: %o\n", *cpuerr);
 
   if (*cpuerr & 0x0004) kputstrzl("Stack overflow (red)");
   if (*cpuerr & 0x0008) kputstrzl("Stack overflow (yellow)");
@@ -63,13 +60,12 @@ void muxx_handle_mmuerr(void *fp) {
   WORD *mmr0 = (WORD *) MMU_MMR0;
   WORD *mmr2 = (WORD *) MMU_MMR2;
   WORD page = 0;
-  
-  kputstrl("\r\n",2);
-  kputstrz("MMUERR exception at ");
-  kputoct(*mmr2); kputstrzl(" ");
-  kputstrz("MMR0: "); kputoct(*mmr0); 
+
   page = ((*mmr0) & 0x000D) >> 1;
-  kputstrz(" - page: "); kputoct(page); kputstrl(" ",1);
+  
+  kprintf("\nMMUERR exception at %o\n", *mmr2);
+  kprintf("MMR0: %o - page %o\n", *mmr0, page);
+
   if (*mmr0 & 0x8000) kputstrzl("Non resident");
   if (*mmr0 & 0x4000) kputstrzl("Page length");
   if (*mmr0 & 0x2000) kputstrzl("Read only abort");

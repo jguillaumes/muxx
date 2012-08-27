@@ -36,9 +36,6 @@ void muxx_check_quantums(void *fp) {
   WORD *wticks = (WORD *) &utimeticks;
   wticks++;
 
-  // kputstr(".",1);
-
-
   if (curtcb != NULL) {
     curtcb->clockTicks++;
   }

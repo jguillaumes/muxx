@@ -1,8 +1,8 @@
-	.TITLE otoa 	- Convert from octal to ASCII
+	.TITLE itoo 	- Convert from octal to ASCII
 	.IDENT "V01.00"
 	
 	.INCLUDE "MACLIB.s"
-	.GLOBAL _otoa
+	.GLOBAL _itoo
 
 //**********************************************************************
 // Conversion from an octal word to an ASCII string
@@ -16,7 +16,7 @@
 //**********************************************************************
 	azero = 0x30
 	
-_otoa:	procentry
+_itoo:	procentry
 	clr	r0			// Return value
 	mov	4(r5),r1		// R1 => Number to convert
 	mov	6(r5),r2		// R2 => Output buffer address

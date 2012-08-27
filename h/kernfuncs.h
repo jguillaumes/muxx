@@ -18,6 +18,7 @@ int kputstrl(char *, int);
 int kputstrzl(char *);
 int kputoct(WORD);
 int kconputc(char);
+int kprintf(char *,...);
 
 void copytrapf();
 void copytrapfp(void *);
