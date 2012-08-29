@@ -15,6 +15,7 @@ void itoh(WORD const, char *);
 void itod(WORD const, char *);
 void itohb(WORD const, char *);
 void itodb(WORD const, char *);
+void itodl(LONGWORD const, char *);
 
 #define _MUXXLIB_H
 #endif

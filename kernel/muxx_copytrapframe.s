@@ -23,7 +23,7 @@ _copytrapfp:
 	mov	14(r1),TCB.PC(r0)	// PC
 	mov	16(r1),TCB.PSW(r0)	// PSW
 	add	$14,r1			// Initial SP
-	mov	r1,TCB.SP(r0)
+	mov	r1,TCB.KSP(r0)		// Save kernel SP
 	
 	mov	CPU.PSW,-(sp)
 	bis	$0b0011000000000000,CPU.PSW // Set previous mode to user
@@ -36,9 +36,25 @@ _copytrapfp:
 	mov	(sp)+,TCB.SSP(r0)
 	.endif
 
-	mov	TCB.SP(r0),TCB.KSP(r0)	// Copy KSP from saved SP
 	mov	(sp)+,CPU.PSW
+	mov	TCB.PSW(r0),r1
+	
+	bic	$0x3FFF,r1	    	    // Isolate mode in saved PSW
+	cmp	$0xC000,r1	            // User?
+	bne	10$
+	mov	TCB.USP(r0),TCB.SP(r0)	    // Set saved SP = user SP
+	br	99$
+10$:
+	.ifc	CPU_HAS_SUPER,"1"
+	cmp	0x1000,r1      		    // Super?
+	bne	20$
+	mov	TCB.SSP(r0),TCB,SP(r0)	    // Set saved SP = super SP
+	br	99$
+	.endif
 
+20$:	mov	TCB.KSP(r0),TCB.SP(r0)	    // PM = kernel, copy KSP to SP
+99$:					  
+	
 	// jsr	pc,_muxx_dumpctcb
 	
 	rts	pc

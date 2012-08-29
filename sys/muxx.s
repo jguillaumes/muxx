@@ -14,6 +14,8 @@
 
 start:
 	SCB
+
+	
 	reset					// Reset machine
 	mov	$tempstackt,sp			// Temporary stack
 	jsr	pc,mmu_initialize		// Memory mapping
@@ -25,6 +27,15 @@ start:
 	mov	$linitmsg,-(sp)			// Send init message to console
 	mov	$initmsg,-(sp)
 	jsr	pc,_kputstrl
+
+
+	/* halt
+	mov	$buffer,-(sp)
+	mov	long,-(sp)
+	mov	long2,-(sp)
+	jsr	pc,_itodl
+	add	$6,sp
+	*/
 	
 	jsr	pc,_muxx_tctinit		// Initialize task table
 	jsr	pc,_muxx_fakeproc		// Set up STARTUP task
@@ -41,5 +52,9 @@ loop:	br	loop				// Endless loop...
 initmsg:
 	.ASCII	"Muxx starting up..."
 	linitmsg = . - initmsg
-
+	.even
+long:	.LONG	123456789
+long2	= long+2		
+buffer:	.space	10
+	
 	.END

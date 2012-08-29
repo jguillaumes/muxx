@@ -20,6 +20,12 @@ void muxx_clock_handler(void *fp) ;
 */
 void muxx_clock_handler(void *fp) {
   utimeticks++;                       // Increment global ticks
+
+  if (curtcb != NULL) {               // Increment ticks for current task
+    curtcb->clockTicks++;
+  }
+
+
   if ((CPU_PSW & 0x3000) != 0) {      // Check for non-kernel previous mode
     if (--clkcountdown <= 0) {        // Check for quantum time expiration
       clkcountdown = clkquantum;      // Reset quantum timer
@@ -35,10 +41,6 @@ void muxx_check_quantums(void *fp) {
 
   WORD *wticks = (WORD *) &utimeticks;
   wticks++;
-
-  if (curtcb != NULL) {
-    curtcb->clockTicks++;
-  }
 
   if (readyq->count > 0) {
     copytrapfp(fp);

@@ -69,10 +69,20 @@ int PRINTF(char *fmt,...) {
 	  return rc;
 	}
 	break;
+      case 'l':
+	itodl((LONGWORD) va_arg(arglist,unsigned long), buffer);
+	rc=PUTSTR(buffer,9);
+	if (rc >= 0) {
+	  numc += rc;
+	} else {
+	  va_end(arglist);
+	  return rc;
+	}
+	break;
       case 'x':
       case 'X':
 	itoh(va_arg(arglist,unsigned int),buffer);
-	PUTSTR(buffer,4);
+	rc=PUTSTR(buffer,4);
 	if (rc >= 0) {
 	  numc += rc;
 	} else {

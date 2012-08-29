@@ -4,7 +4,7 @@
 	.INCLUDE "MACLIB.s"
 
 	
-	.GLOBAL _itod
+	.GLOBAL _itod,_itodl,_itodb
 
 _itod:
 	procentry saver4=no 
@@ -40,6 +40,39 @@ _itodb: saver4=no
 	sob	r0,10$
 
 	procexit getr4=no
-
-	.end
+_itodl:	
+	procentry local=3
 	
+	mov	4(r5),r2
+	mov	6(r5),r3
+	div	$10000,r2			// r2: 5 upper digits
+
+	mov	r5,r1
+	sub	$6,r1				// R1: points to work buffer
+	mov	r1,-(sp)			// Push buffer address...
+	mov	r1,-(sp)			// twice (we'll need it)
+	mov	r2,-(sp)			// Push 4 first digits value
+	jsr	pc,_itod			// Convert upper 
+	add	$4,sp
+
+	mov 	(sp),r0				// Work buffer in stack 
+	mov	$5,r1				// Move the first 5 bytes
+	mov	8(r5),r4
+10$:	movb	(r0)+,(r4)+
+	sob	r1,10$
+
+	mov	(sp),r1				// R1: work buffer (NOT PULLED)
+	mov	r3,-(sp)			// Push 4 lower digits
+	jsr	pc,_itod			// Convert
+	add	$2,sp				// Don't pull buffer addr
+
+	mov	(sp)+,r0			// R0: work buffer (PULLED!)
+	inc	r0				// Skip first digit ('0')
+	mov	$4,r1				// Move 4 bytes
+20$:	movb	(r0)+,(r4)+
+	sob	r1,20$
+	clr	r0
+	
+	procexit local=3
+	
+	.end

@@ -27,6 +27,7 @@ int muxx_taskinit(int type, WORD ppid, ADDRESS entry, WORD privs) {
 
   switch(type) {
   case SYS_TASK:
+    if (topspid == 0) topspid = minspid;
     pid = topspid + 1;
     if (pid > maxspid) {
       pid = reusespid();
@@ -36,6 +37,7 @@ int muxx_taskinit(int type, WORD ppid, ADDRESS entry, WORD privs) {
     break;
   case USR_TASK:
   default:
+    if (topupid == 0) topupid = minupid;
     pid = topupid + 1;
     if (pid > maxupid) {
       pid = reuseupid();

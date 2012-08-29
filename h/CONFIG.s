@@ -173,9 +173,11 @@
 	MEM_BLOCKS = 4096 // 4096 * 64 = 256K
 	MEM_NMCBS = 128	  // 4096 / 32 = 128 MCBs. 1 MCB controls 32 blocks
 
-	CPU_HAS_SPL = 0
-	CPU_HAS_ERROR = 1
-	CPU_HAS_SUPER = 0
-	CPU_HAS_SEPID = 0
+	CPU_HAS_SPL = 0		// Support for spl instruction
+	CPU_HAS_CIS = 0		// Commercial Instruction set
+	CPU_HAS_FPP = 0		// Floating Point processor
+	CPU_HAS_ERROR = 1	// CPU Error trap mask
+	CPU_HAS_SUPER = 0	// Supervisor mode supported and enabled
+	CPU_HAS_SEPID = 0	// Separated I and D address spaces
 	
 	.LIST

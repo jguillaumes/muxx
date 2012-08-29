@@ -16,7 +16,7 @@ loop:	mov	$MSG,-(sp)
 	jsr	pc,_putstrzl
 	add	$2,sp
 //	wait
-	YIELD
+//	YIELD
 	br loop
 
 
