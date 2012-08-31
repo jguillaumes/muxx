@@ -19,30 +19,25 @@ void muxx_clock_handler(void *fp) ;
 ** PC  (from clock_svc.s)
 */
 void muxx_clock_handler(void *fp) {
+  // WORD *psw = (WORD *) CPU_PSW;
   utimeticks++;                       // Increment global ticks
 
   if (curtcb != NULL) {               // Increment ticks for current task
     curtcb->clockTicks++;
   }
 
-
-  if ((CPU_PSW & 0x3000) != 0) {      // Check for non-kernel previous mode
-    if (--clkcountdown <= 0) {        // Check for quantum time expiration
-      clkcountdown = clkquantum;      // Reset quantum timer
-      muxx_check_quantums(fp);        // And check process queues, etc...
-    }
-    muxx_check_timers();              // Check outstanding timers
+  if (--clkcountdown <= 0) {        // Check for quantum time expiration
+    clkcountdown = clkquantum;      // Reset quantum timer
+    muxx_check_quantums(fp);        // And check process queues, etc...
   }
+  muxx_check_timers();              // Check outstanding timers
 }
 
 void muxx_check_quantums(void *fp) {
-  PTCB tcb = curtcb;
-  tcb->clockTicks += 1;
-
-  WORD *wticks = (WORD *) &utimeticks;
-  wticks++;
+  // PTCB tcb = curtcb;
 
   if (readyq->count > 0) {
+    setpl7();
     copytrapfp(fp);
     muxx_yield();
     muxx_schedule();

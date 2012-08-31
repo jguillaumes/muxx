@@ -7,6 +7,7 @@ void panic(char *) __attribute__ ((noreturn));
 void panic(char *msg) {
   int i=0;
 
+  setpl7();                       // No interrupts while dying
   kputstrzl("System panic!") ;
   kputstrzl(msg);
   kputstrl("\r\n*** Last saved frame:",17);

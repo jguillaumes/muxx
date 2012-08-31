@@ -10,7 +10,8 @@ void muxx_schedule() __attribute__ ((noreturn));
 
 void muxx_schedule() {
   PTCB tcb = curtcb;
-  
+
+  setpl7();                     // No interrupts during schedule cycle
   tcb = muxx_qGetTask(readyq);
   curtcb = tcb;
   // muxx_dumptcb(tcb);

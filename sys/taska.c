@@ -5,8 +5,11 @@
 static char msga[] = ">>> AAA - This is task A - AAA <<<"; 
 
 taska() {
+
+  int n=0;
+
   for(;;) {
-    printf("%s - (%d)\n",msga,(WORD) utimeticks);
+    printf("%s - Called %d times\n", msga, ++n);
 //    yield();
   }
 }

@@ -41,7 +41,6 @@
 #define KRN_BUGCHECK (SRV_LAST+4)
 #define KRN_PUTCON   (SRV_LAST+5)
 #define KRN_GETCON   (SRV_LAST+6)
-// #define KRN_PANIC    (SRV_LAST+7)
 
 /*
 ** Task types
@@ -67,6 +66,31 @@
 #define LTC_BLOCKQ   2
 #define LTC_SUSPNQ   3
 #define LTC_MCB      4
+
+/*
+** Device driver callbacks
+*/
+#define DRV_START     0
+#define DRV_STOP      1
+#define DRV_OPEN      2
+#define DRV_CLOSE     3
+#define DRV_READ      4
+#define DRV_WRITE     5
+#define DRV_IOCTL     6
+#define DRV_QUERY     7
+
+/*
+** Named local flags
+*/
+#define LEF_TT      0          // Terminal related 
+#define LEF_PT      1          // Paper tape related
+#define LEF_DK      2          // Disk related
+#define LEF_MT      3          // Magtape related
+#define LEF_ET      4          // Ethernet related (someday)
+#define LEF_TM      5          // Timer related
+                               // 6:15 reserved to MUXX
+#define LEF_USR     16         // First used-available flag
+
 
 #define _MUXDEF_H
 #endif

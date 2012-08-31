@@ -18,6 +18,7 @@ extern ADDRESS ustackt;
 extern ADDRESS ustackb;
 
 extern PMMCBT mmcbtaddr;
+extern PMMCBT drvcbtaddr;
 
 extern WORD topspid;
 extern WORD minspid;

@@ -32,7 +32,7 @@
 	TCB.SSP = (TCB.CPUSTATE + 20)
 	TCB.KSP = (TCB.CPUSTATE + 22)
 
-	TCB.MMUSTATE	= 58
+	TCB.MMUSTATE = (TCB.CPUSTATE + 24)
 
 	TCB.UPAR = (TCB.MMUSTATE + 0)
 	
@@ -56,8 +56,8 @@
 	TCB.UPDR6 = (TCB.UPDR + 12)
 	TCB.UPDR7 = (TCB.UPDR + 14)
 
-#if	CPU_HAS_SUPER == 1
-
+	.if CPU_HAS_SUPER == 1
+	.print "Assembling with supervisor mode support"
 	TCB.SPAR = (TCB.UPDR + 16)
 	
 	TCB.SPAR0 = (TCB.SPAR + 0)
@@ -81,9 +81,10 @@
 	TCB.SPDR7 = (TCB.SPDR + 14)
 	
 	TCB.KPAR = (TCB.SPDR + 16)
-#else
+	.else
+	.print "Assembling without supervisor mode support"
 	TCB.KPAR = (TCB.UPDR + 16)
-#endif
+	.endif
 	
 	TCB.KPAR0 = (TCB.KPAR + 0)
 	TCB.KPAR1 = (TCB.KPAR + 2)
@@ -104,8 +105,17 @@
 	TCB.KPDR5 = (TCB.KPDR + 10)
 	TCB.KPDR6 = (TCB.KPDR + 12)
 	TCB.KPDR7 = (TCB.KPDR + 14)
-	
-	// TCB.CLOCKTICKS	= 108
-	// TCB.CREATSTAMP	= 110
+
+	.if CPU_HAS_SUPER == 1
+	TCB.CLOCKTICKS = (TCB.MMUSTATE + (32 * 3))
+	.else
+	TCB.CLOCKTICKS = (TCB.MMUSTATE + (32 * 2))
+	.endif
+
+	TCB.CREATSTAMP	= (TCB.CLOCKTICKS + 4)
+	TCB.LOCALFLAGS  = (TCB.CREATSTAMP + 4)
+
+
+
+
 	.LIST
-	

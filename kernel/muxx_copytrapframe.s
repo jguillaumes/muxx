@@ -12,6 +12,9 @@
 _copytrapfp:
 	mov	2(sp),r1		// No stack frame based on R5
 
+	mov	CPU.PSW,-(sp)		// Save current PSW
+	mov	$0x00E0,CPU.PSW		// No interrupts
+
 	mov	_curtcb,r0
 
 	mov	2(r1),TCB.R5(r0)
@@ -25,7 +28,6 @@ _copytrapfp:
 	add	$14,r1			// Initial SP
 	mov	r1,TCB.KSP(r0)		// Save kernel SP
 	
-	mov	CPU.PSW,-(sp)
 	bis	$0b0011000000000000,CPU.PSW // Set previous mode to user
 	mfpd	sp			// Get user mode SP onto stack
 	mov	(sp)+,TCB.USP(r0)	// Extract USP and save it
@@ -36,7 +38,6 @@ _copytrapfp:
 	mov	(sp)+,TCB.SSP(r0)
 	.endif
 
-	mov	(sp)+,CPU.PSW
 	mov	TCB.PSW(r0),r1
 	
 	bic	$0x3FFF,r1	    	    // Isolate mode in saved PSW
@@ -56,7 +57,8 @@ _copytrapfp:
 99$:					  
 	
 	// jsr	pc,_muxx_dumpctcb
-	
+
+	mov	(sp)+,CPU.PSW		// Restore interrupts
 	rts	pc
 
 	/*

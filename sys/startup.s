@@ -13,9 +13,9 @@ _startup:
 	CREPRC $NTASKB,$1,$_taskb,$0
 
 loop:	mov	$MSG,-(sp)
-	jsr	pc,_putstrzl
+	jsr	pc,_printf
 	add	$2,sp
-//	wait
+	wait
 //	YIELD
 	br loop
 
@@ -23,5 +23,5 @@ loop:	mov	$MSG,-(sp)
 	.data
 NTASKA:	.ASCII	"TASKA   "
 NTASKB:	.ASCII 	"TASKB   "
-MSG:	.ASCIZ	"\r\nIdle task"
+MSG:	.ASCIZ	"Idle task\n"
 	.END

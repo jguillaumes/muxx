@@ -10,7 +10,7 @@ taskb() {
   for (;;) {
     for(i=0;i<3;i++) {
       gettpi(0,&myself);
-      printf("\nTASK B. Name: %s, PID: %o, ticks: %l\n", 
+      printf("TASK B. Name: %s, PID: %o, ticks: %l\n", 
 	     myself.taskname,myself.pid, myself.clockTicks);
     }
 //    yield();

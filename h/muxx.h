@@ -48,6 +48,9 @@ typedef struct MMUSTATE_S MMUSTATE;
 ** and only one "thread". To implement multithreading it would be 
 ** necessary to move the CPUSTATE information out of the TCB and relate
 ** it to the TCB in an 1..n relationship.
+**
+** The offsets to the individual fields are declared in MUXX.s and must
+** be updated if this structure is modified.
 */
 struct TCB_S {
   char taskname[8];         // Process name
@@ -71,9 +74,9 @@ struct TCB_S {
     WORD prvword;
     struct {
        int operprv  :1;       // Operation privilege (full access)
-      int ioprv    :1;       // I/O privilege (access to iospace)
-      int auditprv :1;       // Can see any memory page 
-      int filler   :13;
+      int ioprv     :1;       // I/O privilege (access to iospace)
+      int auditprv  :1;       // Can see any memory page 
+      int filler    :13;
     } prvflags;
   } privileges;
   WORD taskType;             // Kernel or User task
@@ -87,15 +90,20 @@ struct TCB_S {
   CPUSTATE cpuState;  // Saved CPU status
   MMUSTATE mmuState;  // Saved MMU status
  
-  LONGWORD clockTicks;       // CPU in use clock ticks since task creation
-  LONGWORD created_timestamp; // Timestamp of creation 
-
+  LONGWORD clockTicks;        // CPU in use clock ticks since task creation
+  LONGWORD created_timestamp; // Timestamp of creation
+  LONGWORD localFlags;        // Local event flags
 };
 
 typedef struct TCB_S TCB;
 typedef struct TCB_S *PTCB;
 
-
+/*
+** Macros for reading, setting and clearing local flags
+*/
+#define LOCALFLAG(x,f) (((x)->localFlags >> (f)) & 0x0001)
+#define SETLOCALF(x,f) (((x)->localFlags) | (0x0001 << (f)))
+#define CLRLOCALF(x,f) (((x)->localFlags) & (~(0x0001 << (f))))
 /*
 ** Task control table
 **
@@ -156,9 +164,60 @@ typedef struct MMCB_S *PMMCB;
 typedef struct MMCBT_S MMCBT;
 typedef struct MMCBT_S *PMMCBT;
 
-void panic(char *);
 
+/*
+** Device interrupt structure
+*/
+struct DRVISR_S {
+  ADDRESS handler;
+  ADDRESS vector;
+  WORD    ilevel;
+};
 
+typedef struct DRVISR_S  DRVISR;
+typedef struct DRVISR_S *PDRVISR;
+
+/*
+** Device driver descriptor
+**
+** See muxxdef.h for callback names
+*/
+struct DRVDESC_S {
+  ADDRESS callbacks[8];
+  WORD    numisr;
+  DRVISR  isrtable[4];
+};
+
+typedef struct DRVDESC_S DRVDESC;
+typedef struct DRVDESC_S *PDRVDESC;
+
+/*
+** Device driver table definitions
+*/
+struct DRVCB_S {
+  char drvname[8];           // Driver name
+  PDRVDESC desc;             // Driver descriptor
+  struct {
+    int free     :1;         // Unused entry
+    int loaded   :1;         // Device driver has been loaded
+    int active   :1;         // Device driver is active
+    int stopped  :1;         // Device driver has been stopped
+    int reserved :12;
+  } flags;
+  WORD  taskid;              // Controller task
+  WORD  status;              // Last error code
+};
+
+typedef struct DRVCB_S  DRVCB;
+typedef struct DRVCB_S *PDRVCB;
+
+struct DRVCBT_S {
+  char eyecat[8];           // Eyecatcher (DRVCBT-)
+  WORD  numdrvcb;           // Number of loaded drivers
+  DRVCB drvcbt[MAX_DRV];    // DRVCB table
+};
+
+typedef struct DRVCBT_S DRVCBT;
 
 #define _MUXX_H
 #endif

@@ -17,6 +17,7 @@
 	.global	_ustackt
 	.global	_ustackb
 	.global _mmcbtaddr
+	.global _drvcbtaddr
 	.global _topspid
 	.global _maxspid
 	.global _minspid
@@ -44,6 +45,7 @@ _ustackt:	.WORD TOP_STACK-KRN_STACK-2		// Top of user stack
 _ustackb:	.WORD TOP_STACK-KRN_STACK-USR_STACK	// Bottom of user stack
 
 _mmcbtaddr:	.WORD _mmcbt		// Address of MMCBT
+_drvcbtaddr:	.WORD _drvcbt		// Address of DRVCBT
 	
 _topspid:	.WORD 0			// Highest assigned system PID
 _minspid:	.WORD 00001		// Minimal assignable system PID

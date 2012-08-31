@@ -82,6 +82,7 @@
 #define MMU_KISAR7		0172356
 #define MMU_KDSAR0		0172360
 #define MAX_TASKS		16
+#define MAX_DRV		8
 #define CLK_FREQ		60
 #define CLK_QUANTUM		6
 #define KRN_STACK		1024

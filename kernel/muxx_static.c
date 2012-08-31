@@ -11,4 +11,7 @@ TQUEUE suspQueue  __attribute__ ((common)) = {0};    // Suspended list
 
 MMCBT mmcbt __attribute__ ((common)) = {0};
 
+DRVCBT drvcbt __attribute__ ((common)) = {0};
+
 BYTE muxx_latches[LTC_LATCHES] __attribute__ ((common)) = {0}; // System latches
+

@@ -8,6 +8,7 @@
 #include <string.h>
 
 typedef int (*SVC)(int,...);
+typedef int (*DRV)(int, void *);
 
 static int muxx_svc_yield() __attribute__ ((noreturn));
 static int muxx_svc_muxxhlt() __attribute__ ((noreturn));
@@ -16,6 +17,16 @@ struct SVC_S {
   SVC svc;
   int nparams;
 };
+
+static int muxx_svc_drvreg(char *name, ADDRESS entry) {
+  DRV driver;
+  int rc;
+
+  driver = (DRV) entry;
+  rc = (*driver)(DRV_OPEN,NULL);
+
+  return ENOIMPL;
+}
 
 static int muxx_svc_gettpi(WORD pid, PTCB area) {
   PTCB source = NULL;
@@ -41,29 +52,32 @@ static int muxx_svc_muxxhlt() {
 
 static int muxx_svc_suspend(PTCB task) {
   PTCB theTask = NULL;
+  int curpl=0;
 
   if (task == NULL) {
     theTask = curtcb;
   } else {
     theTask = task;
-    if (curtcb->privileges.prvflags.operprv ||
-        (curtcb->uic == theTask->uic)) {
-      muxx_qRemoveTask(readyq, theTask);
-    } else {
-      return ENOPRIV;
-    }
   }
-  
-  theTask->status = TSK_SUSP;
-  muxx_qAddTask(suspq, theTask);
-  if (theTask == curtcb) {
-    copyMMUstate();
-    muxx_schedule();
+  if (curtcb->privileges.prvflags.operprv ||
+      (curtcb->uic == theTask->uic)) {
+    curpl = setpl7();
+    muxx_qRemoveTask(readyq, theTask);
+    theTask->status = TSK_SUSP;
+    muxx_qAddTask(suspq, theTask);
+    if (theTask == curtcb) {
+      copyMMUstate();
+      muxx_schedule();
+    }
+    setpl(curpl);
+  } else {
+    return ENOPRIV;
   }
   return EOK;
 }
 
 static int muxx_svc_yield() {
+  setpl7();                   
   curtcb->status = TSK_READY;
   muxx_qAddTask(readyq, curtcb);
   copyMMUstate();
@@ -104,7 +118,7 @@ int muxx_systrap_handler(int numtrap, WORD p1, WORD p2, WORD p3, WORD p4) {
     {(SVC) muxx_svc_yield,0},     // 25
     {(SVC) muxx_svc_gettpi,2},     // 26
 
-    {(SVC) muxx_unimpl, 0},	  // KRNL 01
+    {(SVC) muxx_svc_drvreg, 2},	  // KRNL 01
     {(SVC) muxx_unimpl, 0},	  // KRNL 02
     {(SVC) muxx_unimpl, 0},	  // KRNL 03
     {(SVC) muxx_unimpl, 0},	  // KRNL 04
@@ -148,6 +162,10 @@ int muxx_systrap_handler(int numtrap, WORD p1, WORD p2, WORD p3, WORD p4) {
     case SRV_GETTPI:
       rc = muxx_svc_gettpi((WORD) p1, (PTCB) p2);
       break;
+    case KRN_DRVREG:
+      rc = muxx_svc_drvreg((char *) p1, (ADDRESS) p2);
+      break;
+
     default:
       rc = muxx_unimpl();
   }

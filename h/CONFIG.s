@@ -164,8 +164,9 @@
 	/*
 	** Kernel config constants
 	*/
-	MAX_TASKS = 16
-	CLK_FREQ = 60
+	MAX_TASKS = 16	// Size of the TCBT (max number of tasks)
+	MAX_DRV = 8	// Size of the DRVCBT (max number of device drivers)
+	CLK_FREQ = 60	
 	CLK_QUANTUM = 6	
 	KRN_STACK = 1024
 	USR_STACK = 3072
