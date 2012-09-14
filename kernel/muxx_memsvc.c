@@ -6,24 +6,6 @@
 #include "errno.h"
 #include "spl.h"
 
-#define PDR_ACC_RW 0x0006
-#define PDR_ACC_RO 0x0004
-#define PDR_ACC_NA 0x0000
-
-#define PDR_DIR_UP 0x0000 
-#define PDR_DIR_DN 0x0008
-
-#define PDR_SIZ_0K 0x0000
-#define PDR_SIZ_1K 0x1000
-#define PDR_SIZ_2K 0x2000
-#define PDR_SIZ_4K 0x4000
-#define PDR_SIZ_8K 0x7F00
-
-#define MMCB_FLG_SHR 0x0001
-#define MMCB_FLG_FIX 0x0002
-#define MMCB_FLG_PRV 0x0004
-#define MMCB_FLG_IO  0x0008
-#define MMCB_FLG_STK 0x0010
 
 int findFreeMMCB();               // Forward declaration
 
@@ -40,7 +22,6 @@ PMMCB muxx_mem_getblock(PTCB owner, WORD numBlocks, WORD flags, WORD page) {
   PMMCB  cur = NULL, new=NULL;
   int found = 0;
   int numMMCB = 0;
-  int curPL = 0;
 
   // Check limit of blocks (128 = 8KB)
   if (numBlocks > 128) return (NULL);
@@ -187,24 +168,54 @@ int muxx_mem_init() {
 */
 int muxx_setup_taskmem (PTCB task) {
   PMMCB mcb = NULL;
+  int tsize=0;
+  int ssize=0;
+  int ttype=0;
   int rc = EOK;
 
+  ttype = (task->taskType & 0000007);
+  tsize = (task->taskType & 0000070);          // Extract task size
+  ssize = (task->taskType & 0000700);          // Extract task size
+  
+  // Check combinations of task type, task size and stack sze
+  if (ssize != TSZ_SMALLS) return EINVVAL;      // Right now stack size setting
+			                       // is not supported
+  
+  switch(ttype) {
+  case SYS_TASK:         // System tasks: any size is allowed
+    break;
+  case USR_TASK:         // User tasks: any size is allowed
+    break;
+  case DRV_TASK:         // Driver tasks: Big (TSZ_BIG) is not allowed
+    if (tsize == TSZ_BIG) return EINVVAL;
+    break;
+  default:
+    return EINVVAL;
+  }
+
+
   /*
-  ** Kernel common blocks
+  ** Kernel common pages (0-2)
   */
   task->mmuState.upar[0] = 0;
   task->mmuState.updr[0] = PDR_ACC_RW | PDR_SIZ_8K; // Should be RO
-  task->mmuState.upar[1] = 0200;
-  task->mmuState.updr[1] = PDR_ACC_RW | PDR_SIZ_8K; // Should be RO
   task->mmuState.kpar[0] = 0;
   task->mmuState.kpdr[0] = PDR_ACC_RW | PDR_SIZ_8K;
+  task->mmuState.upar[1] = 0200;
+  task->mmuState.updr[1] = PDR_ACC_RW | PDR_SIZ_8K; // Should be RO
   task->mmuState.kpar[1] = 0200;
   task->mmuState.kpdr[1] = PDR_ACC_RW | PDR_SIZ_8K;
+  task->mmuState.upar[2] = 0400;
+  task->mmuState.updr[2] = PDR_ACC_RW | PDR_SIZ_8K; // Should be RO
+  task->mmuState.kpar[2] = 0400;
+  task->mmuState.kpdr[2] = PDR_ACC_RW | PDR_SIZ_8K;
 
   /*
   ** Task private space
   */
-  mcb = muxx_mem_getblock(task, 0200, 0, 2);
+  
+  // First page, always present (page 3, 8KB)
+  mcb = muxx_mem_getblock(task, 0200, 0, 3);
   if (mcb != NULL) {
     task->mmuState.upar[2] = mcb->blockAddr;
     task->mmuState.updr[2] = PDR_ACC_RW | PDR_SIZ_8K;
@@ -214,8 +225,36 @@ int muxx_setup_taskmem (PTCB task) {
     return (ENOMEM);
   }
 
+  // Second page, present for TSS_MED processes, page 4 8KB
+  if ((tsize == TSZ_MED) || (tsize == TSZ_BIG)) {
+    mcb = muxx_mem_getblock(task, 0200, 0, 4);
+    if (mcb != NULL) {
+      task->mmuState.upar[2] = mcb->blockAddr;
+      task->mmuState.updr[2] = PDR_ACC_RW | PDR_SIZ_8K;
+      task->mmuState.kpar[2] = mcb->blockAddr;
+      task->mmuState.kpdr[2] = PDR_ACC_RW | PDR_SIZ_8K;
+    } else {
+      return (ENOMEM);
+    }
+  }
+
+  // Second page, present for TSS_BIG processes, page 5 8KB
+  if (tsize == TSZ_BIG) {
+    mcb = muxx_mem_getblock(task, 0200, 0, 5);
+    if (mcb != NULL) {
+      task->mmuState.upar[2] = mcb->blockAddr;
+      task->mmuState.updr[2] = PDR_ACC_RW | PDR_SIZ_8K;
+      task->mmuState.kpar[2] = mcb->blockAddr;
+      task->mmuState.kpdr[2] = PDR_ACC_RW | PDR_SIZ_8K;
+    } else {
+      return (ENOMEM);
+    }
+  }
+
+
   /*
   ** Task stack space
+  ** The stack size options should be evaluated and applied here
   */
   mcb = muxx_mem_getblock(task, 0100, MMCB_FLG_STK, 6);
   if (mcb != NULL) {
@@ -226,7 +265,6 @@ int muxx_setup_taskmem (PTCB task) {
   } else {
     return (ENOMEM);
   }
-
 
   /*
   ** IOspace block
@@ -245,6 +283,24 @@ int muxx_setup_taskmem (PTCB task) {
     task->mmuState.upar[7] = 0;
     task->mmuState.updr[7] = PDR_ACC_NA | PDR_SIZ_0K;
   }
+
+  /*
+  ** Driver task (allocate 1KB at page 5 for buffer space)
+  ** DRV_TASK can not be big, so the page 5 should always be free
+  **
+  */ 
+  if (ttype == DRV_TASK) {
+    mcb = muxx_mem_getblock(task, DRV_BUFSIZ/64, MMCB_FLG_BUF, 5);
+    if (mcb != NULL) {
+      task->mmuState.upar[4] = mcb->blockAddr;
+      task->mmuState.updr[4] = PDR_ACC_RW | PDR_SIZ_1K;
+      task->mmuState.kpar[4] = mcb->blockAddr;
+      task->mmuState.kpdr[4] = PDR_ACC_RW | PDR_SIZ_1K;
+    } else {
+      return (ENOMEM);
+    }
+  }
+
   return (rc);
 }
 

@@ -10,6 +10,7 @@
 _muxx_init:
 	CMKRNL
 	reset				// Reset unibus devices
+	jsr	pc, _libtest
 	mov 	$kernsp, sp		// KRNL SP to reserved area
 	jsr	pc, _mmu_enable		// Enable MMU and interrupts
 	jsr	pc, _muxx_setup		// Set up EMT handler

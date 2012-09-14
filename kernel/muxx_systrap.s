@@ -62,12 +62,13 @@ muxx_trap_handle:
 noparms:
 //	mov	_curtcb,r1		// R1 => Current TCB
 //	mov	TCB.PC(r1),r1		// R1 => Trap return address
-	
+
 	mov	2(r5),r1		// R1: Trap frame pointer
+	mov	r1,-(sp)		// ... pushed as 2nd parm
 	mov	14(r1),r1		// R1: Trap return address 
  	mov	-2(r1),r1		// R1 contains the EMT/TRAP instruction
 	bic	$0xff00,r1		// R1 contains now the EMT/TRAP number
-	mov	r1,-(sp)		// … which is pushed in the stack
+	mov	r1,-(sp)		// ... pushed as first parm
 	jsr	pc,_muxx_systrap_handler // Call the C trap handler
 	mov	r5,sp			// Clean up parameters from stack 
 	mov	(sp)+,r5		// Get previous frame pointer

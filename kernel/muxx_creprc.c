@@ -9,7 +9,7 @@
 
 
 
-int muxx_svc_creprc(char *name, int type, ADDRESS entry, WORD privs) {
+int muxx_svc_creprc(ADDRESS fp, char *name, int type, ADDRESS entry, WORD privs) {
   PTCB newTask = NULL;
   int pididx = 0;
 

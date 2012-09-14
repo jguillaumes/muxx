@@ -15,6 +15,7 @@ _emt_table:	.WORD	_svc_muxhlt	// 0: Halt system
 
 
 	.text
+
 _muxx_setup:
 	mov	r0,-(sp)
 	mov	$VEC.EMT,r0		// R0 => EMT vector

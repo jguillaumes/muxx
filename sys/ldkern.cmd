@@ -2,8 +2,9 @@ OUTPUT_FORMAT("a.out-pdp11")
 OUTPUT_ARCH(pdp11)
 SEARCH_DIR("/usr/local/pdp11-aout/lib");
 SEARCH_DIR("/usr/local/lib/gcc/pdp11-aout/4.6.4/");
-ENTRY(start)
-phys = 01000;
+ENTRY(sysstart)
+phys    =  01000;
+_toptask =  3 * 8192;
 SECTIONS
 {
   .text phys : AT(phys) {

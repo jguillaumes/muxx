@@ -3,72 +3,97 @@
 /*
 ** "Public" service calls
 */
-#define KRN_HALT     0
-#define SRV_CREPRC   1
-#define SRV_DELPRC   2
-#define SRV_CHGPRC   3
-#define SRV_LOAD     4
-#define SRV_UNLOAD   5
-#define SRV_GETCORE  6
-#define SRV_FREECORE 7
-#define SRV_SUSPEND  8
-#define SRV_AWAKE    9
-#define SRV_OPEN    10
-#define SRV_CLOSE   11
-#define SRV_IOCTL   12
-#define SRV_READ    13
-#define SRV_WRITE   14
-#define SRV_CREATE  15
-#define SRV_DELETE  16
-#define SRV_SEND    17
-#define SRV_RECEIVE 18
-#define SRV_CRESEM  19
-#define SRV_DELSEM  20
-#define SRV_INCSEM  21
-#define SRV_DECSEM  22
-#define SRV_GETSHM  23
-#define SRV_FREESHM 24
-#define SRV_YIELD   25
-#define SRV_GETTPI  26
-#define SRV_LAST    26
+#define KRN_HALT     0    // System halt
+#define SRV_CREPRC   1    // Create process
+#define SRV_DELPRC   2    // Delete process
+#define SRV_CHGPRC   3    // Change (modify) process
+#define SRV_LOAD     4    // Load task
+#define SRV_UNLOAD   5    // Unload (remove) task
+#define SRV_GETCORE  6    // Get physical memory
+#define SRV_FREECORE 7    // Free physical memory
+#define SRV_SUSPEND  8    // Suspend process 
+#define SRV_AWAKE    9    // Awake (unsuspend) process
+#define SRV_OPEN    10    // Open channel (to device)
+#define SRV_CLOSE   11    // Close channel (to device)
+#define SRV_IOCTL   12    // Send control command to device
+#define SRV_READ    13    // Read (from channel)
+#define SRV_WRITE   14    // Write (to channel)
+#define SRV_CREATE  15    // Create logical file
+#define SRV_DELETE  16    // Delete logical file
+#define SRV_SEND    17    // Send IPC message (synchronous) 
+#define SRV_RECEIVE 18    // Listen to receive IPC message (synchronous)
+#define SRV_CRESEM  19    // Create semaphore
+#define SRV_DELSEM  20    // Delete semaphore
+#define SRV_INCSEM  21    // Increment semaphore value
+#define SRV_DECSEM  22    // Decrement semaphore value
+#define SRV_GETSHM  23    // Get shared memory blocks
+#define SRV_FREESHM 24    // Free shared memory blocks
+#define SRV_MUTEX   25    // Lock/Unlock/Read MUTEX
+#define SRV_YIELD   26    // Yield processor
+#define SRV_GETTPI  27    // Get task and process information
+#define SRV_EXIT    28    // Exit task
+#define SRV_ABORT   29    // Abort task
+#define SRV_ALLOC   30    // Allocate/deallocate device
+#define SRV_LAST    30
 
 /*
 ** Kernel service calls
 */
-#define KRN_DRVREG   (SRV_LAST+1)
-#define KRN_DRVUNREG (SRV_LAST+2)
-#define KRN_DEVSTOP  (SRV_LAST+3)
-#define KRN_BUGCHECK (SRV_LAST+4)
-#define KRN_PUTCON   (SRV_LAST+5)
-#define KRN_GETCON   (SRV_LAST+6)
+#define KRN_DRVREG   (SRV_LAST+1)    // Register device driver
+#define KRN_DRVUNREG (SRV_LAST+2)    // Unregister device driver
+#define KRN_DEVSTOP  (SRV_LAST+3)    // Stop device driver
+#define KRN_BUGCHECK (SRV_LAST+4)    // Cause a bugcheck error
+#define KRN_PUTCON   (SRV_LAST+5)    // Put character to system console
+#define KRN_GETCON   (SRV_LAST+6)    // Get character from system console
 
 /*
 ** Task types
 */
-#define SYS_TASK     0
-#define USR_TASK     1
+#define SYS_TASK     0000000         // System task
+#define USR_TASK     0000001         // User task
+#define DRV_TASK     0000002         // Device driver handler task
+
+/*
+** Task code+static size bitmasks
+*/
+#define TSZ_SMALL    0000000         //  8 KB task (1 page)
+#define TSZ_MED      0000010         // 16 KB task (2 pages)
+#define TSZ_BIG      0000020         // 24 KB task (3 pages)
+
+/*
+** Task stack size bitmasks
+*/
+#define TSZ_SMALLS   0000000         //  3KB user + 1 KB kernel ( 1/2 page  )
+#define TSZ_MEDS     0000100         //  6KB user + 2 KB kernel ( 1   page  )
+#define TSZ_BIGS     0000200         // 12KB user + 4 KB kernel ( 2   pages )
 
 /*
 ** Task states
 */
-#define TSK_INIT     0
-#define TSK_READY    1
-#define TSK_BLOCKED  2
-#define TSK_RUN      3
-#define TSK_SUSP     4
-#define TSK_DISPOSE  5
+#define TSK_INIT     0               // Task is ready to start 
+#define TSK_READY    1               // Task is ready to run
+#define TSK_BLOCKED  2               // Task is blocked
+#define TSK_RUN      3               // Task is now running
+#define TSK_SUSP     4               // Task is suspended
+#define TSK_DISPOSE  5               // Task finished, waiting deletion
 
 /*
-** System latches
+** System mutexes
 */
-#define LTC_LATCHES 16
-#define LTC_READYQ   1
-#define LTC_BLOCKQ   2
-#define LTC_SUSPNQ   3
-#define LTC_MCB      4
+#define MUT_MUTEXES 16       // Number of system mutexes
+#define MUT_READYQ   1       // Ready Queue manipulation
+#define MUT_BLOCKQ   2       // Blocked Queue manipulation
+#define MUT_SUSPNQ   3       // Suspended Queue manipulation
+#define MUT_MCB      4       // Memory control block manipulation
+#define MUT_DRV      5       // Device driver manipulation
+
+#define MUT_READ     0
+#define MUT_ALLOC    1
+#define MUT_DEALLOC  2
+
 
 /*
-** Device driver callbacks
+** Device driver callbacks and functions
 */
 #define DRV_START     0
 #define DRV_STOP      1
@@ -78,6 +103,40 @@
 #define DRV_WRITE     5
 #define DRV_IOCTL     6
 #define DRV_QUERY     7
+
+#define DRV_ALLOC     0
+#define DRV_DEALLOC   1
+
+/*
+** DRVCB offsets and constants
+*/
+#define DRV_DESCSIZE  36
+#define DRV_DRVNAME   0
+#define DRV_DESC      8
+#define DRV_FLAGS     (DRV_DESC+DRV_DESCSIZE)
+#define DRV_TASKID    (DRV_FLAGS+2)
+#define DRV_OWNERID   (DRV_TASKID+2)
+#define DRV_STATUS    (DRV_OWNERID+2)
+
+/*
+** IOPKT offsets
+*/
+#define IOP_FUNCTION  0
+#define IOP_PARAMS    2
+#define IOP_SIZE      10
+#define IOP_IOAREA    12
+
+/*
+** IOT offsets and definitions
+*/
+#define IOT_SIZE       16
+#define IOT_CHANNEL     0
+#define IOT_DRIVER      2
+#define IOT_STATUS      4
+#define IOT_POSITION    6
+#define IOT_CONTROLLER 10
+#define IOT_UNIT       11
+#define IOT_ERROR      12
 
 /*
 ** Named local flags
@@ -91,6 +150,43 @@
                                // 6:15 reserved to MUXX
 #define LEF_USR     16         // First used-available flag
 
+
+/*
+** Constants for memory management bits
+*/
+
+#define PDR_ACC_RW 0x0006      // Read-write access
+#define PDR_ACC_RO 0x0004      // Read-only access
+#define PDR_ACC_NA 0x0000      // No access
+
+#define PDR_DIR_UP 0x0000      // Page grows upwards
+#define PDR_DIR_DN 0x0008      // Page grows downwards (stack)
+
+#define PDR_SIZ_0K 0x0000      // Empty page
+#define PDR_SIZ_1K 0x1000      // 1 Kilobyte 
+#define PDR_SIZ_2K 0x2000      // 2 Kilobytes
+#define PDR_SIZ_4K 0x4000      // 4 Kilobytes
+#define PDR_SIZ_8K 0x7F00      // 8 Kilobytes
+
+#define MMCB_FLG_SHR 0x0001    // Shared page
+#define MMCB_FLG_FIX 0x0002    // Fixed page (not moveable in physical memory)
+#define MMCB_FLG_PRV 0x0004    // Accessible just from priv. tasks (operprv)
+#define MMCB_FLG_IO  0x0008    // IO space page (needs ioprv)
+#define MMCB_FLG_STK 0x0010    // Stack page
+#define MMCB_FLG_BUF 0x0020    // Buffer page
+
+/*
+** Constants for TCB bits
+*/
+
+#define TSK_SENDING    0x0001  // Task is sending a message, blocked till recv
+#define TSK_RECEIVING  0x0002  // Task is receiving a message
+#define TSK_SUSPENDED  0x0004  // Task is suspended
+#define TSK_MSGWAIT    0x0008  // Task is wating for a message
+
+#define TSK_OPERPRV    0x0001  // Oper privilege, can access anything
+#define TSK_IOPRV      0x0002  // IO Privilege, can access IOspace
+#define TSK_AUDITPRV   0x0004  // Audit priv, can read anything
 
 #define _MUXDEF_H
 #endif

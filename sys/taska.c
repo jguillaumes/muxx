@@ -2,14 +2,21 @@
 #include "muxxlib.h"
 #include "externals.h"
 
-static char msga[] = ">>> AAA - This is task A - AAA <<<"; 
+extern WORD toptask;
+extern WORD end;
 
 taska() {
-
   int n=0;
-
+ 
   for(;;) {
-    printf("%s - Called %d times\n", msga, ++n);
-//    yield();
+    n = allocw("PTPDRV  ", DRV_ALLOC);
+    if (n != 0) 
+      printf("TASKA - Error allocw: %d.\n", n);
+    else 
+      printf("TASKA - Allocated at %l.\n",utimeticks);
+    sleep(3);
+    allocw("PTPDRV  ", DRV_DEALLOC);
+    printf("TASKA - Deallocated at %l.\n", utimeticks);
+    sleep(1);
   }
 }

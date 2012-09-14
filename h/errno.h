@@ -12,6 +12,11 @@
 #define EILLINST  -5
 #define EINVVAL   -6
 #define ENOPRIV   -7
+#define ELOCKED   -8
+#define ENOAVAIL  -9
+#define ENOTALLOC -10
+#define ENOTFOUND -11
+#define ERRDEV    -12
 
 #define ENOIMPL   -999
 

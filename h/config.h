@@ -90,11 +90,13 @@
 #define TOP_STACK		0160000
 #define MEM_BLOCKS		4096
 #define MEM_NMCBS		128
+#define DRV_BUFSIZ		2048
 #define CPU_HAS_SPL		0
 #define CPU_HAS_CIS		0
 #define CPU_HAS_FPP		0
 #define CPU_HAS_ERROR		1
 #define CPU_HAS_SUPER		0
 #define CPU_HAS_SEPID		0
+#define IOT_ENTRIES		5
 #define _CONFIG_H
 #endif

@@ -6,20 +6,20 @@
 #include "muxxlib.h"
 
 void muxx_handle_cpuerr(void *fp) {
+  asm("halt");
   copytrapfp(fp);
-  kputstrl("\r\n",2);
-  kputstrl("CPUERR exception", 16);
+  kprintf("\nCPUERR exception\n");
 #if CPU_HAS_ERROR == 1
   WORD *cpuerr = (WORD *) CPU_ERR;
 
   kprintf("Error mask: %o\n", *cpuerr);
 
-  if (*cpuerr & 0x0004) kputstrzl("Stack overflow (red)");
-  if (*cpuerr & 0x0008) kputstrzl("Stack overflow (yellow)");
-  if (*cpuerr & 0x0010) kputstrzl("UNIBUS timeout");
-  if (*cpuerr & 0x0020) kputstrzl("Non-existent memory");
-  if (*cpuerr & 0x0040) kputstrzl("Odd address");
-  if (*cpuerr & 0x0080) kputstrzl("Illegal HALT");
+  if (*cpuerr & 0x0004) kprintf("Stack overflow (red)\n");
+  if (*cpuerr & 0x0008) kprintf("Stack overflow (yellow)\n");
+  if (*cpuerr & 0x0010) kprintf("UNIBUS timeout\n");
+  if (*cpuerr & 0x0020) kprintf("Non-existent memory\n");
+  if (*cpuerr & 0x0040) kprintf("Odd address\n");
+  if (*cpuerr & 0x0080) kprintf("Illegal HALT\n");
 
 #endif
   panic("CPUERR");
@@ -27,29 +27,25 @@ void muxx_handle_cpuerr(void *fp) {
 
 void muxx_handle_illins(void *fp) {
   copytrapfp(fp);
-  kputstrl("\r\n",2);
-  kputstrl("ILLINS exception", 16);
+  kprintf("\nILLINS exception\n");
   panic("ILLINS");
 }
 
 void muxx_handle_iot(void *fp) {
   copytrapfp(fp);
-  kputstrl("\r\n",2);
-  kputstrl("IOT    exception", 16);
+  kprintf("\nIOT    exception\n");
   panic("IOT");
 }
 
 void muxx_handle_buserr(void *fp) {
   copytrapfp(fp);
-  kputstrl("\r\n",2);
-  kputstrl("BUSERR exception", 16);
+  kprintf("\nBUSERR exception\n");
   panic("BUSERR");
 }
 
 void muxx_handle_fperr(void *fp) {
   copytrapfp(fp);
-  kputstrl("\r\n",2);
-  kputstrl("FPERR  exception", 16);
+  kprintf("\nFPERR  exception\n");
   panic("FPERR");
 }
 
@@ -66,31 +62,28 @@ void muxx_handle_mmuerr(void *fp) {
   kprintf("\nMMUERR exception at %o\n", *mmr2);
   kprintf("MMR0: %o - page %o\n", *mmr0, page);
 
-  if (*mmr0 & 0x8000) kputstrzl("Non resident");
-  if (*mmr0 & 0x4000) kputstrzl("Page length");
-  if (*mmr0 & 0x2000) kputstrzl("Read only abort");
-  if (*mmr0 & 0x1000) kputstrzl("MMU trap");
+  if (*mmr0 & 0x8000) kprintf("Non resident\n");
+  if (*mmr0 & 0x4000) kprintf("Page length\n");
+  if (*mmr0 & 0x2000) kprintf("Read only abort\n");
+  if (*mmr0 & 0x1000) kprintf("MMU trap\n");
   muxx_dumpmmu(&(curtcb->mmuState));
   panic("MMUERR");
 }
 
 void muxx_handle_trace(void *fp) {
   copytrapfp(fp);
-  kputstrl("\r\n",2);
-  kputstrl("TRACE trap", 16);
+  kprintf("\nTRACE trap\n");
   panic("TRACE");
 }
 
 void muxx_handle_power(void *fp) {
   copytrapfp(fp);
-  kputstrl("\r\n",2);
-  kputstrl("POWER exception", 16);
+  kprintf("\nPOWER exception\n");
   panic("POWER");
 }
 
 void muxx_handle_unimpl(void *fp) {
   copytrapfp(fp);
-  kputstrl("\r\n",2);
-  kputstrl("UNIMPL exception", 16);
+  kprintf("\nUNIMPL exception\n");
   panic("unimplemented");
 }

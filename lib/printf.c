@@ -60,8 +60,8 @@ int PRINTF(char *fmt,...) {
 	}
 	break;
       case 'd':
-	itod(va_arg(arglist,unsigned int),buffer);
-	PUTSTR(buffer,5);
+	itods(va_arg(arglist,unsigned int),buffer);
+	PUTSTR(buffer,6);
 	if (rc >= 0) {
 	  numc += rc;
 	} else {

@@ -1,4 +1,5 @@
-	.NOLIST
+	.nolist
+
 	/*
 	** Offsets into TCB fields
 	*/
@@ -115,7 +116,4 @@
 	TCB.CREATSTAMP	= (TCB.CLOCKTICKS + 4)
 	TCB.LOCALFLAGS  = (TCB.CREATSTAMP + 4)
 
-
-
-
-	.LIST
+	.list

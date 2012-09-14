@@ -27,6 +27,7 @@ int muxx_taskinit(int type, WORD ppid, ADDRESS entry, WORD privs) {
 
   switch(type) {
   case SYS_TASK:
+  case DRV_TASK:
     if (topspid == 0) topspid = minspid;
     pid = topspid + 1;
     if (pid > maxspid) {

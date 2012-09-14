@@ -25,39 +25,42 @@ void muxx_dumpmmu(MMUSTATE *mmu) {
 
 void muxx_dumpmemsvc() {
   int i;
-  kputstrzl("\r\n*** Memory Management Control Blocks (MMCBs):");
+  kprintf("\n*** Memory Management Control Blocks (MMCBs):\n");
   for(i=0;i<MEM_NMCBS; i++) {
     if (mmcbtaddr->mmcbt[i].ownerPID != -1) {
-      kputstrz(" MMCB="); kputoct((WORD) &(mmcbtaddr->mmcbt[i]));
-      kputstrz(" ADDR="); kputoct(mmcbtaddr->mmcbt[i].blockAddr);
-      kputstrz(" SIZE="); kputoct(mmcbtaddr->mmcbt[i].blockSize);  
+      kprintf(" MMCB=%o ADDR=%o ADDR=%o SIZE=%o",
+	      &(mmcbtaddr->mmcbt[i]),mmcbtaddr->mmcbt[i].blockAddr,
+	      mmcbtaddr->mmcbt[i].blockAddr,mmcbtaddr->mmcbt[i].blockSize); 
       if (mmcbtaddr->mmcbt[i].ownerPID == 0) {
-	kputstrz(" OWNR="); kputstrz("*FREE*");  
-	kputstrz(" PAGE="); kputstrz("*NONE*");  
+	kprintf(" OWNR=*FREE* PAGE=*NONE*");
       } else {
-	kputstrz(" OWNR="); kputoct(mmcbtaddr->mmcbt[i].ownerPID);  
-	kputstrz(" PAGE="); kputoct(mmcbtaddr->mmcbt[i].ownerPAR);
+	kprintf(" OWNR=%o PAGE=%o",
+		mmcbtaddr->mmcbt[i].ownerPID,
+		mmcbtaddr->mmcbt[i].ownerPAR);
       }
-
-      kputstrz(" NEXT="); kputoct((WORD) mmcbtaddr->mmcbt[i].nextBlock);
-      kputstrz(" PREV="); kputoct((WORD) mmcbtaddr->mmcbt[i].prevBlock);
+      kprintf(" NEXT=%o PREV=%o", 
+	     mmcbtaddr->mmcbt[i].nextBlock,
+	     mmcbtaddr->mmcbt[i].prevBlock);
       if (mmcbtaddr->mmcbt[i].mmcbFlags.flags.sharedBlock) {
-	kputstrz(" SHR");
+	kprintf(" SHR");
       }
       if (mmcbtaddr->mmcbt[i].mmcbFlags.flags.fixedBlock) {
-	kputstrz(" FIX");
+	kprintf(" FIX");
       }
       if (mmcbtaddr->mmcbt[i].mmcbFlags.flags.privBlock) {
-	kputstrz(" PRV");
+	kprintf(" PRV");
       }
       if (mmcbtaddr->mmcbt[i].mmcbFlags.flags.iopage) {
-	kputstrz(" IO ");
+	kprintf(" IO ");
       }
       if (mmcbtaddr->mmcbt[i].mmcbFlags.flags.stack) {
-	kputstrz(" STK");
+	kprintf(" STK");
       }
-      kputstrl(" ",1);
+      if (mmcbtaddr->mmcbt[i].mmcbFlags.flags.iobuffer) {
+	kprintf(" BUF");
+      }
+      kprintf("\n");
     }
   }
-  kputstrzl("---");
+  kprintf("---\n");
 }

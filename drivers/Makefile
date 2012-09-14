@@ -9,7 +9,7 @@ LDFLAGS=-T ldaout.cmd -M --cref --traditional -lgcc -lpdp11
 CFLAGS=-c -Wall -I../h -Os -ffreestanding -fomit-frame-pointer
 ASMFLAGS=-acmghlsd -I../h -m11/45
 TARGETS=libmuxxdrv.a
-OBJECTS=ptpdrv.o
+OBJECTS=ptpdrv.o ptphnd.o
 
 .out.lda:	
 	$(BIN2LOAD) -a -f $< -o $@

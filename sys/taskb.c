@@ -1,18 +1,22 @@
 #include "muxx.h"
+#include "muxxlib.h"
+#include "externals.h"
 
-static char msgb[] = ">>> BBB - This is task B - BBB <<<"; 
+extern WORD toptask;
+extern WORD end;
 
 taskb() {
-  int i;
-  TCB myself;
-
-
-  for (;;) {
-    for(i=0;i<3;i++) {
-      gettpi(0,&myself);
-      printf("TASK B. Name: %s, PID: %o, ticks: %l\n", 
-	     myself.taskname,myself.pid, myself.clockTicks);
-    }
-//    yield();
+  int n=0;
+ 
+  for(;;) {
+    n = allocw("PTPDRV  ", DRV_ALLOC);
+    if (n != 0) 
+      printf("TASKB - Error allocw: %d.\n", n);
+    else 
+      printf("TASKB - Allocated at %l.\n",utimeticks);
+    sleep(2);
+    allocw("PTPDRV  ", DRV_DEALLOC);
+    printf("TASKB - Deallocated at %l.\n", utimeticks);
+    sleep(1);
   }
 }

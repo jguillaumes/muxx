@@ -1,10 +1,11 @@
-#include <types.h>
-#include <muxxlib.h>
+#include "types.h"
+#include "muxxlib.h"
 #include <string.h>
  
 static char CRLF[]="\r\n";
 
 
+/*
 int getlin(char *buffer, int size, char *term, int termsiz) {
 
   BYTE inchar;
@@ -21,6 +22,7 @@ int getlin(char *buffer, int size, char *term, int termsiz) {
   }
   return (i);
 }
+*/
 
 
 int putstr(char *buffer, int size) {

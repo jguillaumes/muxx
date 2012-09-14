@@ -18,7 +18,7 @@ extern ADDRESS ustackt;
 extern ADDRESS ustackb;
 
 extern PMMCBT mmcbtaddr;
-extern PMMCBT drvcbtaddr;
+extern PDRVCBT drvcbtaddr;
 
 extern WORD topspid;
 extern WORD minspid;
@@ -36,7 +36,7 @@ extern LONGWORD utimeticks;
 extern WORD clkcountdown;
 extern WORD clkquantum;
 
-extern BYTE muxx_latches[LTC_LATCHES];
+extern BYTE muxx_mutexes[MUT_MUTEXES];
 
 #define _EXTERNALS_H
 #endif

@@ -73,9 +73,9 @@ struct TCB_S {
   union {
     WORD prvword;
     struct {
-       int operprv  :1;       // Operation privilege (full access)
+      int operprv  :1;        // Operation privilege (full access)
       int ioprv     :1;       // I/O privilege (access to iospace)
-      int auditprv  :1;       // Can see any memory page 
+      int auditprv  :1;       // Can see any memory page
       int filler    :13;
     } prvflags;
   } privileges;
@@ -140,7 +140,8 @@ struct MMCB_S {
       int privBlock: 1;     // Privilege (oper) required to access this block
       int iopage: 1;        // This is an iopage block (requires iopriv)
       int stack: 1;         // This is a stack page
-      int filler: 11;
+      int iobuffer: 1;      // This page is used for I/O buffers
+      int filler: 10;       
     } flags;
     WORD word;
   } mmcbFlags;
@@ -184,6 +185,15 @@ typedef struct DRVISR_S *PDRVISR;
 */
 struct DRVDESC_S {
   ADDRESS callbacks[8];
+  union {
+    struct {
+      int shareable: 1;
+      int files    : 1;
+      int reserved : 14;
+    } flags;
+    WORD wflags;
+  } attributes;
+  char    devname[8];
   WORD    numisr;
   DRVISR  isrtable[4];
 };
@@ -202,22 +212,57 @@ struct DRVCB_S {
     int loaded   :1;         // Device driver has been loaded
     int active   :1;         // Device driver is active
     int stopped  :1;         // Device driver has been stopped
-    int reserved :12;
+    int alloc    :1;         // Device dricer has been allocated
+    int reserved :11;
   } flags;
-  WORD  taskid;              // Controller task
-  WORD  status;              // Last error code
+  PTCB taskid;               // Controller task
+  PTCB ownerid;              // Owning task
+  WORD status;               // Last error code
 };
 
 typedef struct DRVCB_S  DRVCB;
 typedef struct DRVCB_S *PDRVCB;
 
 struct DRVCBT_S {
-  char eyecat[8];           // Eyecatcher (DRVCBT-)
+  char eyecat[8];           // Eyecatcher (DRVCBT--)
   WORD  numdrvcb;           // Number of loaded drivers
   DRVCB drvcbt[MAX_DRV];    // DRVCB table
 };
 
 typedef struct DRVCBT_S DRVCBT;
+typedef struct DRVCBT_S *PDRVCBT;
+
+struct IOPKT_S {
+  WORD function;
+  WORD param[4];
+  WORD size;
+  BYTE ioarea[0];
+};
+
+typedef struct IOPKT_S IOPKT;
+typedef struct IOPKT_S *PIOPKT;
+
+struct IOTE_S {
+  WORD channel;
+  PDRVCB driver;
+  union {
+    struct {
+      int open:      1;
+      int eof:       1;
+      int ioerror:   1;
+      int reserved: 13;
+    } flags;
+    WORD wflags;
+  } status;
+  LONGWORD position;
+  BYTE controller;
+  BYTE unit;
+  WORD error;
+  char reserved[2];
+};
+
+typedef struct IOTE_S IOTE;
+typedef struct IOTE_S *PIOTE;  
 
 #define _MUXX_H
 #endif

@@ -57,10 +57,11 @@ void muxx_dumpregs(CPUSTATE *cpus) {
     kputstr(" N-",3);
   }
   if ((cpus->psw & 0x0010) != 0) {
-    kputstrl(" T+",3);
+    kputstr(" T+",3);
   } else {
-    kputstrl(" T-",3);
+    kputstr(" T-",3);
   }
+  kprintf("\n");
 }
 
 void muxx_dumptcbregs() {

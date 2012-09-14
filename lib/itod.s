@@ -4,7 +4,7 @@
 	.INCLUDE "MACLIB.s"
 
 	
-	.GLOBAL _itod,_itodl,_itodb
+	.GLOBAL _itod,_itods,_itodl,_itodb
 
 _itod:
 	procentry saver4=no 
@@ -23,8 +23,22 @@ _itod:
 	
 	procexit getr4=no
 
-	.GLOBAL _itodb
+_itods:
+	procentry saver2=no,saver3=no,saver4=no
+	mov	4(r5),r0
+	mov	6(r5),r1
+	bpl	10$
+	movb	$'-',(r1)+
+	neg	r0
+	br	20$
 
+10$:	movb	$' ',(r1)+
+20$:	mov	r1,-(sp)
+	mov	r0,-(sp)
+	jsr	pc,_itod
+	add	$4,sp
+	procexit getr2=no,getr3=no,getr4=no
+	
 _itodb: saver4=no
 	procentry
 	movb	4(r5),r3

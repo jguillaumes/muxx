@@ -1,22 +1,8 @@
-all:	kernel sys h lib shell
+MAKE=make
+DIRS= kernel drivers lib sys
 
-kernel:	
-	cd kernel
-	make
+all:
+	set -e; for d in $(DIRS); do $(MAKE) -C $$d ; done
 
-sys:
-	cd kernel
-	make
-
-h:	
-	cd h
-	make
-
-lib:
-	cd lib
-	make
-
-shell:
-	cd shell
-	make
-
+clean:
+	set -e; for d in $(DIRS); do $(MAKE) clean -C $$d ; done

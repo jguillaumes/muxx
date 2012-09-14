@@ -38,19 +38,23 @@ void muxx_fakeproc() {
 
   mmu->upar[0] = 0;
   mmu->upar[1] = 0200;
-  mmu->upar[6] = 0400;
+  mmu->upar[2] = 0400;
+  mmu->upar[6] = 0600;
   mmu->upar[7] = 07600; 
   mmu->kpar[0] = 0;
   mmu->kpar[1] = 0200;
-  mmu->kpar[6] = 0400;
+  mmu->kpar[2] = 0400;
+  mmu->kpar[6] = 0600;
   mmu->kpar[7] = 07600; 
   
   mmu->updr[0] = 0x7F06;  
   mmu->updr[1] = 0x7F06;  
+  mmu->updr[2] = 0x7F06;  
   mmu->updr[6] = 0x400E;
   mmu->updr[7] = 0x7F04;
   mmu->kpdr[0] = 0x7F06;  
   mmu->kpdr[1] = 0x7F06;  
+  mmu->kpdr[2] = 0x7F06;  
   mmu->kpdr[6] = 0x400E;
   mmu->kpdr[7] = 0x7F06;
 
