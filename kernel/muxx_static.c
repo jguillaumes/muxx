@@ -15,3 +15,4 @@ DRVCBT drvcbt __attribute__ ((common)) = {0};
 
 BYTE muxx_mutexes[MUT_MUTEXES] __attribute__ ((common)) = {0}; // System latches
 
+IOTT muxx_iott __attribute__ ((common)) = {0}; // IO table

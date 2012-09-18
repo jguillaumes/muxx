@@ -97,6 +97,7 @@
 #define CPU_HAS_ERROR		1
 #define CPU_HAS_SUPER		0
 #define CPU_HAS_SEPID		0
-#define IOT_ENTRIES		5
+#define IOT_TENTRIES		5
+#define IOT_SENTRIES		16
 #define _CONFIG_H
 #endif

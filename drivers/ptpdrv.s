@@ -18,6 +18,7 @@
 
 _ptpdesc:
 	mov	$ptpdesct,r0
+	clc
 	rts	pc
 
 ptpopen:
@@ -30,54 +31,83 @@ ptpclose:
 	clr	r0
 	rts	pc
 
+	/*
+	** Read a byte from punched tape reader
+	*/
 ptpread:
 	procentry saver2=no,saver3=no,saver4=no
-	mov	4(r5),r1
-	cmp	IOP_SIZE(r1),$1
+	mov	4(r5),r1		// R1: IOPKT address
+	cmp	IOP_SIZE(r1),$1		// Buffer size must be one
 	beq	5$
-	mov	$EINVVAL,r0
-	sec
-	br	999$
-5$:	clc
-	mov	PTP.PRS,r0
-	bit	$ERROR,r0
-	beq	10$
-	mov	$ERRDEV,r0
-	sec
-	br	999$
-10$:	bis	$ENAB,PTP.PRS
-20$:	bit	$DONE,PTP.PRS
-	beq	20$
-	mov	PTP.PRB,IOP_IOAREA(r1)
-999$:	procexit getr2=no,getr3=no,getr4=no
+	mov	$EINVVAL,r0		// Error: Invalid value
+	br	900$
+
+5$:	clc				// Carry clear: OK
+	mov	PTP.PRS,r0		// R0: Paper Reader Status Register
+	bit	$ERROR,r0		// Error in dev?
+	beq	10$			// No: go on
+	mov	$ERRDEV,r0		// Prepare error code
+	br	900$
+
+10$:	bis	$ENAB,PTP.PRS		// Enable reader
+20$:	bit	$(DONE+ERROR),PTP.PRS	// Check done or error
+	beq	20$			// No: try again
+	bit	$ERROR,PTP.PRS		// Error?
+	bne	readok			// No: then read OK
+	mov	$ERRDEV,r0		// Yes: prepare error code
+	br	900$
 	
+readok:	movb	PTP.PRB,IOP_IOAREA(r1)	// Move read byte to buffer
+	br	999$			// Anhd exit
+
+900$:	sec				// Error => Carry set
+	mov	r0,IOP_ERROR(r1)	// Copy error code to IOPK
+
+999$:	procexit getr2=no,getr3=no,getr4=no
+
+	/*
+	** Punch a byte
+	*/
 ptpwrite:
 	procentry saver3=no,saver4=no
-	mov	4(r5),r2
-	cmp	IOP_SIZE(r1),$2
-	beq	5$
-	mov	$EINVVAL,r0
-	sec
-	br	999$
-5$:	clc
-	mov	PTP.PPS,r1
-	bit	$ERROR,r1
-	beq	10$
-	mov	$ERRDEV,r0
-	sec
-	br	999$
-10$:	bit	$READY,PTP.PPS
-	beq	10$
+	mov	4(r5),r2		// R2: IOPK address
+	cmp	IOP_SIZE(r2),$2		// Check size (must be one)
+	beq	5$			
+	mov	$EINVVAL,r0		// Prepare error code		
+	br	900$
+	
+5$:	clc				// Carry clear: OK
+
+10$:	bit	$(READY+ERROR),PTP.PPS	// Check device ready/error
+	beq	10$			// Not ready/error: repeat
+	bit	$ERROR,PTP.PPS		// Check error status
+	beq	dowrite			// No error, then we arew ready
+	mov	$ERRDEV,r0		// Error: prepare error code
+	br	900$
+	
+dowrite:	
 	movb	IOP_IOAREA(r2),PTP.PPB
+	br	999$
+	
+900$:	sec
+	mov	r0,IOP_ERROR(r2)	// Copy error code to IOPK	
+
 999$:	mov	r1,r0
 	procexit getr3=no,getr4=no
+
+ptpflush:
+	clc
+	clr	r0
+	rts	pc
 
 
 ptpstart:
 ptpstop:
 ptpquery:	
 ptpioctl:	
+ptpseek:	
 	mov	$ENOIMPL,r0
+	sec
 	rts	pc
 	
 ptpisr:
@@ -93,6 +123,8 @@ ptpdesct:
 	.WORD	ptpwrite
 	.WORD	ptpioctl
 	.WORD   ptpquery
+	.WORD	ptpseek
+	.WORD	ptpflush
 	.WORD	0
 	.ASCII  "PT      "
 	.WORD	2

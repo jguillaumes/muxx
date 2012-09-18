@@ -83,6 +83,7 @@ MUT_BLOCKQ = 2		// Blocked Queue manipulation
 MUT_SUSPNQ = 3		// Suspended Queue manipulation
 MUT_MCB = 4		// Memory control block manipulation
 MUT_DRV = 5		// Device driver manipulation
+MUT_CHAN = 6		// Channel manipulation
 MUT_READ = 0
 MUT_ALLOC = 1
 MUT_DEALLOC = 2
@@ -97,15 +98,17 @@ DRV_READ = 4
 DRV_WRITE = 5
 DRV_IOCTL = 6
 DRV_QUERY = 7
+DRV_SEEK = 8
+DRV_FLUSH = 9
 DRV_ALLOC = 0
 DRV_DEALLOC = 1
 /*
 ** DRVCB offsets and constants
 */
-DRV_DESCSIZE = 36
+DRV_DESCSIZE = 40
 DRV_DRVNAME = 0
 DRV_DESC = 8
-DRV_FLAGS = (DRV_DESC+DRV_DESCSIZE)
+DRV_FLAGS = (DRV_DESC+2)
 DRV_TASKID = (DRV_FLAGS+2)
 DRV_OWNERID = (DRV_TASKID+2)
 DRV_STATUS = (DRV_OWNERID+2)
@@ -113,9 +116,10 @@ DRV_STATUS = (DRV_OWNERID+2)
 ** IOPKT offsets
 */
 IOP_FUNCTION = 0
-IOP_PARAMS = 2
-IOP_SIZE = 10
-IOP_IOAREA = 12
+IOP_ERROR = 2
+IOP_PARAMS = 4
+IOP_SIZE = 12
+IOP_IOAREA = 14
 /*
 ** IOT offsets and definitions
 */

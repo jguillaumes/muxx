@@ -38,5 +38,7 @@ extern WORD clkquantum;
 
 extern BYTE muxx_mutexes[MUT_MUTEXES];
 
+extern PIOTT iott;
+
 #define _EXTERNALS_H
 #endif

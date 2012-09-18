@@ -7,8 +7,8 @@ LD=pdp11-aout-ld
 SIZE=pdp11-aout-size
 LIBS=-L../lib -lmuxx -L../kernel -lkmuxx -L../drivers -lmuxxdrv -lgcc -lpdp11
 LDFLAGS=-M --cref --traditional 
-CFLAGS=-c -Os -ffreestanding -I../h -fomit-frame-pointer
-ASMFLAGS=-aghls -am -I../h
+CFLAGS=-c -Os -ffreestanding -I../h -fomit-frame-pointer -fno-builtin
+ASMFLAGS=-aghls -am -I../h 
 MACROS=../h/SCB.s ../h/MUXXDEF.s ../h/MACLIB.s ../h/MUXXMAC.s
 
 .out.lda:	

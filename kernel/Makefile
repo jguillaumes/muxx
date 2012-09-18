@@ -7,7 +7,7 @@ LD=pdp11-aout-ld
 AR=pdp11-aout-ar
 LDFLAGS=-T ldaout.cmd -M --cref --traditional -lgcc -lpdp11
 CFLAGS=-c -Wall -I../h -Os -ffreestanding -fomit-frame-pointer
-ASMFLAGS=-acmghlsd -I../h -m11/45
+ASMFLAGS=-acmghlsd -I../h 
 
 TARGETS=libkmuxx.a
 OBJECTS=muxx_mmu.o muxx_cputrap.o muxx_kconio.o muxx_systrap.o muxx_tctinit.o \
@@ -16,7 +16,7 @@ OBJECTS=muxx_mmu.o muxx_cputrap.o muxx_kconio.o muxx_systrap.o muxx_tctinit.o \
 	muxx_panic.o muxx_dumpregs.o muxx_copytrapframe.o muxx_creprc.o \
 	muxx_taskqueues.o muxx_switch.o muxx_dumptcb.o muxx_dumpmmu.o \
 	muxx_kconio1.o muxx_yield.o muxx_schedule.o kprintf.o muxx_drvinit.o \
-	muxx_drvctl.o muxx_drvctl_a.o
+	muxx_drvctl.o muxx_drvctl_a.o muxx_channels.o
 
 .out.lda:	
 	$(BIN2LOAD) -a -f $< -o $@

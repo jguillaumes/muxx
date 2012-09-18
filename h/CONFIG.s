@@ -181,7 +181,7 @@
 	CPU_HAS_SUPER = 0	// Supervisor mode supported and enabled
 	CPU_HAS_SEPID = 0	// Separated I and D address spaces
 
-	IOT_ENTRIES = 5		// Number of channels per process
-
+	IOT_TENTRIES = 5	// Channels per process
+	IOT_SENTRIES = 16	// Channels per system
 
 	.LIST

@@ -135,6 +135,11 @@
 	add	$4,sp
 	.endm
 	
+	/*
+	** Allocate or release a MUTEX
+	** mutex: mutex number
+	** op: operation: MUT_READ, MUT_ALLOC, MUT_DEALLOC
+	*/
 	.macro MUTEX mutex,op=MUT_READ
 	sub	$6,sp
 	mov	$2,(sp)
@@ -145,6 +150,11 @@
 	add	$6,sp
 	.endm
 
+	/*
+	** Allocate or release a device
+	** devnam: device driver name
+	** op: operation: DRV_ALLOC, DRV_DEALLOC
+	*/
 	.macro ALLOC devnam,op
 	sub	$6,sp
 	mov	$2,(sp)
@@ -153,6 +163,25 @@
 	mov	sp,r0
 	trap	$SRV_ALLOC
 	add	$6,sp
+	.endm
+
+	.macro OPEN devnam,flags=OO_READ
+	sub	$6,sp
+	mov	$2,(sp)
+	mov	\flags,2(sp)
+	mov	\devnam,4(sp)
+	mov	sp,r0
+	trap	$SRV_OPEN
+	add	$6,sp
+	.endm
+
+	.macro CLOSE fd
+	sub	$4,sp
+	mov	$2,(sp)
+	mov	\fd,2(sp)
+	mov	sp,r0
+	trap	$SRV_OPEN
+	add	$4,sp
 	.endm
 	
 	.LIST

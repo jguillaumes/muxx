@@ -86,6 +86,7 @@
 #define MUT_SUSPNQ   3       // Suspended Queue manipulation
 #define MUT_MCB      4       // Memory control block manipulation
 #define MUT_DRV      5       // Device driver manipulation
+#define MUT_CHAN     6       // Channel manipulation
 
 #define MUT_READ     0
 #define MUT_ALLOC    1
@@ -103,6 +104,8 @@
 #define DRV_WRITE     5
 #define DRV_IOCTL     6
 #define DRV_QUERY     7
+#define DRV_SEEK      8
+#define DRV_FLUSH     9
 
 #define DRV_ALLOC     0
 #define DRV_DEALLOC   1
@@ -110,10 +113,10 @@
 /*
 ** DRVCB offsets and constants
 */
-#define DRV_DESCSIZE  36
+#define DRV_DESCSIZE  40
 #define DRV_DRVNAME   0
 #define DRV_DESC      8
-#define DRV_FLAGS     (DRV_DESC+DRV_DESCSIZE)
+#define DRV_FLAGS     (DRV_DESC+2)
 #define DRV_TASKID    (DRV_FLAGS+2)
 #define DRV_OWNERID   (DRV_TASKID+2)
 #define DRV_STATUS    (DRV_OWNERID+2)
@@ -122,9 +125,10 @@
 ** IOPKT offsets
 */
 #define IOP_FUNCTION  0
-#define IOP_PARAMS    2
-#define IOP_SIZE      10
-#define IOP_IOAREA    12
+#define IOP_ERROR     2
+#define IOP_PARAMS    4
+#define IOP_SIZE      12
+#define IOP_IOAREA    14
 
 /*
 ** IOT offsets and definitions

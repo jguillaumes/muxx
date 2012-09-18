@@ -217,11 +217,12 @@ int muxx_setup_taskmem (PTCB task) {
   // First page, always present (page 3, 8KB)
   mcb = muxx_mem_getblock(task, 0200, 0, 3);
   if (mcb != NULL) {
-    task->mmuState.upar[2] = mcb->blockAddr;
-    task->mmuState.updr[2] = PDR_ACC_RW | PDR_SIZ_8K;
-    task->mmuState.kpar[2] = mcb->blockAddr;
-    task->mmuState.kpdr[2] = PDR_ACC_RW | PDR_SIZ_8K;
+    task->mmuState.upar[3] = mcb->blockAddr;
+    task->mmuState.updr[3] = PDR_ACC_RW | PDR_SIZ_8K;
+    task->mmuState.kpar[3] = mcb->blockAddr;
+    task->mmuState.kpdr[3] = PDR_ACC_RW | PDR_SIZ_8K;
   } else {
+    kprintf("Error allocating memory for page 3, PID %o\n", task);
     return (ENOMEM);
   }
 
@@ -229,11 +230,12 @@ int muxx_setup_taskmem (PTCB task) {
   if ((tsize == TSZ_MED) || (tsize == TSZ_BIG)) {
     mcb = muxx_mem_getblock(task, 0200, 0, 4);
     if (mcb != NULL) {
-      task->mmuState.upar[2] = mcb->blockAddr;
-      task->mmuState.updr[2] = PDR_ACC_RW | PDR_SIZ_8K;
-      task->mmuState.kpar[2] = mcb->blockAddr;
-      task->mmuState.kpdr[2] = PDR_ACC_RW | PDR_SIZ_8K;
+      task->mmuState.upar[4] = mcb->blockAddr;
+      task->mmuState.updr[4] = PDR_ACC_RW | PDR_SIZ_8K;
+      task->mmuState.kpar[4] = mcb->blockAddr;
+      task->mmuState.kpdr[4] = PDR_ACC_RW | PDR_SIZ_8K;
     } else {
+      kprintf("Error allocating memory for page 4, PID %o\n", task);
       return (ENOMEM);
     }
   }
@@ -242,11 +244,12 @@ int muxx_setup_taskmem (PTCB task) {
   if (tsize == TSZ_BIG) {
     mcb = muxx_mem_getblock(task, 0200, 0, 5);
     if (mcb != NULL) {
-      task->mmuState.upar[2] = mcb->blockAddr;
-      task->mmuState.updr[2] = PDR_ACC_RW | PDR_SIZ_8K;
-      task->mmuState.kpar[2] = mcb->blockAddr;
-      task->mmuState.kpdr[2] = PDR_ACC_RW | PDR_SIZ_8K;
+      task->mmuState.upar[5] = mcb->blockAddr;
+      task->mmuState.updr[5] = PDR_ACC_RW | PDR_SIZ_8K;
+      task->mmuState.kpar[5] = mcb->blockAddr;
+      task->mmuState.kpdr[5] = PDR_ACC_RW | PDR_SIZ_8K;
     } else {
+      kprintf("Error allocating memory for page 5, PID %o\n", task);
       return (ENOMEM);
     }
   }

@@ -26,7 +26,7 @@ PDRVCB muxx_find_driver(char *devnam) {
 }
 
 /*
-** Build a TIO entry from a physical device name
+** Build a IOT entry from a physical device name
 */
 int muxx_locate_pdev(char *devname, PIOTE iote) {
   PDRVCB driver = NULL;
@@ -82,6 +82,15 @@ int muxx_locate_pdev(char *devname, PIOTE iote) {
   return rc;
 }
 
+/*
+** Build a IOT entry from a logical device name
+**
+** The logical device translation is still not implemented, so
+** this function just calls the physical device locator
+*/
+int muxx_locate_dev(char *devname, PIOTE iote) {
+  return muxx_locate_pdev(devname, iote);
+}
 
 /*
 ** Allocate a device for the current process
@@ -117,8 +126,8 @@ int muxx_svc_alloc(ADDRESS fp, char *devnam, WORD op) {
 	  rc = ENOTALLOC;
 	}
       }
+      muxx_svc_mutex(fp, MUT_DRV, MUT_DEALLOC);
     }
-    muxx_svc_mutex(fp, MUT_DRV, MUT_DEALLOC);
   } 
   return rc;
 }

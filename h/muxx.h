@@ -170,9 +170,9 @@ typedef struct MMCBT_S *PMMCBT;
 ** Device interrupt structure
 */
 struct DRVISR_S {
-  ADDRESS handler;
-  ADDRESS vector;
-  WORD    ilevel;
+  ADDRESS handler;           // Address of ISR entry point
+  ADDRESS vector;            // Address of interrupt vector (ISR + PSW)
+  WORD    ilevel;            // Priority level to set
 };
 
 typedef struct DRVISR_S  DRVISR;
@@ -184,18 +184,18 @@ typedef struct DRVISR_S *PDRVISR;
 ** See muxxdef.h for callback names
 */
 struct DRVDESC_S {
-  ADDRESS callbacks[8];
+  ADDRESS callbacks[10];     // Table of callback entries (see muxxdef.h)
   union {
     struct {
-      int shareable: 1;
-      int files    : 1;
-      int reserved : 14;
+      int shareable: 1;      // Devices are shareable 
+      int files    : 1;      // Devices are file structured
+      int reserved : 14; 
     } flags;
     WORD wflags;
   } attributes;
-  char    devname[8];
-  WORD    numisr;
-  DRVISR  isrtable[4];
+  char    devname[8];        // Root of physical device name (PC, DK, DB, ...)
+  WORD    numisr;            // Number of interrupt service routines handled
+  DRVISR  isrtable[4];       // Table of ISRs (maximum of 4)
 };
 
 typedef struct DRVDESC_S DRVDESC;
@@ -232,37 +232,76 @@ struct DRVCBT_S {
 typedef struct DRVCBT_S DRVCBT;
 typedef struct DRVCBT_S *PDRVCBT;
 
+/*
+** IO Packet structure
+** 
+** This structure is passed as a parameter to the device
+** driver callback functions.
+*/
 struct IOPKT_S {
-  WORD function;
-  WORD param[4];
-  WORD size;
-  BYTE ioarea[0];
+  WORD function;            // Callback to invoke
+  int  error;               // Error code (set by driver)
+  WORD param[4];            // Parameters (WORDS), callback/driver specific
+  WORD size;                // Size (in bytes) of the ioarea
+  BYTE ioarea[0];           // IOArea (length specified by size)
 };
 
 typedef struct IOPKT_S IOPKT;
 typedef struct IOPKT_S *PIOPKT;
 
+/*
+** IO Table entry structure
+**
+** This structure holds the information for a defined channel.
+**
+** In MUXX the channels are related to a device, that can be physical or
+** logical. 
+**
+** Physical devices are named as DDCn, where:
+** "DD" is the root device name found in the device descriptor (DRVDESC)
+** "C"  is the controller identifier (A,B,C,...)
+** "n"  is the unit identifier (0,1,2,...)
+**
+** The controller and unit can be omitted, so DKA0, DKA and DK are all valid
+** specification for the first (or only) unit of the first (or only) controller
+** for DK devices.
+**
+** Logical devices will translate to a physical device and optionally a file
+** or dataset specification. This is not implemented at this moment, so right
+** now the routines which expect a logical device must be provided with
+** a physical one.
+*/
 struct IOTE_S {
-  WORD channel;
-  PDRVCB driver;
+  WORD channel;              // Channel number (system wide)
+  PDRVCB driver;             // Pointer to device driver control block
   union {
     struct {
-      int open:      1;
-      int eof:       1;
-      int ioerror:   1;
-      int reserved: 13;
+      int open:      1;      // Channel is opened
+      int eof:       1;      // EOF reached
+      int ioerror:   1;      // Error detected by driver
+      int dealloc:   1;      // Dealloc device on close
+      int reserved: 12;
     } flags;
     WORD wflags;
   } status;
-  LONGWORD position;
-  BYTE controller;
-  BYTE unit;
-  WORD error;
-  char reserved[2];
+  LONGWORD position;         // Position within device (if it supports it)
+  BYTE controller;           // Number of controller within driver
+  BYTE unit;                 // Number of unit whithin driver-controller
+  WORD error;                // Error code
+  char reserved[2];          // Filler
 };
 
 typedef struct IOTE_S IOTE;
 typedef struct IOTE_S *PIOTE;  
+
+struct IOTT_S {
+  char ioteye[8];
+  int entries;
+  IOTE iote[IOT_SENTRIES];
+};
+
+typedef struct IOTT_S IOTT;
+typedef struct IOTT_S *PIOTT;
 
 #define _MUXX_H
 #endif

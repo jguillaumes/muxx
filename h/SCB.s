@@ -27,6 +27,7 @@
 	.global	_utimeticks
 	.global _clkcountdown
 	.global _clkquantum
+	.global _iott
 	
 	jmp	end_scb			// Initial jump instruction
 
@@ -61,6 +62,8 @@ _clkcountdown:	.WORD CLK_QUANTUM	// Ticks remaining in currrent quantum
 _utimeticks:	.LONG 0			// Ticks of uptime
 _datetime:	.LONG 0			// Ticks of datetime (1/1/1970 based)
 
+_iott:		.WORD _muxx_iott	// Address of IOT table
+	
 	.ALIGN 6			// Align to 64 byte boundary
 end_scb:
 	.ENDM

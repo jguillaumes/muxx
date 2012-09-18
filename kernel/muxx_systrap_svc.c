@@ -10,7 +10,7 @@
 typedef int (*SVC)(int, ADDRESS, ...);
 typedef int (*DRV)(int, void *);
 
-static int muxx_svc_yield(ADDRESS) __attribute__ ((noreturn));
+static int muxx_svc_yield  (ADDRESS) __attribute__ ((noreturn));
 static int muxx_svc_muxxhlt(ADDRESS) __attribute__ ((noreturn));
 
 struct SVC_S {
@@ -200,8 +200,8 @@ int muxx_systrap_handler(int numtrap, ADDRESS fp, WORD p1, WORD p2,
     {(SVC) muxx_unimpl, 0},	  //  7:
     {(SVC) muxx_svc_suspend, 1},  //  8:
     {(SVC) muxx_unimpl, 0},	  //  9:
-    {(SVC) muxx_unimpl, 0},	  // 10:
-    {(SVC) muxx_unimpl, 0},	  // 11:
+    {(SVC) muxx_svc_open, 2},	  // 10:
+    {(SVC) muxx_svc_close, 1},	  // 11:
     {(SVC) muxx_unimpl, 0},	  // 12:
     {(SVC) muxx_unimpl, 0},	  // 13:
     {(SVC) muxx_unimpl, 0},	  // 14:
@@ -236,6 +236,8 @@ int muxx_systrap_handler(int numtrap, ADDRESS fp, WORD p1, WORD p2,
   // int (*svcimpl)();
   int rc=0;
 
+  // kprintf("Trap number %o of %o\n", numtrap, trap_table_entries);
+
   if (numtrap < 0 || numtrap > trap_table_entries) {
     return(EINVVAL);
   }
@@ -248,6 +250,12 @@ int muxx_systrap_handler(int numtrap, ADDRESS fp, WORD p1, WORD p2,
   // rc = (*svcimpl)(syssvc->nparams, args);
 
   switch(numtrap) {
+  case SRV_OPEN:
+    rc= muxx_svc_open(fp, (char *) p1, (WORD) p2);
+    break;
+  case SRV_CLOSE:
+    rc = muxx_svc_close(fp, (int) p1);
+    break;
   case SRV_EXIT:
     rc = muxx_svc_exit(fp, (WORD) p1);
     break;
@@ -280,8 +288,7 @@ int muxx_systrap_handler(int numtrap, ADDRESS fp, WORD p1, WORD p2,
     break;
   case KRN_DRVREG:
     rc = muxx_svc_drvreg(fp, (char *) p1, (ADDRESS) p2, (PTCB) p3);
-    break;
-    
+    break;    
   default:
     rc = muxx_unimpl(fp);
   }

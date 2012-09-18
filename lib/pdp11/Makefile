@@ -9,7 +9,7 @@ LD=pdp11-aout-ld
 AR=pdp11-aout-ar
 LDFLAGS=-T ldkern.cmd -M --cref --traditional -lgcc -lpdp11
 CFLAGS=-c -Wall -I $(MUXXH) -Os -ffreestanding -fomit-frame-pointer
-ASMFLAGS=-acmghlsd -I $(MUXXH) 
+ASMFLAGS=-acmghlsd -I $(MUXXH)
 
 TARGETS=../libmuxx.a
 OBJECTS=sbrk.o
@@ -18,11 +18,12 @@ OBJECTS=sbrk.o
 	$(AS) $(ASMFLAGS) $< -o $@ > $*.lst
 
 
-all:	$(TARGETS)
+all:	done
+	touch done
+
+done:	$(OBJECTS)
 
 clean:
-	@rm *.a *.o *.lst
+	@rm *.a *.o *.lst done
 
-../libmuxx.a:	$(OBJECTS)
-	$(AR) rs $@ $^ 
 

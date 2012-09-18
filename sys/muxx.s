@@ -39,6 +39,7 @@ sysstart:
 	
 	jsr	pc,_muxx_tctinit		// Initialize task table
 	jsr	pc,_muxx_drvinit		// Init. device driver table
+	jsr	pc,_muxx_iottinit		// Init. channel table
 	jsr	pc,_muxx_fakeproc		// Set up STARTUP task
 	jsr	pc,_muxx_clock_setup		// Setup clock interrupt..
 	jsr	pc,_muxx_clock_enable		// ... and enable it

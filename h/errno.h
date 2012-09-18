@@ -17,6 +17,7 @@
 #define ENOTALLOC -10
 #define ENOTFOUND -11
 #define ERRDEV    -12
+#define EOFFLINE  -13
 
 #define ENOIMPL   -999
 

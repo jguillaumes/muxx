@@ -1,0 +1,42 @@
+	.TITLE sleep - Wait for a number of seconds
+	.IDENT "V01.00"
+
+	.INCLUDE "MACLIB.s"
+	.INCLUDE "MUXXMAC.s"
+	.INCLUDE "MUXXDEF.s"
+	.INCLUDE "CONFIG.s"
+	
+	.GLOBAL _sleep
+
+_sleep:	procentry local=8
+
+	clr	r0	
+	mov	4(r5),r2	// R2: seconds to wait 
+	beq	999$
+
+	mul	$CLK_FREQ,r2	// R2-3: Clicks to wait
+
+	mov	r2,-4(r5)
+	mov	r3,-2(r5)
+	
+	mov	_utimeticks,-8(r5)
+	mov	_utimeticks+2,-6(r5)
+
+10$:	mov	_utimeticks,r0
+	mov	_utimeticks+2,r1
+
+	sub	-8(r5),r0
+	sbc	r1
+	sub	-6(r5),r1
+
+	cmp	r1,-6(r5)
+	blo	10$
+	bhi	999$
+	cmp	r0,-8(r5)
+	bhi	999$
+	
+20$:	// YIELD
+	br	10$
+	
+999$:	procexit
+	.end

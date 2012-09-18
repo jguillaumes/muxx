@@ -11,6 +11,7 @@ int getpl();
 int muxx_taskinit(int, WORD, ADDRESS, WORD);
 void muxx_tcbinit(PTCB);
 int muxx_setup_taskmem(PTCB);
+void muxx_iottinit();
 
 int kputstr(char *, int);
 int kputstrz(char *);
@@ -42,8 +43,12 @@ PTCB muxx_qRemoveTask(PTQUEUE,PTCB);
 int muxx_svc_creprc(ADDRESS, char *, int, ADDRESS, WORD);
 int muxx_svc_mutex(ADDRESS, WORD, WORD);
 int muxx_svc_alloc(ADDRESS, char *, WORD);
+int muxx_svc_open (ADDRESS, char *, WORD);
+int muxx_svc_close(ADDRESS, int);
 
 PDRVCB muxx_drv_find(char *);
+int muxx_locate_dev(char *, PIOTE);
+int muxx_srv_mutex(ADDRESS, WORD, WORD);
 
 void muxx_yield();
 void muxx_schedule();

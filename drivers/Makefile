@@ -7,7 +7,7 @@ LD=pdp11-aout-ld
 AR=pdp11-aout-ar
 LDFLAGS=-T ldaout.cmd -M --cref --traditional -lgcc -lpdp11
 CFLAGS=-c -Wall -I../h -Os -ffreestanding -fomit-frame-pointer
-ASMFLAGS=-acmghlsd -I../h -m11/45
+ASMFLAGS=-acmghlsd -I../h
 TARGETS=libmuxxdrv.a
 OBJECTS=ptpdrv.o ptphnd.o
 

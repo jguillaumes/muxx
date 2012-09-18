@@ -8,17 +8,20 @@ CC=pdp11-aout-gcc
 LD=pdp11-aout-ld
 AR=pdp11-aout-ar
 LDFLAGS=-T ldkern.cmd -M --cref --traditional -lgcc -lpdp11
-CFLAGS=-c -Wall -I $(MUXXH) -Os -fomit-frame-pointer
+CFLAGS=-c -Wall -I $(MUXXH) -Os -fomit-frame-pointer -ffreestanding
 ASMFLAGS=-acmghlsd -I $(MUXXH) 
 
-OBJECTS=malloc.o calloc.o sleep.o
+OBJECTS=malloc.o calloc.o sleep.o ctype_.o
 
 .s.o:
 	$(AS) $(ASMFLAGS) $< -o $@ > $*.lst
 
 
-all:	$(OBJECTS)
+all:	done
+	touch done
+
+done:	$(OBJECTS)
 
 clean:
-	@rm *.a *.o *.lst
+	@rm *.a *.o *.lst done
 

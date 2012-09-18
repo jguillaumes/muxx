@@ -6,7 +6,6 @@
 #include "muxxlib.h"
 
 void muxx_handle_cpuerr(void *fp) {
-  asm("halt");
   copytrapfp(fp);
   kprintf("\nCPUERR exception\n");
 #if CPU_HAS_ERROR == 1

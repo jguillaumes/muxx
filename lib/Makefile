@@ -16,6 +16,7 @@ OBJECTS=memblocks.o itoo.o itoh.o itod.o conio.o lib_syscalls.o \
 
 DIRS= gen machine
 ADIRS= crt0
+SUBDIRS=gen/done machine/done
 
 .out.lda:	
 	$(BIN2LOAD) -a -f $< -o $@
@@ -31,10 +32,10 @@ subdirs:
 	set -e; for d in $(ADIRS); do $(MAKE) -C $$d ; done
 
 clean:
-	@rm *.a *.o *.lst *.map *.out *.lda
+	@rm *.a *.o *.lst 
 
 queues.o:	queues.c ../h/queues.h
 
-libmuxx.a:	$(OBJECTS) $(SUBLIBS)
+libmuxx.a:	$(OBJECTS) $(SUBDIRS)
 	$(AR) rs $@ $(OBJECTS)
 	set -e; for d in $(DIRS); do $(AR) rs $@ $$d/*.o ; done

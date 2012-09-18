@@ -22,13 +22,19 @@ start:
 	/*
 	** Task prefix block (TPB)
 	*/
-_heapb:	.WORD	_end
-_heapt:	.WORD	0
+_heapb:
+	.WORD	_end
+_heapt:
+	.WORD	0
 _endcode:
 	.WORD	0
 _toptask:
 	.WORD	0
-_tiot:	.SPACE  (IOT_SIZE * IOT_ENTRIES)
+	
+_iote:	
+	.WORD   0
+_tiote:
+	.SPACE	(2*IOT_TENTRIES)	
 	
 	.align 6
 	/*
