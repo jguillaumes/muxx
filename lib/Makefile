@@ -11,15 +11,11 @@ ASMFLAGS=-acmghlsd -I../h
 
 TARGETS=libmuxx.a
 
-OBJECTS=memblocks.o itoo.o itoh.o itod.o conio.o lib_syscalls.o \
-	empty_proc.o lib_getpid.o printf.o lib_externals.o
+OBJECTS=memblocks.o itoo.o itoh.o itod.o conio.o
 
-DIRS= gen machine
+DIRS= gen machine stdio sys
 ADIRS= crt0
-SUBDIRS=gen/done machine/done
-
-.out.lda:	
-	$(BIN2LOAD) -a -f $< -o $@
+SUBDIRS=gen/done machine/done stdio/done sys/done
 
 .s.o:
 	$(AS) $(ASMFLAGS) $< -o $@ > $*.lst

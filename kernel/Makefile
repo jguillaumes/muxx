@@ -36,5 +36,5 @@ mrproper:
 libkmuxx.a:	$(OBJECTS)
 	$(AR) rs $@ $^ 
 
-kprintf.o:	../lib/printf.c
+kprintf.o:	../lib/stdio/printf.c
 	$(CC) $(CFLAGS) -DMUXX_KERNEL -c -o $@  $<
