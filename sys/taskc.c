@@ -1,6 +1,8 @@
+#include <stdio.h>
 #include "muxx.h"
 #include "muxxlib.h"
 #include "externals.h"
+
 
 static char msga[] = ">>> CCC - This is task C - CCC <<<"; 
 

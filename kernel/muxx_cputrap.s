@@ -58,6 +58,7 @@ trap_fperr:
 0$:	br	0$
 	
 trap_mmuerr:
+	halt
 	traphandle _muxx_handle_mmuerr
 	halt
 0$:	br	0$

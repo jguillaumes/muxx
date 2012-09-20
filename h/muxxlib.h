@@ -31,8 +31,5 @@ WORD sleep(int);
 WORD alloc(char *, WORD);
 WORD allocw(char *, WORD);
 
-
-int printf(char *,...);
-
 #define _MUXXLIB_H
 #endif

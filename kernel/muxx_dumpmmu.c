@@ -28,9 +28,9 @@ void muxx_dumpmemsvc() {
   kprintf("\n*** Memory Management Control Blocks (MMCBs):\n");
   for(i=0;i<MEM_NMCBS; i++) {
     if (mmcbtaddr->mmcbt[i].ownerPID != -1) {
-      kprintf(" MMCB=%o ADDR=%o ADDR=%o SIZE=%o",
+      kprintf(" MMCB=%o ADDR=%o SIZE=%o",
 	      &(mmcbtaddr->mmcbt[i]),mmcbtaddr->mmcbt[i].blockAddr,
-	      mmcbtaddr->mmcbt[i].blockAddr,mmcbtaddr->mmcbt[i].blockSize); 
+	      mmcbtaddr->mmcbt[i].blockSize); 
       if (mmcbtaddr->mmcbt[i].ownerPID == 0) {
 	kprintf(" OWNR=*FREE* PAGE=*NONE*");
       } else {

@@ -28,7 +28,10 @@ subdirs:
 	set -e; for d in $(ADIRS); do $(MAKE) -C $$d ; done
 
 clean:
-	@rm *.a *.o *.lst 
+	-@rm *.a *.o *.lst 
+
+mrproper:
+	-@rm *.a *.o *.lst *~ 
 
 queues.o:	queues.c ../h/queues.h
 

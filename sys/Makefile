@@ -21,10 +21,10 @@ MACROS=../h/SCB.s ../h/MUXXDEF.s ../h/MACLIB.s ../h/MUXXMAC.s
 all: muxx.lda taskc.lda
 
 clean:
-	rm *.o *.out *.lda *.map *.lst
+	-@rm *.o *.out *.lda *.map *.lst
 
 mrproper:
-	rm *.o *.out *.lda *.map *.lst *~
+	-@rm *.o *.out *.lda *.map *.lst *~
 
 muxx.o:	muxx.s $(MACROS)
 

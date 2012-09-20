@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "muxx.h"
 #include "muxxlib.h"
 #include "externals.h"
@@ -13,10 +14,10 @@ taska() {
     if (n != 0) 
       printf("TASKA - Error allocw: %d.\n", n);
     else 
-      printf("TASKA - Allocated at %l.\n",utimeticks);
+      printf("TASKA - Allocated at %-6l.\n",utimeticks);
     sleep(3);
     allocw("PTPDRV  ", DRV_DEALLOC);
-    printf("TASKA - Deallocated at %l.\n", utimeticks);
+    printf("TASKA - Deallocated at %-6l.\n", utimeticks);
     sleep(1);
   }
 }

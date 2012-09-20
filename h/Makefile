@@ -1,5 +1,10 @@
 all:	MUXXDEF.s ERRNO.s config.h
 
+clean:
+	echo 
+
+mrproper:
+	-@rm *~
 
 MUXXDEF.s:	muxxdef.h htos.awk
 	awk -f htos.awk muxxdef.h > MUXXDEF.s
