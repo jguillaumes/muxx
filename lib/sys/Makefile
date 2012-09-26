@@ -11,7 +11,8 @@ LDFLAGS=-T ldkern.cmd -M --cref --traditional -lgcc -lpdp11
 CFLAGS=-c -Wall -I $(MUXXH) -Os -fomit-frame-pointer -ffreestanding
 ASMFLAGS=-acmghlsd -I $(MUXXH) 
 
-OBJECTS=lib_externals.o lib_syscalls.o lib_getpid.o
+OBJECTS=lib_externals.o lib_syscalls.o lib_getpid.o lib_mutex.o \
+	lib_alloc.o lib_channels.o lib_openclose.o
 
 .s.o:
 	$(AS) $(ASMFLAGS) $< -o $@ > $*.lst
@@ -23,5 +24,5 @@ all:	done
 done:	$(OBJECTS)
 
 clean:
-	@rm *.a *.o *.lst done
+	-@rm *.a *.o *.lst done
 

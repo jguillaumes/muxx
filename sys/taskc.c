@@ -6,14 +6,15 @@
 
 static char msga[] = ">>> CCC - This is task C - CCC <<<"; 
 
-extern WORD toptask;
-extern WORD end;
-
 main() {
   int n=0;
- 
+  WORD toptask,endcode;
+
+  toptask = curtcb->taskTUCB->toptask;
+  endcode = curtcb->taskTUCB->endcode;
+
   for(;;) {
-    printf("TASC A - Top of code: %o, top of task: %o\n", &end, &toptask); 
-    // yield();
+    printf("TASC A - Top of code: %06o, top of task: %06o\n", endcode, toptask); 
+    sleep(10);
   }
 }

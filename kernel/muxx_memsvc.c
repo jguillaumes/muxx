@@ -5,7 +5,7 @@
 #include "externals.h"
 #include "errno.h"
 #include "spl.h"
-
+#include "kernfuncs.h"
 
 int findFreeMMCB();               // Forward declaration
 
@@ -172,6 +172,16 @@ int muxx_setup_taskmem (PTCB task) {
   int ssize=0;
   int ttype=0;
   int rc = EOK;
+  int i=0;
+  WORD endalloc=0;
+  WORD tucbsize = sizeof(struct TUCB_S);
+  PTUCB ptucb = NULL;
+
+  kprintf("Raw tucbsize: %d ", tucbsize);
+
+  tucbsize = (tucbsize-1)/64;
+  tucbsize = (tucbsize+1)*64;
+  kprintf("Adjusted: %d\n", tucbsize);
 
   ttype = (task->taskType & 0000007);
   tsize = (task->taskType & 0000070);          // Extract task size
@@ -221,6 +231,7 @@ int muxx_setup_taskmem (PTCB task) {
     task->mmuState.updr[3] = PDR_ACC_RW | PDR_SIZ_8K;
     task->mmuState.kpar[3] = mcb->blockAddr;
     task->mmuState.kpdr[3] = PDR_ACC_RW | PDR_SIZ_8K;
+    endalloc = (WORD) 8192*4;
   } else {
     kprintf("Error allocating memory for page 3, PID %o\n", task);
     return (ENOMEM);
@@ -234,6 +245,7 @@ int muxx_setup_taskmem (PTCB task) {
       task->mmuState.updr[4] = PDR_ACC_RW | PDR_SIZ_8K;
       task->mmuState.kpar[4] = mcb->blockAddr;
       task->mmuState.kpdr[4] = PDR_ACC_RW | PDR_SIZ_8K;
+      endalloc = (WORD) 8192*5;
     } else {
       kprintf("Error allocating memory for page 4, PID %o\n", task);
       return (ENOMEM);
@@ -248,12 +260,22 @@ int muxx_setup_taskmem (PTCB task) {
       task->mmuState.updr[5] = PDR_ACC_RW | PDR_SIZ_8K;
       task->mmuState.kpar[5] = mcb->blockAddr;
       task->mmuState.kpdr[5] = PDR_ACC_RW | PDR_SIZ_8K;
+      endalloc = (WORD) 8192*6;
     } else {
       kprintf("Error allocating memory for page 5, PID %o\n", task);
       return (ENOMEM);
     }
   }
 
+  /*
+  ** Point to TUCB at the end of the allocated space
+  ** We can't initialize the TUCB at this point because the
+  ** memory for the new task has not been set up.
+  ** The TUCB will be prepared by the task initialization code
+  ** in crt0.
+  **/
+  ptucb = (PTUCB) (endalloc - tucbsize);
+  task->taskTUCB = ptucb;
 
   /*
   ** Task stack space

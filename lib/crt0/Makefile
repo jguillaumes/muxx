@@ -1,6 +1,6 @@
-.SUFFIXES: .lda .out .o .s .c
+.SUFFIXES: .lda .out .o .S .s .c
 
-MUXXBASE=../../
+MUXXBASE=../..
 MUXXH=$(MUXXBASE)/h
 BIN2LOAD=/home/jguillaumes/retroutils/bin2load/bin2load
 AS=pdp11-aout-as
@@ -16,6 +16,8 @@ OBJECTS=crt0.o
 .s.o:
 	$(AS) $(ASMFLAGS) $< -o $@ > $*.lst
 
+.S.o:	
+	$(CC) $(CFLAGS) $< -o $@
 
 all:	$(OBJECTS)
 

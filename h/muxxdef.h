@@ -41,10 +41,11 @@
 */
 #define KRN_DRVREG   (SRV_LAST+1)    // Register device driver
 #define KRN_DRVUNREG (SRV_LAST+2)    // Unregister device driver
-#define KRN_DEVSTOP  (SRV_LAST+3)    // Stop device driver
-#define KRN_BUGCHECK (SRV_LAST+4)    // Cause a bugcheck error
-#define KRN_PUTCON   (SRV_LAST+5)    // Put character to system console
-#define KRN_GETCON   (SRV_LAST+6)    // Get character from system console
+#define KRN_DRVSTART (SRV_LAST+3)    // Start device driver
+#define KRN_DRVSTOP  (SRV_LAST+4)    // Stop device driver
+#define KRN_BUGCHECK (SRV_LAST+5)    // Cause a bugcheck error
+#define KRN_PUTCON   (SRV_LAST+6)    // Put character to system console
+#define KRN_GETCON   (SRV_LAST+7)    // Get character from system console
 
 /*
 ** Task types
@@ -134,13 +135,26 @@
 ** IOT offsets and definitions
 */
 #define IOT_SIZE       16
-#define IOT_CHANNEL     0
-#define IOT_DRIVER      2
-#define IOT_STATUS      4
+#define IOT_DRIVER      0
+#define IOT_STATUS      2
 #define IOT_POSITION    6
-#define IOT_CONTROLLER 10
-#define IOT_UNIT       11
-#define IOT_ERROR      12
+#define IOT_CONTROLLER  8
+#define IOT_UNIT        9
+#define IOT_ERROR      10
+#define IOT_ATTRADDR   12
+#define IOT_BUFFADDR   14
+
+/*
+** OPEN flags
+*/
+#define OO_READ      0         // Open file for reading
+#define OO_WRITE     1         // Open file for writing
+#define OO_CREATE    2         // Create file if it does not exist
+#define OO_TRUNC     4         // Truncate file if it exists
+#define OO_TEMP      8         // Delete on close
+#define OO_UNBUFF   16         // Force unbuffered mode
+#define OO_STREAM   32         // Force stream mode (for record devices)
+
 
 /*
 ** Named local flags

@@ -4,7 +4,6 @@
 	.INCLUDE "CONFIG.s"
 	.INCLUDE "MUXX.s"
 	.INCLUDE "MACLIB.s"
-
 	
 	.GLOBAL trap_initialize
 
@@ -13,6 +12,13 @@
 	mov	\psw, \vector+2
 	.endm
 
+	.macro TRAPHALT
+	.if	MUXX_TRAPHALT == 1
+	halt
+	.endif
+	.endm
+
+	
 	PSWTRAP = 0x00E0		// Traps: IPL:7 (No interrupts)
 	
 	.text
@@ -33,49 +39,57 @@ trap_initialize:
 	procexit getr2=no,getr3=no,getr4=no
 
 trap_cpuerr:
+	TRAPHALT
 	traphandle _muxx_handle_cpuerr
 	halt
 0$:	br	0$
 	
 trap_illins:
+	TRAPHALT
 	traphandle _muxx_handle_illins
 	halt
 0$:	br	0$
 	
 trap_iot:
+	TRAPHALT
 	traphandle _muxx_handle_iot
 	halt
 0$:	br	0$		;
 	
 trap_buserr:
+	TRAPHALT
 	traphandle _muxx_handle_buserr
 	halt
 0$:	br	0$		;
 	
 trap_fperr:
+	TRAPHALT
 	traphandle _muxx_handle_fperr
 	halt
 0$:	br	0$
 	
 trap_mmuerr:
-	halt
+	TRAPHALT
 	traphandle _muxx_handle_mmuerr
 	halt
 0$:	br	0$
 
 
 trap_trace:
+	TRAPHALT
 	traphandle _muxx_handle_trace
 	halt
 0$:	br	0$
 
 trap_power:
+	TRAPHALT
 	traphandle _muxx_handle_power
 	halt
 0$:	br	0$
 
 	
 trap_unimplemented:
+	TRAPHALT	
 	traphandle _muxx_handle_unimpl
 	halt
 0$:	br	0$

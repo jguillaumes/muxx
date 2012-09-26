@@ -21,6 +21,7 @@ void muxx_tcbinit(PTCB tcb) {
     memset(&tcb->mmuState,0,sizeof(tcb->mmuState));
     tcb->clockTicks = 0L;
     tcb->created_timestamp = 0L;
+    tcb->taskTUCB = NULL;
 }
 
 

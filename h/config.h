@@ -99,5 +99,7 @@
 #define CPU_HAS_SEPID		0
 #define IOT_TENTRIES		5
 #define IOT_SENTRIES		16
+#define MUXX_DEBUG		0
+#define MUXX_TRAPHALT		1
 #define _CONFIG_H
 #endif

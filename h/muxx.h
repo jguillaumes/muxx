@@ -41,6 +41,24 @@ struct MMUSTATE_S {
 typedef struct MMUSTATE_S MMUSTATE;
 
 /*
+** TUCB - Task User Control Block
+** Structure containing task-specific information 
+** This structure resides in task user space
+*/
+
+struct TUCB_S {
+  ADDRESS heapb;     // Bottom of memory heap
+  ADDRESS heapt;     // Top of memory heap
+  ADDRESS endcode;   // End of task code
+  ADDRESS toptask;   // End of task memory (excluding stack and buffers)
+  WORD    errno;     // Last error code
+  ADDRESS iote[IOT_TENTRIES]; // Channel table
+};
+
+typedef struct TUCB_S TUCB;
+typedef struct TUCB_S *PTUCB;
+
+/*
 ** TCB - Task control block
 ** Structure representing a process state
 **
@@ -80,7 +98,7 @@ struct TCB_S {
     } prvflags;
   } privileges;
   WORD taskType;             // Kernel or User task
-
+  struct TUCB_S *taskTUCB;   // Task user control block address
   struct TCB_S *firstChild;  // First descendent
   struct TCB_S *lastChild;   // Last descendent
   struct TCB_S *nextSibling; // First younger sibling 
@@ -188,12 +206,15 @@ struct DRVDESC_S {
   union {
     struct {
       int shareable: 1;      // Devices are shareable 
+      int record   : 1;      // Device is record oriented
       int files    : 1;      // Devices are file structured
-      int reserved : 14; 
+      int buffered : 1;      // Channels are buffered by default
+      int reserved : 12; 
     } flags;
     WORD wflags;
   } attributes;
   char    devname[8];        // Root of physical device name (PC, DK, DB, ...)
+  WORD    defbufsiz;         // Default IO BUffer size
   WORD    numisr;            // Number of interrupt service routines handled
   DRVISR  isrtable[4];       // Table of ISRs (maximum of 4)
 };
@@ -248,6 +269,20 @@ struct IOPKT_S {
 
 typedef struct IOPKT_S IOPKT;
 typedef struct IOPKT_S *PIOPKT;
+#define IOPKT_FIXSIZE 8
+
+/*
+** IO Buffer structure
+*/
+struct IOBUF_S {
+  int bufsize;
+  int first;
+  int last;
+  char *buffer;
+};
+
+typedef struct IOBUF_S IOBUF;
+typedef struct IOBUF_S *PIOBUF;
 
 /*
 ** IO Table entry structure
@@ -272,7 +307,6 @@ typedef struct IOPKT_S *PIOPKT;
 ** a physical one.
 */
 struct IOTE_S {
-  WORD channel;              // Channel number (system wide)
   PDRVCB driver;             // Pointer to device driver control block
   union {
     struct {
@@ -280,7 +314,9 @@ struct IOTE_S {
       int eof:       1;      // EOF reached
       int ioerror:   1;      // Error detected by driver
       int dealloc:   1;      // Dealloc device on close
-      int reserved: 12;
+      int attributes:1;      // Device(file) has attributes
+      int buffered:  1;      // Channel is buffered
+      int reserved: 10;
     } flags;
     WORD wflags;
   } status;
@@ -288,7 +324,8 @@ struct IOTE_S {
   BYTE controller;           // Number of controller within driver
   BYTE unit;                 // Number of unit whithin driver-controller
   WORD error;                // Error code
-  char reserved[2];          // Filler
+  ADDRESS attraddr;          // Attributes address (if attributes ==1)
+  ADDRESS buffaddr;          // IO Buffer address (if buffered == 1)
 };
 
 typedef struct IOTE_S IOTE;

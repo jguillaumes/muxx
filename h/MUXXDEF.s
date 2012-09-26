@@ -43,10 +43,11 @@ SRV_LAST = 30
 */
 KRN_DRVREG = (SRV_LAST+1)		// Register device driver
 KRN_DRVUNREG = (SRV_LAST+2)		// Unregister device driver
-KRN_DEVSTOP = (SRV_LAST+3)		// Stop device driver
-KRN_BUGCHECK = (SRV_LAST+4)		// Cause a bugcheck error
-KRN_PUTCON = (SRV_LAST+5)		// Put character to system console
-KRN_GETCON = (SRV_LAST+6)		// Get character from system console
+KRN_DRVSTART = (SRV_LAST+3)		// Start device driver
+KRN_DRVSTOP = (SRV_LAST+4)		// Stop device driver
+KRN_BUGCHECK = (SRV_LAST+5)		// Cause a bugcheck error
+KRN_PUTCON = (SRV_LAST+6)		// Put character to system console
+KRN_GETCON = (SRV_LAST+7)		// Get character from system console
 /*
 ** Task types
 */
@@ -124,13 +125,24 @@ IOP_IOAREA = 14
 ** IOT offsets and definitions
 */
 IOT_SIZE = 16
-IOT_CHANNEL = 0
-IOT_DRIVER = 2
-IOT_STATUS = 4
+IOT_DRIVER = 0
+IOT_STATUS = 2
 IOT_POSITION = 6
-IOT_CONTROLLER = 10
-IOT_UNIT = 11
-IOT_ERROR = 12
+IOT_CONTROLLER = 8
+IOT_UNIT = 9
+IOT_ERROR = 10
+IOT_ATTRADDR = 12
+IOT_BUFFADDR = 14
+/*
+** OPEN flags
+*/
+OO_READ = 0		// Open file for reading
+OO_WRITE = 1		// Open file for writing
+OO_CREATE = 2		// Create file if it does not exist
+OO_TRUNC = 4		// Truncate file if it exists
+OO_TEMP = 8		// Delete on close
+OO_UNBUFF = 16		// Force unbuffered mode
+OO_STREAM = 32		// Force stream mode (for record devices)
 /*
 ** Named local flags
 */

@@ -25,8 +25,8 @@ _itod:
 
 _itods:
 	procentry saver2=no,saver3=no,saver4=no
-	mov	4(r5),r0
 	mov	6(r5),r1
+	mov	4(r5),r0
 	bpl	10$
 	movb	$'-',(r1)+
 	neg	r0

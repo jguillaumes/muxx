@@ -18,7 +18,7 @@ int printf(char *fmt,...) {
   putstrl("]",1);
   */
 
-  args = (void *) (&fmt + 2);
+  args = (void *) (&(fmt)+1);
   doprnt(fmt, args, stdout);
   return 0;
 

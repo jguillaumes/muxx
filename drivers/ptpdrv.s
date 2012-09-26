@@ -6,6 +6,7 @@
 	.INCLUDE "MACLIB.s"
 	.INCLUDE "CONFIG.s"
 	.INCLUDE "MUXXDEF.s"
+	.INCLUDE "MUXX.s"
 	
 	ERROR = 0100000
 	BUSY  = 0004000
@@ -37,7 +38,7 @@ ptpclose:
 ptpread:
 	procentry saver2=no,saver3=no,saver4=no
 	mov	4(r5),r1		// R1: IOPKT address
-	cmp	IOP_SIZE(r1),$1		// Buffer size must be one
+	cmp	IOPKT.SIZE(r1),$1		// Buffer size must be one
 	beq	5$
 	mov	$EINVVAL,r0		// Error: Invalid value
 	br	900$
@@ -57,11 +58,11 @@ ptpread:
 	mov	$ERRDEV,r0		// Yes: prepare error code
 	br	900$
 	
-readok:	movb	PTP.PRB,IOP_IOAREA(r1)	// Move read byte to buffer
+readok:	movb	PTP.PRB,IOPKT.IOAREA(r1)	// Move read byte to buffer
 	br	999$			// Anhd exit
 
 900$:	sec				// Error => Carry set
-	mov	r0,IOP_ERROR(r1)	// Copy error code to IOPK
+	mov	r0,IOPKT.ERROR(r1)	// Copy error code to IOPK
 
 999$:	procexit getr2=no,getr3=no,getr4=no
 
@@ -71,7 +72,7 @@ readok:	movb	PTP.PRB,IOP_IOAREA(r1)	// Move read byte to buffer
 ptpwrite:
 	procentry saver3=no,saver4=no
 	mov	4(r5),r2		// R2: IOPK address
-	cmp	IOP_SIZE(r2),$2		// Check size (must be one)
+	cmp	IOPKT.SIZE(r2),$2		// Check size (must be one)
 	beq	5$			
 	mov	$EINVVAL,r0		// Prepare error code		
 	br	900$
@@ -86,11 +87,11 @@ ptpwrite:
 	br	900$
 	
 dowrite:	
-	movb	IOP_IOAREA(r2),PTP.PPB
+	movb	IOPKT.IOAREA(r2),PTP.PPB
 	br	999$
 	
 900$:	sec
-	mov	r0,IOP_ERROR(r2)	// Copy error code to IOPK	
+	mov	r0,IOPKT.ERROR(r2)	// Copy error code to IOPK	
 
 999$:	mov	r1,r0
 	procexit getr3=no,getr4=no
@@ -102,6 +103,10 @@ ptpflush:
 
 
 ptpstart:
+	clc
+	clr	r0
+	rts	pc
+	
 ptpstop:
 ptpquery:	
 ptpioctl:	
@@ -125,9 +130,10 @@ ptpdesct:
 	.WORD   ptpquery
 	.WORD	ptpseek
 	.WORD	ptpflush
-	.WORD	0
+	.WORD	0			// Flags
 	.ASCII  "PT      "
-	.WORD	2
+	.WORD	0			// Default buffer size
+	.WORD	2			// Number of ISRs
 	.WORD	ptpisr,PTP.RVEC,PTP.PL
 	.WORD	ptpisr,PTP.PVEC,PTP.PL
 	.WORD	0

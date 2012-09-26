@@ -184,4 +184,7 @@
 	IOT_TENTRIES = 5	// Channels per process
 	IOT_SENTRIES = 16	// Channels per system
 
+	MUXX_DEBUG = 0		// Compile debugging code
+	MUXX_TRAPHALT = 1	// insert a HALT before CPU traps (aborts)
+	
 	.LIST

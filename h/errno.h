@@ -18,8 +18,12 @@
 #define ENOTFOUND -11
 #define ERRDEV    -12
 #define EOFFLINE  -13
+#define ENOTOPEN  -14
+#define ENOSYSRES -15
 
 #define ENOIMPL   -999
+
+void perror(char *);
 
 #define _ERRNO_H
 #endif

@@ -24,6 +24,6 @@ all:	done
 done:	$(OBJECTS)
 
 clean:
-	@rm *.a *.o *.lst done
+	-@rm *.a *.o *.lst done
 
 

@@ -43,17 +43,29 @@ PTCB muxx_qRemoveTask(PTQUEUE,PTCB);
 int muxx_svc_creprc(ADDRESS, char *, int, ADDRESS, WORD);
 int muxx_svc_mutex(ADDRESS, WORD, WORD);
 int muxx_svc_alloc(ADDRESS, char *, WORD);
-int muxx_svc_open (ADDRESS, char *, WORD);
-int muxx_svc_close(ADDRESS, int);
+PIOTE muxx_svc_open (ADDRESS, char *, WORD);
+int muxx_svc_close(ADDRESS, PIOTE);
+int muxx_svc_drvstart(ADDRESS, char*);
+int muxx_svc_drvstop(ADDRESS, char*);
 
 PDRVCB muxx_drv_find(char *);
+int muxx_drv_exec(PDRVCB, PIOPKT);
 int muxx_locate_dev(char *, PIOTE);
 int muxx_srv_mutex(ADDRESS, WORD, WORD);
 
-void muxx_yield();
+int muxx_yield();
 void muxx_schedule();
 
 void panic(char *);
+
+#if MUXX_DEBUG != 0
+#define KDPRINTF  kprintf
+#define KDPUTSTRL kputstrl
+#else
+#define KDPRINTF
+#define KDPUTSTRL
+#endif
+
 
 #define _H_KERFUNCS_H
 #endif

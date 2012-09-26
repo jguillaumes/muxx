@@ -14,6 +14,11 @@ _startup:
 	jsr	pc,_ptpdesc
 	mov	r0,r2
 	DRVREG 	$NPTPDRV,r2,r3
+	tst	r0
+	bmi	error1
+	DRVSTART $NPTPDRV
+	tst	r0
+	bmi	error2
 	CREPRC 	$NTASKB,$(USR_TASK + TSZ_BIG),$_taskb,$0
 	CREPRC 	$NTASKA,$(USR_TASK + TSZ_MED),$_taska,$0	
 loop:	
@@ -25,10 +30,25 @@ loop:
 
 	br loop
 
+error1:
+	mov	r0,-(sp)
+	mov	$ERRMSG1,-(sp)
+	jsr	pc,_printf
+	br	h
+	
+error2:
+	mov	r0,-(sp)
+	mov	$ERRMSG2,-(sp)
+	jsr	pc,_printf
+
+h:	SYSHALT
+
 	.data
 NPTPDRV:.ASCII  "PTPDRV  "
 NPTHND:	.ASCII  "PTPHND  "
 NTASKA:	.ASCII	"TASKA   "
 NTASKB:	.ASCII 	"TASKB   "
 MSG:	.ASCIZ	"Idle task\n"
+ERRMSG1:	.ASCIZ	"Error DRVREG, rc=%d\n"
+ERRMSG2:	.ASCIZ	"Error DRVSTART, rc=%d\n" 
 	.END

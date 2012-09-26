@@ -19,17 +19,19 @@ void itohb(WORD const, char *);
 void itodb(WORD const, char *);
 void itodl(LONGWORD const, char *);
 
-WORD gettpi(WORD, PTCB);
-WORD getpid();
+int gettpi(WORD, PTCB);
+int getpid();
 
-WORD suspend(WORD);
-WORD yield();
+int suspend(WORD);
+int yield();
 
-WORD mutex(WORD, WORD);
-WORD mutexw(WORD, WORD);
-WORD sleep(int);
-WORD alloc(char *, WORD);
-WORD allocw(char *, WORD);
+int mutex(WORD, WORD);
+int mutexw(WORD, WORD);
+int sleep(int);
+int alloc(char *, WORD);
+int allocw(char *, WORD);
+int open(char *, WORD);
+int close(int);
 
 #define _MUXXLIB_H
 #endif

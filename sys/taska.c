@@ -2,22 +2,33 @@
 #include "muxx.h"
 #include "muxxlib.h"
 #include "externals.h"
-
-extern WORD toptask;
-extern WORD end;
+#include "errno.h"
 
 taska() {
   int n=0;
+  int fd=0;
+  WORD pid;
  
+  pid = getpid();
+  printf("Starting task B, PID=%06o\n", pid);
+
   for(;;) {
-    n = allocw("PTPDRV  ", DRV_ALLOC);
-    if (n != 0) 
-      printf("TASKA - Error allocw: %d.\n", n);
-    else 
-      printf("TASKA - Allocated at %-6l.\n",utimeticks);
+    n = allocw("PTPDRV  ", DRV_ALLOC); 
+    fd = open("PT",0);
+    if (fd < 0) {
+      printf("Error opening PT, %d\n", fd);
+      perror("TASKA-OPEN");
+    } else {
+      printf("Device PT opened, FD=%d\n", fd);
+    }
     sleep(3);
-    allocw("PTPDRV  ", DRV_DEALLOC);
-    printf("TASKA - Deallocated at %-6l.\n", utimeticks);
-    sleep(1);
+    n=close(fd);
+    if (n<0) {
+      printf("Error closing PT, %d\n", n);
+      perror("TASKA-CLOSE");
+      allocw("PTPDRV  ", DRV_DEALLOC);
+    } else {
+      printf("FD %d closed\n", fd);
+    }
   }
 }

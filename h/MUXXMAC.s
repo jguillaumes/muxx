@@ -177,11 +177,30 @@
 
 	.macro CLOSE fd
 	sub	$4,sp
-	mov	$2,(sp)
+	mov	$1,(sp)
 	mov	\fd,2(sp)
 	mov	sp,r0
-	trap	$SRV_OPEN
+	trap	$SRV_CLOSE
 	add	$4,sp
 	.endm
+
+	.macro	DRVSTART drvname
+	sub	$4,sp
+	mov	$1,(sp)
+	mov	\drvname,2(sp)
+	mov	sp,r0
+	trap	$KRN_DRVSTART
+	add	$4,sp
+	.endm
+
+	.macro	DRVSTOP drvcb
+	sub	$4,sp
+	mov	$1,(sp)
+	mov	\drvcb,2(sp)
+	mov	sp,r0
+	trap	$KRN_DRVSTOP
+	add	$4,sp
+	.endm
+
 	
 	.LIST

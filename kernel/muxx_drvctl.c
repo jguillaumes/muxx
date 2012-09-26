@@ -37,8 +37,11 @@ int muxx_locate_pdev(char *devname, PIOTE iote) {
 
   memset(wdev,0,9);
   memcpy(wdev,devname,8);
-  for(i=7;i>=0 && wdev[i]==' '; i--) wdev[i]=0;
+
+  for(i=strlen(wdev); i>=0 && wdev[i]==' '; i--) wdev[i]=0;
   l = i;
+
+  KDPRINTF("Searching dev [%s], length=%d\n", wdev,l);
 
   for(i=0; i<MAX_DRV && driver==NULL; i++) {
     if (!(drvcbtaddr->drvcbt[i].flags.free)) {
@@ -46,6 +49,8 @@ int muxx_locate_pdev(char *devname, PIOTE iote) {
 
       // 1: Try whole device name
       if (memcmp(devname,driver->desc->devname,l) == 0) {
+	KDPRINTF("Found driver: ");
+	KDPUTSTRL(driver->drvname,8);
 	controller = 0;
 	unit       = 0;
 	found = 1;
@@ -130,4 +135,43 @@ int muxx_svc_alloc(ADDRESS fp, char *devnam, WORD op) {
     }
   } 
   return rc;
+}
+
+static int muxx_drv_startstop(ADDRESS fp, int op, char *drvnam) {
+  PDRVCB driver = NULL;
+  int rc = EOK;
+  union {
+    IOPKT iopkt;
+    char  ciopkt[IOPKT_FIXSIZE+0];
+  } u_iopkt;
+
+  if (!curtcb->privileges.prvflags.operprv) {
+    rc = ENOPRIV;
+  } else {
+    driver = muxx_find_driver(drvnam);
+    if (driver == NULL) {
+      rc = ENOTFOUND;
+    } else {
+      memset(u_iopkt.ciopkt, 0, sizeof(u_iopkt));
+      u_iopkt.iopkt.function = op;
+      u_iopkt.iopkt.size     = 0;
+      rc = muxx_drv_exec(driver, &(u_iopkt.iopkt));
+      if (rc==EOK) {
+	u_iopkt.iopkt.error = EOK;
+	driver->flags.active  = ( op == DRV_START ? 1 : 0);
+	driver->flags.stopped = ( op == DRV_START ? 0 : 1);
+      } else {
+	u_iopkt.iopkt.error = rc;
+      }
+    }
+  }
+  return rc;
+} 
+
+int muxx_svc_drvstart(ADDRESS fp, char *drvnam) {
+  return muxx_drv_startstop(fp, DRV_START, drvnam);
+}
+
+int muxx_svc_drvstop(ADDRESS fp, char *drvnam) {
+  return muxx_drv_startstop(fp, DRV_STOP, drvnam);
 }

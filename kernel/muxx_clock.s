@@ -33,7 +33,4 @@ muxx_clock_svc:
 	traphandle	_muxx_clock_handler	
 	rti 				// Interrupt done
 
-	.data
-crlf:	.ASCIZ	"\r\n"
-	
 	.end

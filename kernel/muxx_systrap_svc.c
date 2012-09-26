@@ -20,7 +20,6 @@ struct SVC_S {
 
 static int muxx_svc_drvreg(ADDRESS fp, char *name,  
 			   PDRVDESC descriptor, ADDRESS handler) {
-  kprintf("FP: %o, ", fp);
   kputstr(name,8);
   kprintf(", descr: %o, hnd: %o\n", descriptor, handler);
 
@@ -180,6 +179,7 @@ int muxx_svc_mutex(ADDRESS fp, WORD mutex, WORD op) {
     } else {
       rc = ELOCKED;
     }
+    break;
   default:
     return EINVVAL;
   }
@@ -224,10 +224,11 @@ int muxx_systrap_handler(int numtrap, ADDRESS fp, WORD p1, WORD p2,
 
     {(SVC) muxx_svc_drvreg, 2},	  // KRNL 01
     {(SVC) muxx_unimpl, 0},	  // KRNL 02
-    {(SVC) muxx_unimpl, 0},	  // KRNL 03
-    {(SVC) muxx_unimpl, 0},	  // KRNL 04
-    {(SVC) muxx_svc_conputc, 1},  // KRNL 05
-    {(SVC) muxx_unimpl, 0}
+    {(SVC) muxx_svc_drvstart, 2}, // KRNL 03
+    {(SVC) muxx_svc_drvstop, 2},  // KRNL 04
+    {(SVC) muxx_unimpl, 0},	  // KRNL 05
+    {(SVC) muxx_svc_conputc, 1},  // KRNL 06
+    {(SVC) muxx_unimpl, 0}        // KRNL 07
   };	
   
   static int trap_table_entries = sizeof(trap_table)/sizeof(void *());	
@@ -236,8 +237,7 @@ int muxx_systrap_handler(int numtrap, ADDRESS fp, WORD p1, WORD p2,
   // int (*svcimpl)();
   int rc=0;
 
-  // kprintf("Trap number %o of %o\n", numtrap, trap_table_entries);
-
+ 
   if (numtrap < 0 || numtrap > trap_table_entries) {
     return(EINVVAL);
   }
@@ -254,7 +254,7 @@ int muxx_systrap_handler(int numtrap, ADDRESS fp, WORD p1, WORD p2,
     rc= muxx_svc_open(fp, (char *) p1, (WORD) p2);
     break;
   case SRV_CLOSE:
-    rc = muxx_svc_close(fp, (int) p1);
+    rc = muxx_svc_close(fp, (PIOTE) p1);
     break;
   case SRV_EXIT:
     rc = muxx_svc_exit(fp, (WORD) p1);
@@ -289,7 +289,14 @@ int muxx_systrap_handler(int numtrap, ADDRESS fp, WORD p1, WORD p2,
   case KRN_DRVREG:
     rc = muxx_svc_drvreg(fp, (char *) p1, (ADDRESS) p2, (PTCB) p3);
     break;    
+  case KRN_DRVSTART:
+    rc = muxx_svc_drvstart(fp, (char *) p1);
+    break;
+  case KRN_DRVSTOP:
+    rc = muxx_svc_drvstop(fp, (PDRVCB) p1);
+    break;
   default:
+    kprintf("Called unimplemented SYSCALL %d\n", numtrap);
     rc = muxx_unimpl(fp);
   }
   return rc;

@@ -8,16 +8,22 @@ extern WORD end;
 
 taskb() {
   int n=0;
- 
+  WORD pid;
+
+  pid = getpid();
+  printf("Starting task B, PID=%06o\n", pid);
+
   for(;;) {
     n = allocw("PTPDRV  ", DRV_ALLOC);
-    if (n != 0) 
+    if (n != 0) { 
       printf("TASKB - Error allocw: %d.\n", n);
+      perror("TASKB: ");
+    }
     else 
-      printf("TASKB - Allocated at %06l.\n",utimeticks);
+      printf("TASKB - Allocated at %8ld.\n",utimeticks);
     sleep(2);
     allocw("PTPDRV  ", DRV_DEALLOC);
-    printf("TASKB - Deallocated at %6l.\n", utimeticks);
+    printf("TASKB - Deallocated at %6ld.\n", utimeticks);
     sleep(1);
   }
 }

@@ -12,7 +12,7 @@
 ** and loops until the specified number of seconds has passed
 */
 
-WORD sleep(int seconds) {
+int sleep(int seconds) {
   if (seconds == 0) return 0;
 
   LONGWORD sticks;
