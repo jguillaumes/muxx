@@ -50,6 +50,9 @@
 	.endm
 
 
+	/*
+	** Interrupt/trap handler wrapper
+	*/
 	.macro traphandle handler,saveall=yes
 	.ifc	\saveall,yes
 	mov	r0,-(sp)		// Push R0
@@ -58,7 +61,8 @@
 	.ifnc	\saveall,no
 	.error	"saveall must be yes or no. Default is yes"
 	.else
-	sub	$4,sp			// Space to keep offsets right
+	clr	-(sp)			// Space to keep offsets right
+	clr	-(sp)			// Space to keep offsets right
 	.endif
 	.endif
 	mov	r2,-(sp)		// Push R1

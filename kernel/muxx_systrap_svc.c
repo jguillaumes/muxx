@@ -10,7 +10,6 @@
 typedef int (*SVC)(int, ADDRESS, ...);
 typedef int (*DRV)(int, void *);
 
-static int muxx_svc_yield  (ADDRESS) __attribute__ ((noreturn));
 static int muxx_svc_muxxhlt(ADDRESS) __attribute__ ((noreturn));
 
 struct SVC_S {
@@ -134,6 +133,8 @@ static int muxx_svc_yield(ADDRESS fp) {
   copytrapfp(fp);
   copyMMUstate();
   muxx_schedule();
+  panic("YIELD returning!");            // Should not execute this
+  return EINVVAL;
 }
 
 static int muxx_unimpl(ADDRESS fp) {
@@ -152,6 +153,8 @@ int muxx_svc_mutex(ADDRESS fp, WORD mutex, WORD op) {
   BYTE *mutexes = &muxx_mutexes;
   int rc=0;
   int curpl;
+
+  KDPRINTF("Mutex service called, mutex=%d, op=%d, pid=%o\n", mutex,op,curtcb->pid);
 
   if (mutex < 0 || mutex > MUT_MUTEXES) {
     return EINVVAL;
@@ -183,6 +186,7 @@ int muxx_svc_mutex(ADDRESS fp, WORD mutex, WORD op) {
   default:
     return EINVVAL;
   }
+  KDPRINTF("muxx_mutex returning %d, pid %o\n", rc, curtcb->pid);
   return rc;
 }
 

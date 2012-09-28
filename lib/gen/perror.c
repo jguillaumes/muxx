@@ -7,49 +7,49 @@ void perror(char *msg) {
 
   switch(curtcb->taskTUCB->errno) {
   case ENOMEM:
-    printf("Not enough memory\n");
+    printf("ENOMEM\n");
     break;
   case EMAXTASK:
-    printf("The system can't execute more tasks\n");
+    printf("EMAXTASK\n");
     break;
   case ENOPID:
-    printf("The system can't allocate a PID number\n");
+    printf("ENOPID\n");
     break;
   case ETCTFULL:
-    printf("The system task table is full\n");
+    printf("ETCTFULL\n");
     break;
   case EILLINST:
-    printf("Illegal instruction\n");
+    printf("EILLINST\n");
     break;
   case EINVVAL:
-    printf("Invalid value\n");
+    printf("EINVVAL\n");
     break;
   case ENOPRIV:
-    printf("No privileges for the attempted operation\n");
+    printf("ENOPRIV\n");
     break;
   case ELOCKED:
-    printf("The resource is locked\n");
+    printf("ELOCKED\n");
     break;
   case ENOAVAIL:
-    printf("No available resources\n");
+    printf("ENOAVAIL\n");
     break;
   case ENOTALLOC:
-    printf("The device is not allocated\n");
+    printf("ENOTALLOC\n");
     break;
   case ENOTFOUND:
-    printf("The resource could not be found\n");
+    printf("ENOTFOUND\n");
     break;
   case ERRDEV:
-    printf("The device reported an error\n");
+    printf("ERRDEV\n");
     break;
   case EOFFLINE:
-    printf("The device is offline\n");
+    printf("EOFFLINE\n");
     break;
   case ENOSYSRES:
-    printf("The system has insufficient resources to execute the operation\n");
+    printf("ENOSYSRES\n");
     break;
   case ENOTOPEN:
-    printf("The channel is not opened\n");
+    printf("ENOTOPEN\n");
   default:
     printf("ERRNO: %d\n", curtcb->taskTUCB->errno);
     break;

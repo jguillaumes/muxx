@@ -33,5 +33,16 @@ int allocw(char *, WORD);
 int open(char *, WORD);
 int close(int);
 
+
+#if MUXX_DEBUG != 0
+#define DPRINTF  printf
+#define DPUTSTRL putstrl
+#else
+#define DPRINTF
+#define DPUTSTRL
+
+#endif
+
+
 #define _MUXXLIB_H
 #endif

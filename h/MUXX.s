@@ -1,6 +1,16 @@
 	.nolist
 
 	/*
+	** Offsets into frames (short and long)
+	*/
+	FRAME.R5	= 0
+	FRAME.R4	= 2
+	FRAME.R3	= 4
+	FRAME.R2	= 6
+	FRAME.R1	= 8
+	FRAME.R0	= 10
+
+	/*
 	** Offsets into TCB fields
 	*/
 	TCB.TASKNAME	= 0

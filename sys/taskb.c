@@ -19,11 +19,16 @@ taskb() {
       printf("TASKB - Error allocw: %d.\n", n);
       perror("TASKB: ");
     }
-    else 
+    else { 
       printf("TASKB - Allocated at %8ld.\n",utimeticks);
-    sleep(2);
-    allocw("PTPDRV  ", DRV_DEALLOC);
-    printf("TASKB - Deallocated at %6ld.\n", utimeticks);
+    }
     sleep(1);
+    n = alloc("PTPDRV  ", DRV_DEALLOC);
+    if (n==0) {
+      printf("TASKB - Deallocated at %6ld.\n", utimeticks);
+      sleep(1);
+    } else {
+      perror("TASKB - Dealloc");
+    }
   }
 }

@@ -20,6 +20,20 @@ struct CPUSTATE_S {
 
 typedef struct CPUSTATE_S CPUSTATE;
 
+/*
+** Saved frame for interrupts/traps
+*/
+struct FRAME_S {
+  WORD r5;
+  WORD r4;
+  WORD r3;
+  WORD r2;
+  WORD r1;
+  WORD r0;
+};
+
+typedef struct FRAME_S FRAME;
+typedef struct FRAME_S *PFRAME;
 
 /* 
 ** MMU state block
