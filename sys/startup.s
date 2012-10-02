@@ -9,8 +9,8 @@
 	.text
 
 _startup:
-	CREPRC 	$NPTHND,$DRV_TASK,$_ptphnd,$TSK_IOPRV
-	mov	r0,r3
+	// CREPRC 	$NPTHND,$DRV_TASK,$_ptphnd,$TSK_IOPRV
+	// mov	r0,r3
 	jsr	pc,_ptpdesc
 	mov	r0,r2
 	DRVREG 	$NPTPDRV,r2,r3

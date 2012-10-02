@@ -11,4 +11,9 @@ __write:
 	WRITE 4(r5),6(r5),8(R5)
 	procexit getr2=no,getr3=no,getr4=no
 
+__read:
+	procentry saver2=no,saver3=no,saver4=no
+	READ 4(r5),6(r5),8(R5)
+	procexit getr2=no,getr3=no,getr4=no
+
 	.end

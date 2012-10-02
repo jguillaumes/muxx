@@ -1,26 +1,11 @@
-	.NOLIST 
-/*
- * This is a generated file - DO NOT EDIT 
- * Edit the .h file and run "make" to regenerate the .s
-*/
-/*
-*/
-EOK = 0
-ENOMEM = -1
-EMAXTASK = -2
-ENOPID = -3
-ETCTFULL = -4
-EILLINST = -5
-EINVVAL = -6
-ENOPRIV = -7
-ELOCKED = -8
-ENOAVAIL = -9
-ENOTALLOC = -10
-ENOTFOUND = -11
-ERRDEV = -12
-EOFFLINE = -13
-ENOTOPEN = -14
-ENOSYSRES = -15
-EEOF = -16
-ENOIMPL = -999
-	.LIST 
+	.INCLUDE "ERRORS.s"
+	.INCLUDE "MUXX.s"
+	
+	.macro ERRNO dest
+	mov	r1,-(sp)
+	mov	curtcb,r1
+	mov	@TCB.TASKTUCB(r1),r1
+	mov	TUCB.T_ERRNO(r1),\dest
+	mov	(sp)+,r1
+	.endm
+

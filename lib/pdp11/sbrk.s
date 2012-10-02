@@ -2,8 +2,7 @@
 	.IDENT "V01.00"
 
 	.INCLUDE "MACLIB.s"
-	.INCLUDE "ERRNO.s"
-	
+
 	.GLOBAL _sbrk
 
 	// sbrk() basic implementation

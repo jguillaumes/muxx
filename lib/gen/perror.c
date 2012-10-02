@@ -5,7 +5,7 @@
 void perror(char *msg) {
   if (msg != NULL) printf("%s: ", msg);
 
-  switch(curtcb->taskTUCB->errno) {
+  switch(errno) {
   case ENOMEM:
     printf("ENOMEM\n");
     break;
@@ -50,8 +50,10 @@ void perror(char *msg) {
     break;
   case ENOTOPEN:
     printf("ENOTOPEN\n");
+  case EEOF:
+    printf("EEOF\n");
   default:
-    printf("ERRNO: %d\n", curtcb->taskTUCB->errno);
+    printf("ERRNO: %d\n", errno);
     break;
   }
 }

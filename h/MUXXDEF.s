@@ -164,7 +164,7 @@ LEF_USR = 16		// First used-available flag
 ** Constants for memory management bits
 */
 PDR_ACC_RW = 0x0006		// Read-write access
-PDR_ACC_RO = 0x0004		// Read-only access
+PDR_ACC_RO = 0x0002		// Read-only access
 PDR_ACC_NA = 0x0000		// No access
 PDR_DIR_UP = 0x0000		// Page grows upwards
 PDR_DIR_DN = 0x0008		// Page grows downwards (stack)

@@ -12,8 +12,8 @@ CFLAGS=-c -Wall -I $(MUXXH) -Os -fomit-frame-pointer -ffreestanding
 ASMFLAGS=-acmghlsd -I $(MUXXH) 
 
 OBJECTS=lib_externals.o lib_syscalls.o lib_getpid.o lib_mutex.o \
-	lib_alloc.o lib_allocw.o lib_channels.o lib_openclose.o lib_write.o \
-	_write.o
+	lib_alloc.o lib_allocw.o lib_channels.o lib_openclose.o \
+	lib_readwrite.o _readwrite.o
 
 .s.o:
 	$(AS) $(ASMFLAGS) $< -o $@ > $*.lst

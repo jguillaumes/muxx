@@ -65,7 +65,7 @@ struct TUCB_S {
   ADDRESS heapt;     // Top of memory heap
   ADDRESS endcode;   // End of task code
   ADDRESS toptask;   // End of task memory (excluding stack and buffers)
-  WORD    errno;     // Last error code
+  WORD    t_errno;   // Last error code
   ADDRESS iote[IOT_TENTRIES]; // Channel table
 };
 

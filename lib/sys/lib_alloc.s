@@ -17,7 +17,7 @@ _alloc:
 	ALLOC     4(r5),6(r5)
 	mov	_curtcb,r1
 	mov	TCB.TASKTUCB(r1),r1
-	mov	r0,TUCB.ERRNO(r1)
+	mov	r0,TUCB.T_ERRNO(r1)
 	procexit  getr2=NO,getr3=no,getr4=no
 
 	.end

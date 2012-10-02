@@ -208,7 +208,7 @@ int muxx_systrap_handler(int numtrap, ADDRESS fp, WORD p1, WORD p2,
     {(SVC) muxx_svc_open, 2},	  // 10:
     {(SVC) muxx_svc_close, 1},	  // 11:
     {(SVC) muxx_unimpl, 0},	  // 12:
-    {(SVC) muxx_unimpl, 0},	  // 13:
+    {(SVC) muxx_svc_read, 3},	  // 13:
     {(SVC) muxx_svc_write, 3},	  // 14:
     {(SVC) muxx_unimpl, 0},	  // 15:
     {(SVC) muxx_unimpl, 0},	  // 16:
@@ -263,6 +263,9 @@ int muxx_systrap_handler(int numtrap, ADDRESS fp, WORD p1, WORD p2,
     break;
   case SRV_WRITE:
     rc = muxx_svc_write(fp, (PIOTE) p1, (int) p2, (char *) p3);
+    break;
+  case SRV_READ:
+    rc = muxx_svc_read(fp, (PIOTE) p1, (int) p2, (char *) p3);
     break;
   case SRV_EXIT:
     rc = muxx_svc_exit(fp, (WORD) p1);

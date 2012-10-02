@@ -5,7 +5,6 @@
 	.INCLUDE "MACLIB.s"
 	.INCLUDE "MUXXDEF.s"
 	.INCLUDE "MUXXMAC.s"
-	.INCLUDE "ERRNO.s"
 	
 	.text
 

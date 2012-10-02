@@ -50,17 +50,19 @@ ptpread:
 	mov	$ERRDEV,r0		// Prepare error code
 	br	900$
 
-10$:	bis	$ENAB,PTP.PRS		// Enable reader
-20$:	bit	$(DONE+ERROR),PTP.PRS	// Check done or error
+10$:
+	bis	$ENAB,PTP.PRS		// Enable reader
+20$:
+	bit	$(DONE+ERROR),PTP.PRS	// Check done or error
 	beq	20$			// No: try again
-	bit	$ERROR,PTP.PRS		// Error?
-	bne	readok			// No: then read OK
-	mov	$ERRDEV,r0		// Yes: prepare error code
-	br	900$
+	bmi	30$
 	
-readok:	movb	PTP.PRB,IOPKT.IOAREA(r1)	// Move read byte to buffer
+	movb	PTP.PRB,IOPKT.IOAREA(r1) // Move read byte to buffer
+	mov	$1,r0			// 1 character read
 	br	999$			// And exit
 
+30$:	mov	$EEOF,r0
+	
 900$:	sec				// Error => Carry set
 	mov	r0,IOPKT.ERROR(r1)	// Copy error code to IOPK
 

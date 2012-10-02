@@ -50,13 +50,15 @@ rjust	= -6
 ndfnd	= -8
 ndigit	= -10
 zfill	= -12
-buffer  = -312
+buffer  = -314
 	
 _doprnt:
-	procentry local=156
+	procentry local=157
 	
 	mov	4(r5),formp(r5)		// format
 	mov	6(r5),r4
+	mov	r5,buffer(r5)
+	add	$buffer+2,buffer(r5)
 loop:
 	mov	buffer(r5),r3
 	mov	formp(r5),r1
@@ -83,7 +85,7 @@ loop:
 2:
 	tst	r2
 	bne	2f
-	procexit local=156
+	procexit local=157
 2:
 	mov	buffer(r5),r3
 2:

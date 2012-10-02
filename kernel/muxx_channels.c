@@ -21,17 +21,18 @@ static int muxx_find_free_iote() {
   if (idx == -1) {
     return ENOSYSRES;
   } else {
+    KDPRINTF("Using IOTE entry %d\n", idx);
     return idx;
   }
 }
 
 PIOBUF muxx_allocate_iobuffer(int size) {
-  curtcb->taskTUCB->errno = ENOIMPL;
+  errno = ENOIMPL;
   return NULL;
 }
 
 int muxx_deallocate_iobuffer(PIOBUF pbuf) {
-    curtcb->taskTUCB->errno = ENOIMPL;
+    errno = ENOIMPL;
     kprintf("Channe buffer allocation not yet implemented\n");
     return ENOIMPL;
 }
@@ -44,7 +45,7 @@ PIOTE muxx_svc_open (ADDRESS fp, char *device, WORD flags) {
   rc = muxx_svc_mutex(fp, MUT_CHAN, MUT_ALLOC);
   if (rc == EOK) {
     iotidx = muxx_find_free_iote();
-    if (rc == EOK) {
+    if (iotidx >= 0) {
       io = &(iott->iote[iotidx]);
       rc = muxx_locate_dev(device, io);
       if (rc == EOK) {
@@ -71,7 +72,7 @@ PIOTE muxx_svc_open (ADDRESS fp, char *device, WORD flags) {
 	    if (io->driver->desc->attributes.flags.buffered == 1) {
 	      io->buffaddr = muxx_allocate_iobuffer(io->driver->desc->defbufsiz);
 	      if (io->buffaddr == NULL) {
-		rc = curtcb->taskTUCB->errno;
+		rc = errno;
 	      } else {
 		io->status.flags.open = 1;
 	      }
@@ -83,6 +84,9 @@ PIOTE muxx_svc_open (ADDRESS fp, char *device, WORD flags) {
 	  rc = EOFFLINE;
 	}
       }
+    } else {
+      KDPRINTF("Error finding free IOTE: %d\n", iotidx);
+      rc = iotidx;
     }
   }
   rc1 = muxx_svc_mutex(fp, MUT_CHAN, MUT_DEALLOC);
@@ -93,7 +97,7 @@ PIOTE muxx_svc_open (ADDRESS fp, char *device, WORD flags) {
   if (rc == EOK) {
     return io;
   } else {
-    curtcb->taskTUCB->errno = rc;
+    errno = rc;
     return NULL;
   }
 }
@@ -113,6 +117,9 @@ int muxx_svc_close(ADDRESS fp, PIOTE io) {
 	} 
       }
       io->status.flags.open = 0;
+      io->driver = NULL;
+      io->controller = 0;
+      io->unit = 0;
       if (io->buffaddr != NULL) {
 	rc = muxx_deallocate_iobuffer(io->buffaddr);
 	if (rc != EOK) {
@@ -129,6 +136,6 @@ int muxx_svc_close(ADDRESS fp, PIOTE io) {
     kprintf("Error deallocating CHAN: %d\n", rc1);
     panic("muxx_svc_open: dealloc CHAN mutex");
   }
-  curtcb->taskTUCB->errno = rc;
+  errno = rc;
   return rc;
 }

@@ -15,21 +15,20 @@ int open(char *filename, WORD mode) {
 
 
   ptucb = curtcb->taskTUCB;
-  ptucb->errno = EOK;
+  errno = EOK;
   for (i=0; i<IOT_TENTRIES && fd==-1; i++) {
     if (ptucb->iote[i] == NULL) {
       fd = i;
     }
   }
   if (fd == -1) {
-    ptucb->errno = ENOSYSRES;
+    errno = ENOSYSRES;
     return ENOSYSRES;
   } 
   
   piote = _open(filename, mode);
-  if ((int) piote < 0) {
-    ptucb->errno = (int) piote;
-    return (int) piote;
+  if ( piote == NULL) {
+    return errno;
   } else {
     ptucb->iote[fd] = piote;
   }
@@ -44,17 +43,17 @@ int close(int fd) {
 
   if (fd < 0 || fd > IOT_TENTRIES) {
     rc = EINVVAL;
-    ptucb->errno =rc;
+    errno =rc;
   } else {
     if (ptucb->iote[fd] == NULL) {
       rc = ENOTOPEN;
-      ptucb->errno = ENOTOPEN;
+      errno = ENOTOPEN;
     } else {
       rc = _close(ptucb->iote[fd]);
       if (rc == EOK) {
 	ptucb->iote[fd] = NULL;
       } else {
-	ptucb->errno = rc;
+	errno = rc;
       }
     }
   }

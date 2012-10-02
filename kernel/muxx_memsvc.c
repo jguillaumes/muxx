@@ -174,14 +174,12 @@ int muxx_setup_taskmem (PTCB task) {
   int rc = EOK;
   int i=0;
   WORD endalloc=0;
+  WORD wpdr=0;
   WORD tucbsize = sizeof(struct TUCB_S);
   PTUCB ptucb = NULL;
 
-  kprintf("Raw tucbsize: %d ", tucbsize);
-
   tucbsize = (tucbsize-1)/64;
   tucbsize = (tucbsize+1)*64;
-  kprintf("Adjusted: %d\n", tucbsize);
 
   ttype = (task->taskType & 0000007);
   tsize = (task->taskType & 0000070);          // Extract task size
@@ -207,16 +205,21 @@ int muxx_setup_taskmem (PTCB task) {
   /*
   ** Kernel common pages (0-2)
   */
+  if (task->privileges.prvflags.operprv) {
+    wpdr = PDR_ACC_RW | PDR_SIZ_8K;
+  } else {
+    wpdr = PDR_ACC_RO | PDR_SIZ_8K;
+  }
   task->mmuState.upar[0] = 0;
-  task->mmuState.updr[0] = PDR_ACC_RW | PDR_SIZ_8K; // Should be RO
+  task->mmuState.updr[0] = wpdr;
   task->mmuState.kpar[0] = 0;
   task->mmuState.kpdr[0] = PDR_ACC_RW | PDR_SIZ_8K;
   task->mmuState.upar[1] = 0200;
-  task->mmuState.updr[1] = PDR_ACC_RW | PDR_SIZ_8K; // Should be RO
+  task->mmuState.updr[1] = wpdr;
   task->mmuState.kpar[1] = 0200;
   task->mmuState.kpdr[1] = PDR_ACC_RW | PDR_SIZ_8K;
   task->mmuState.upar[2] = 0400;
-  task->mmuState.updr[2] = PDR_ACC_RW | PDR_SIZ_8K; // Should be RO
+  task->mmuState.updr[2] = wpdr;
   task->mmuState.kpar[2] = 0400;
   task->mmuState.kpdr[2] = PDR_ACC_RW | PDR_SIZ_8K;
 

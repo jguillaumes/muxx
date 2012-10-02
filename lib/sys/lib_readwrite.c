@@ -8,3 +8,10 @@ int write(int fd, int size, char *buffer) {
   iote = curtcb->taskTUCB->iote[fd];
   return _write(iote, size, buffer);
 }
+
+int read(int fd, int size, char *buffer) {
+  PIOTE iote;
+
+  iote = curtcb->taskTUCB->iote[fd];
+  return _read(iote, size, buffer);
+}

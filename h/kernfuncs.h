@@ -48,6 +48,7 @@ int muxx_svc_close(ADDRESS, PIOTE);
 int muxx_svc_drvstart(ADDRESS, char*);
 int muxx_svc_drvstop(ADDRESS, char*);
 int muxx_svc_write(ADDRESS, PIOTE, int, char*);
+int muxx_svc_read(ADDRESS, PIOTE, int, char*);
 
 PDRVCB muxx_drv_find(char *);
 int muxx_drv_exec(PDRVCB, PIOPKT);
