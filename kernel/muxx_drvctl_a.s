@@ -27,11 +27,11 @@ _muxx_drv_exec:
 	mov	6(r5),r3		// R3: IOPKT address
 	mov	r3,-(sp)		// Push IOPKT address
 	mov	DRVCB.DESC(r2),r2	// R2 points to dev descriptor
-	mov	DRVDESC.CALLBACKS(r2),r2 // R2 points now to callback table
+	add	$DRVDESC.CALLBACKS,r2   // R2 points now to callback table
 	mov 	IOPKT.FUNCTION(r3),r3	// R3: Function to call
 	asl	r3			// R3: Function offset to call
 	add	r3,r2			// R2 points to callback address
-	jsr	pc,(R2)			// Call callback routine
+	jsr	pc,@0(R2)		// Call callback routine
 	add	$2,sp			// Remove parameter
 	procexit getr4=no
 

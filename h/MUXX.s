@@ -139,7 +139,7 @@
 	TUCB.IOTE = 10
 
 	/*
-	** DRVDESC offsets
+	** DRVDESC offsets and constants
 	*/
 	DRVDESC.CALLBACKS = 0
 	DRVDESC.ATTRIBUTES = 20

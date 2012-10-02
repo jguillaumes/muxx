@@ -6,7 +6,7 @@ CC=pdp11-aout-gcc
 LD=pdp11-aout-ld
 AR=pdp11-aout-ar
 LDFLAGS=-T ldaout.cmd -M --cref --traditional -lgcc -lpdp11
-CFLAGS=-c -Wall -I../h -Os -ffreestanding -fomit-frame-pointer
+CFLAGS=-c -Wall -I../h -Os -ffreestanding -fomit-frame-pointer -fno-builtin-alloca
 ASMFLAGS=-acmghlsd -I../h 
 
 TARGETS=libkmuxx.a

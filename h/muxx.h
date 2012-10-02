@@ -339,7 +339,7 @@ struct IOTE_S {
   BYTE unit;                 // Number of unit whithin driver-controller
   WORD error;                // Error code
   ADDRESS attraddr;          // Attributes address (if attributes ==1)
-  ADDRESS buffaddr;          // IO Buffer address (if buffered == 1)
+  PIOBUF buffaddr;           // IO Buffer address (if buffered == 1)
 };
 
 typedef struct IOTE_S IOTE;

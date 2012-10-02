@@ -89,6 +89,13 @@ MUT_READ = 0
 MUT_ALLOC = 1
 MUT_DEALLOC = 2
 /*
+** Driver descriptor attribute bits
+*/
+DRVDESC_SHAREABLE = 0x0001
+DRVDESC_RECORD = 0x0002
+DRVDESC_FILES = 0x0004
+DRVDESC_BUFFERED = 0x0008
+/*
 ** Device driver callbacks and functions
 */
 DRV_START = 0

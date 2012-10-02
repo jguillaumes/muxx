@@ -20,6 +20,12 @@ taska() {
       perror("TASKA-OPEN");
     } else {
       printf("Device PT opened, FD=%d\n", fd);
+      n=write(fd,10,"0123456789");
+      if (n<0) {
+	printf("Error writing: %d\n", n);
+      } else {
+	printf("%d characters written\n", n);
+      }
     }
     sleep(1);
     if (fd>=0) {

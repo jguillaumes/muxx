@@ -33,6 +33,7 @@ int allocw(char *, WORD);
 int open(char *, WORD);
 int close(int);
 
+void *alloca(int);
 
 #if MUXX_DEBUG != 0
 #define DPRINTF  printf

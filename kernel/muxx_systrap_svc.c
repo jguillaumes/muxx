@@ -77,6 +77,7 @@ static int muxx_svc_drvreg(ADDRESS fp, char *name,
   return rc;
 }
 
+
 static int muxx_svc_gettpi(ADDRESS fp, WORD pid, PTCB area) {
   PTCB source = NULL;
   if (pid == 0) {
@@ -208,7 +209,7 @@ int muxx_systrap_handler(int numtrap, ADDRESS fp, WORD p1, WORD p2,
     {(SVC) muxx_svc_close, 1},	  // 11:
     {(SVC) muxx_unimpl, 0},	  // 12:
     {(SVC) muxx_unimpl, 0},	  // 13:
-    {(SVC) muxx_unimpl, 0},	  // 14:
+    {(SVC) muxx_svc_write, 3},	  // 14:
     {(SVC) muxx_unimpl, 0},	  // 15:
     {(SVC) muxx_unimpl, 0},	  // 16:
     {(SVC) muxx_unimpl, 0},	  // 17:
@@ -259,6 +260,9 @@ int muxx_systrap_handler(int numtrap, ADDRESS fp, WORD p1, WORD p2,
     break;
   case SRV_CLOSE:
     rc = muxx_svc_close(fp, (PIOTE) p1);
+    break;
+  case SRV_WRITE:
+    rc = muxx_svc_write(fp, (PIOTE) p1, (int) p2, (char *) p3);
     break;
   case SRV_EXIT:
     rc = muxx_svc_exit(fp, (WORD) p1);

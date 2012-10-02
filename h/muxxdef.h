@@ -93,6 +93,13 @@
 #define MUT_ALLOC    1
 #define MUT_DEALLOC  2
 
+/*
+** Driver descriptor attribute bits
+*/
+#define DRVDESC_SHAREABLE 0x0001
+#define DRVDESC_RECORD    0x0002
+#define DRVDESC_FILES     0x0004
+#define DRVDESC_BUFFERED  0x0008
 
 /*
 ** Device driver callbacks and functions

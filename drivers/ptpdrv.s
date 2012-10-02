@@ -38,7 +38,7 @@ ptpclose:
 ptpread:
 	procentry saver2=no,saver3=no,saver4=no
 	mov	4(r5),r1		// R1: IOPKT address
-	cmp	IOPKT.SIZE(r1),$1		// Buffer size must be one
+	cmp	IOPKT.SIZE(r1),$1	// Buffer size must be one
 	beq	5$
 	mov	$EINVVAL,r0		// Error: Invalid value
 	br	900$
@@ -59,7 +59,7 @@ ptpread:
 	br	900$
 	
 readok:	movb	PTP.PRB,IOPKT.IOAREA(r1)	// Move read byte to buffer
-	br	999$			// Anhd exit
+	br	999$			// And exit
 
 900$:	sec				// Error => Carry set
 	mov	r0,IOPKT.ERROR(r1)	// Copy error code to IOPK
@@ -70,9 +70,9 @@ readok:	movb	PTP.PRB,IOPKT.IOAREA(r1)	// Move read byte to buffer
 	** Punch a byte
 	*/
 ptpwrite:
-	procentry saver3=no,saver4=no
-	mov	4(r5),r2		// R2: IOPK address
-	cmp	IOPKT.SIZE(r2),$2		// Check size (must be one)
+	procentry saver2=no,saver3=no,saver4=no
+	mov	4(r5),r1		// R2: IOPK address
+	cmp	IOPKT.SIZE(r1),$1	// Check size (must be one)
 	beq	5$			
 	mov	$EINVVAL,r0		// Prepare error code		
 	br	900$
@@ -86,15 +86,16 @@ ptpwrite:
 	mov	$ERRDEV,r0		// Error: prepare error code
 	br	900$
 	
-dowrite:	
-	movb	IOPKT.IOAREA(r2),PTP.PPB
+dowrite:
+	movb	IOPKT.IOAREA(r1),PTP.PPB // Send byte to device
+	mov	$1,r0			 // 1 written byte
 	br	999$
 	
 900$:	sec
-	mov	r0,IOPKT.ERROR(r2)	// Copy error code to IOPK	
+	mov	r0,IOPKT.ERROR(r1)	// Copy error code to IOPK	
 
-999$:	mov	r1,r0
-	procexit getr3=no,getr4=no
+999$:	
+	procexit getr2=no,getr3=no,getr4=no
 
 ptpflush:
 	clc
@@ -132,7 +133,7 @@ ptpdesct:
 	.WORD	ptpflush
 	.WORD	0			// Flags
 	.ASCII  "PT      "
-	.WORD	0			// Default buffer size
+	.WORD	1			// Default buffer size
 	.WORD	2			// Number of ISRs
 	.WORD	ptpisr,PTP.RVEC,PTP.PL
 	.WORD	ptpisr,PTP.PVEC,PTP.PL

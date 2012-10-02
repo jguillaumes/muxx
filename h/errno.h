@@ -20,6 +20,7 @@
 #define EOFFLINE  -13
 #define ENOTOPEN  -14
 #define ENOSYSRES -15
+#define EEOF      -16
 
 #define ENOIMPL   -999
 

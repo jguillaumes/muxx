@@ -202,5 +202,15 @@
 	add	$4,sp
 	.endm
 
+	.macro	WRITE iote,size,buffer
+	sub	$8,sp
+	mov	$3,(sp)
+	mov	\buffer,2(sp)
+	mov	\size,4(sp)
+	mov	\iote,6(sp)
+	mov	sp,r0
+	trap	$SRV_WRITE
+	add	$8,sp
+	.endm
 	
 	.LIST
