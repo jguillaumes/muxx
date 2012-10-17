@@ -10,7 +10,7 @@ KRN_HALT = 0		// System halt
 SRV_CREPRC = 1		// Create process
 SRV_DELPRC = 2		// Delete process
 SRV_CHGPRC = 3		// Change (modify) process
-SRV_LOAD = 4		// Load task
+SRV_LOADPRC = 4		// Create process and load task
 SRV_UNLOAD = 5		// Unload (remove) task
 SRV_GETCORE = 6		// Get physical memory
 SRV_FREECORE = 7		// Free physical memory
@@ -48,6 +48,7 @@ KRN_DRVSTOP = (SRV_LAST+4)		// Stop device driver
 KRN_BUGCHECK = (SRV_LAST+5)		// Cause a bugcheck error
 KRN_PUTCON = (SRV_LAST+6)		// Put character to system console
 KRN_GETCON = (SRV_LAST+7)		// Get character from system console
+KRN_XCOPY = (SRV_LAST+8)		// Copy memory between processes
 /*
 ** Task types
 */

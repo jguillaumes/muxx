@@ -13,7 +13,7 @@ ASMFLAGS=-acmghlsd -I $(MUXXH)
 
 OBJECTS=lib_externals.o lib_syscalls.o lib_getpid.o lib_mutex.o \
 	lib_alloc.o lib_allocw.o lib_channels.o lib_openclose.o \
-	lib_readwrite.o _readwrite.o
+	lib_readwrite.o _readwrite.o lib_load.o
 
 .s.o:
 	$(AS) $(ASMFLAGS) $< -o $@ > $*.lst

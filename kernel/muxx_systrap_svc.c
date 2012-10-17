@@ -78,21 +78,6 @@ static int muxx_svc_drvreg(ADDRESS fp, char *name,
 }
 
 
-static int muxx_svc_gettpi(ADDRESS fp, WORD pid, PTCB area) {
-  PTCB source = NULL;
-  if (pid == 0) {
-    source = curtcb;
-  } else {
-    return ENOIMPL;
-  }
-  memcpy(area, source, sizeof(TCB));
-  return EOK;
-}
-
-static int muxx_svc_conputc(ADDRESS fp, char c) {
- return kconputc(c);
-}
-
 static int muxx_svc_muxxhlt(ADDRESS fp) {
   asm("halt");
   asm("halt");  
@@ -191,15 +176,20 @@ int muxx_svc_mutex(ADDRESS fp, WORD mutex, WORD op) {
   return rc;
 }
 
+static int muxx_svc_conputc(ADDRESS fp, char c) {
+ return kconputc(c);
+}
+
 
 int muxx_systrap_handler(int numtrap, ADDRESS fp, WORD p1, WORD p2, 
-			                          WORD p3, WORD p4) {
+			                          WORD p3, WORD p4,
+			                          WORD p5, WORD p6) {
   static struct SVC_S trap_table[] = {
     {(SVC) muxx_svc_muxxhlt,0}, //  0;
     {(SVC) muxx_svc_creprc, 4},	  //  1;
     {(SVC) muxx_unimpl, 0},     //  2:
     {(SVC) muxx_unimpl, 0},	  //  3:
-    {(SVC) muxx_unimpl, 0},	  //  4:
+    {(SVC) muxx_svc_loadprc, 4},  //  4:
     {(SVC) muxx_unimpl, 0},	  //  5:
     {(SVC) muxx_unimpl, 0},	  //  6:
     {(SVC) muxx_unimpl, 0},	  //  7:
@@ -233,7 +223,8 @@ int muxx_systrap_handler(int numtrap, ADDRESS fp, WORD p1, WORD p2,
     {(SVC) muxx_svc_drvstop, 2},  // KRNL 04
     {(SVC) muxx_unimpl, 0},	  // KRNL 05
     {(SVC) muxx_svc_conputc, 1},  // KRNL 06
-    {(SVC) muxx_unimpl, 0}        // KRNL 07
+    {(SVC) muxx_unimpl, 0},       // KRNL 07
+    {(SVC) muxx_svc_xcopy, 5}     // KRNL 078
   };	
   
   static int trap_table_entries = sizeof(trap_table)/sizeof(void *());	
@@ -282,6 +273,9 @@ int muxx_systrap_handler(int numtrap, ADDRESS fp, WORD p1, WORD p2,
   case SRV_CREPRC:
     rc = muxx_svc_creprc(fp, (char *) p1,(int) p2,(ADDRESS) p3,(WORD) p4);
     break;
+  case SRV_LOADPRC:
+    rc = muxx_svc_loadprc(fp, (char *) p1,(int) p2,(ADDRESS) p3,(WORD) p4);
+    break;
   case SRV_SUSPEND:
     rc = muxx_svc_suspend(fp, (PTCB) p1);
     break;
@@ -306,9 +300,14 @@ int muxx_systrap_handler(int numtrap, ADDRESS fp, WORD p1, WORD p2,
   case KRN_DRVSTOP:
     rc = muxx_svc_drvstop(fp, (PDRVCB) p1);
     break;
+  case KRN_XCOPY:
+    rc = muxx_svc_xcopy(fp, (WORD) p1, (WORD) p2, 
+			    (WORD) p3, (WORD) p4, (WORD) p5);
+    break;
   default:
     kprintf("Called unimplemented SYSCALL %d\n", numtrap);
     rc = muxx_unimpl(fp);
   }
   return rc;
 }
+

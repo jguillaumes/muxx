@@ -41,6 +41,7 @@ PTCB muxx_qGetTask(PTQUEUE);
 PTCB muxx_qRemoveTask(PTQUEUE,PTCB);
 
 int muxx_svc_creprc(ADDRESS, char *, int, ADDRESS, WORD);
+int muxx_svc_loadprc(ADDRESS, char *, int, ADDRESS, WORD);
 int muxx_svc_mutex(ADDRESS, WORD, WORD);
 int muxx_svc_alloc(ADDRESS, char *, WORD);
 PIOTE muxx_svc_open (ADDRESS, char *, WORD);
@@ -49,11 +50,15 @@ int muxx_svc_drvstart(ADDRESS, char*);
 int muxx_svc_drvstop(ADDRESS, char*);
 int muxx_svc_write(ADDRESS, PIOTE, int, char*);
 int muxx_svc_read(ADDRESS, PIOTE, int, char*);
+int muxx_svc_gettpi(ADDRESS, WORD, PTCB);
+PTCB muxx_findtcb(WORD);
 
 PDRVCB muxx_drv_find(char *);
 int muxx_drv_exec(PDRVCB, PIOPKT);
 int muxx_locate_dev(char *, PIOTE);
 int muxx_srv_mutex(ADDRESS, WORD, WORD);
+
+int muxx_svc_xcopy(ADDRESS, WORD, WORD, WORD, WORD, WORD);
 
 int muxx_yield();
 void muxx_schedule();

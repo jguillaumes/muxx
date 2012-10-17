@@ -6,7 +6,7 @@ CC=pdp11-aout-gcc
 LD=pdp11-aout-ld
 SIZE=pdp11-aout-size
 STRIP=pdp11-aout-strip
-LIBS=-L../lib -lmuxx -L../kernel -lkmuxx -L../drivers -lmuxxdrv -lgcc -lpdp11
+LIBS=-L../lib -lmuxx -L../kernel -lkmuxx -L../drivers -lmuxxdrv -L../shell -lshell -lgcc -lpdp11 
 LDFLAGS=-M --cref --traditional 
 CFLAGS=-c -Os -ffreestanding -I../h -fomit-frame-pointer
 ASMFLAGS=-aghls -am -I../h 
@@ -28,8 +28,8 @@ mrproper:
 
 muxx.o:	muxx.s $(MACROS)
 
-muxx.out:	muxx.o startup.o taska.o taskb.o ../lib/libmuxx.a ../kernel/libkmuxx.a
-	$(LD) -T ldkern.cmd $(LDFLAGS) $^ -o $@ $(LIBS) > muxx.map
+muxx.out:	muxx.o startup.o ../lib/libmuxx.a ../kernel/libkmuxx.a ../shell/libshell.a
+	$(LD) -T ldkern.cmd $(LDFLAGS) muxx.o startup.o -o $@ --start-group $(LIBS) --end-group > muxx.map
 	$(STRIP) $@
 	$(SIZE) $@ --format=sysv -o 
 

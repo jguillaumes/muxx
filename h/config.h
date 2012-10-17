@@ -91,6 +91,8 @@
 #define MEM_BLOCKS		4096
 #define MEM_NMCBS		128
 #define DRV_BUFSIZ		2048
+#define PAGE_SIZE		020000
+#define TASK_BASE		060000
 #define CPU_HAS_SPL		0
 #define CPU_HAS_CIS		0
 #define CPU_HAS_FPP		0

@@ -7,7 +7,7 @@
 #define SRV_CREPRC   1    // Create process
 #define SRV_DELPRC   2    // Delete process
 #define SRV_CHGPRC   3    // Change (modify) process
-#define SRV_LOAD     4    // Load task
+#define SRV_LOADPRC  4    // Create process and load task
 #define SRV_UNLOAD   5    // Unload (remove) task
 #define SRV_GETCORE  6    // Get physical memory
 #define SRV_FREECORE 7    // Free physical memory
@@ -46,6 +46,7 @@
 #define KRN_BUGCHECK (SRV_LAST+5)    // Cause a bugcheck error
 #define KRN_PUTCON   (SRV_LAST+6)    // Put character to system console
 #define KRN_GETCON   (SRV_LAST+7)    // Get character from system console
+#define KRN_XCOPY    (SRV_LAST+8)    // Copy memory between processes
 
 /*
 ** Task types

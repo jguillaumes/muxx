@@ -58,6 +58,18 @@
 	add	$10,sp
 	.endm
 
+	.macro	LOADPRC name,type,file,privs
+	sub	$10,sp			// Room for 4 members parmlist
+	mov	$4,(sp)			// size = 4
+	mov	\privs,2(sp)
+	mov	\file,4(sp)
+	mov	\type,6(sp)
+	mov	\name,8(sp)
+	mov	sp,r0
+	trap	$SRV_CREPRC
+	add	$10,sp
+	.endm
+
 	/*
 	** Get Task-Process information
 	** pid: PID of the task top query, or zero for own task
@@ -222,6 +234,19 @@
 	mov	sp,r0
 	trap	$SRV_READ
 	add	$8,sp
+	.endm
+
+	.macro XCOPY srcpid=0, srcaddr, dstpid=0, dstaddr, size
+	sub	$12,sp
+	mov	$5,(sp)
+	mov	\size,2(sp)
+	mov	\dstaddr,4(sp)
+	mov	\dstpid,6(sp)
+	mov	\srcaddr,8(sp)
+	mov	\srcpid,10(sp)
+	mov	sp,r0
+	trap	$KRN_XCOPY
+	add	$12,sp
 	.endm
 	
 	.LIST

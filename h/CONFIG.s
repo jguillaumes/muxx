@@ -170,9 +170,11 @@
 	KRN_STACK = 1024
 	USR_STACK = 3072
 	TOP_STACK = 0160000
-	MEM_BLOCKS = 4096 // 4096 * 64 = 256K
-	MEM_NMCBS = 128	  // 4096 / 32 = 128 MCBs. 1 MCB controls 32 blocks
-	DRV_BUFSIZ = 2048 // Buffer size for handler tasks
+	MEM_BLOCKS = 4096    // 4096 * 64 = 256K
+	MEM_NMCBS = 128	     // 4096 / 32 = 128 MCBs. 1 MCB controls 32 blocks
+	DRV_BUFSIZ = 2048    // Buffer size for handler tasks
+	PAGE_SIZE = 020000   // Size of VM page (8K)
+	TASK_BASE = 060000   // Base of user tasks (page 3)
 	
 	CPU_HAS_SPL = 0		// Support for spl instruction
 	CPU_HAS_CIS = 0		// Commercial Instruction set

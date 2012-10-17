@@ -21,6 +21,7 @@
 #define ENOTOPEN  -14
 #define ENOSYSRES -15
 #define EEOF      -16
+#define EINVLOAD  -17
 
 #define ENOIMPL   -999
 

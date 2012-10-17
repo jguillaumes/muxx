@@ -1,5 +1,5 @@
 MAKE=make
-DIRS= h kernel drivers lib sys
+DIRS= h kernel drivers lib shell sys 
 
 all:
 	set -e; for d in $(DIRS); do $(MAKE) -C $$d ; done

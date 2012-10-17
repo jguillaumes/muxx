@@ -32,6 +32,9 @@ int alloc(char *, WORD);
 int allocw(char *, WORD);
 int open(char *, WORD);
 int close(int);
+int read(int, WORD, char *);
+int write(int, WORD, char *);
+int load(char *, ADDRESS, ADDRESS *);
 
 void *alloca(int);
 

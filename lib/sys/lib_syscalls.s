@@ -53,6 +53,9 @@ _abort:
 	EXIT 	4(r5)
 	procexit  getr2=NO,getr3=no,getr4=no
 
-
+_xcopy:
+	procentry saver2=no,saver3=no,saver4=no
+	XCOPY	4(r5),6(r5),8(r5),10(r5),12(r5)
+	procexit  getr2=NO,getr3=no,getr4=no
 	
 	.end

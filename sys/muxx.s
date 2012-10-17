@@ -28,22 +28,16 @@ sysstart:
 	mov	$initmsg,-(sp)
 	jsr	pc,_kputstrl
 
-
-	/* halt
-	mov	$buffer,-(sp)
-	mov	long,-(sp)
-	mov	long2,-(sp)
-	jsr	pc,_itodl
-	add	$6,sp
-	*/
 	
 	jsr	pc,_muxx_tctinit		// Initialize task table
 	jsr	pc,_muxx_drvinit		// Init. device driver table
 	jsr	pc,_muxx_iottinit		// Init. channel table
-	jsr	pc,_muxx_fakeproc		// Set up STARTUP task
+//	jsr	pc,_muxx_fakeproc		// Set up STARTUP task
 	jsr	pc,_muxx_clock_setup		// Setup clock interrupt..
 	jsr	pc,_muxx_clock_enable		// ... and enable it
 
+	LOADPRC	$stup,$SYS_TASK,$stupf,$(TSK_OPERPRV+TSK_IOPRV)
+	
 	jsr	pc,_muxx_switch			// Switch to STARTUP task
 	
 loop:	br	loop				// Endless loop...
@@ -58,5 +52,7 @@ initmsg:
 long:	.LONG	123456789
 long2	= long+2		
 buffer:	.space	10
+stup:	.ASCIZ  "STARTUP"
+stupf:	.ASCIZ  "PT     "
 	
 	.END
