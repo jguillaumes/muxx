@@ -14,7 +14,7 @@ main() {
   endcode = curtcb->taskTUCB->endcode;
 
   for(;;) {
-    printf("TASC A - Top of code: %06o, top of task: %06o\n", endcode, toptask); 
-    sleep(10);
+    printf("TASKC - Top of code: %06o, top of task: %06o\n", endcode, toptask); 
+    sleep(1);
   }
 }

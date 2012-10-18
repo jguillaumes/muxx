@@ -61,6 +61,16 @@ int PRINTF(char *fmt,...) {
 	  return rc;
 	}
 	break;
+      case 'O':
+	itool((LONGWORD) va_arg(arglist,unsigned long),buffer);
+	rc = PUTSTR(buffer,11);
+	if (rc >= 0) {
+	  numc += rc;
+	} else {
+	  va_end(arglist);
+	  return rc;
+	}
+	break;
       case 'd':
 	itods(va_arg(arglist,unsigned int),buffer);
 	PUTSTR(buffer,6);

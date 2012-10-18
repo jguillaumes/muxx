@@ -11,6 +11,7 @@ LDFLAGS=-M --cref --traditional
 CFLAGS=-c -Os -ffreestanding -I../h -fomit-frame-pointer
 ASMFLAGS=-aghls -am -I../h 
 MACROS=../h/SCB.s ../h/MUXXDEF.s ../h/MACLIB.s ../h/MUXXMAC.s
+TASKS=taska.out taskb.out taskc.out
 
 .out.lda:	
 	$(BIN2LOAD) -a -f $< -o $@
@@ -18,13 +19,13 @@ MACROS=../h/SCB.s ../h/MUXXDEF.s ../h/MACLIB.s ../h/MUXXMAC.s
 .s.o:
 	$(AS) $(ASMFLAGS) $< -o $@ -ald > $*.lst
 
-all: muxx.lda taskc.lda
+all: muxx.lda tasks.tap
 
 clean:
-	-@rm *.o *.out *.lda *.map *.lst
+	-@rm *.o *.out *.lda *.map *.lst *.tap
 
 mrproper:
-	-@rm *.o *.out *.lda *.map *.lst *~
+	-@rm *.o *.out *.lda *.map *.lst *.tap *~
 
 muxx.o:	muxx.s $(MACROS)
 
@@ -37,3 +38,17 @@ taskc.out:	taskc.o ../lib/libmuxx.a ../kernel/libkmuxx.a
 	$(LD) -T ldtask.cmd $(LDFLAGS) $^ -o $@ $(LIBS) > taskc.map
 	$(STRIP) $@
 	$(SIZE) $@ --format=sysv -o 
+
+taska.out:	taska.o ../lib/libmuxx.a ../kernel/libkmuxx.a
+	$(LD) -T ldtask.cmd $(LDFLAGS) $^ -o $@ $(LIBS) > taska.map
+	$(STRIP) $@
+	$(SIZE) $@ --format=sysv -o 
+
+taskb.out:	taskb.o ../lib/libmuxx.a ../kernel/libkmuxx.a
+	$(LD) -T ldtask.cmd $(LDFLAGS) $^ -o $@ $(LIBS) > taska.map
+	$(STRIP) $@
+	$(SIZE) $@ --format=sysv -o 
+
+tasks.tap:	$(TASKS)
+	cat $^ > tasks.tap
+	echo "$@ has been rebuilt"

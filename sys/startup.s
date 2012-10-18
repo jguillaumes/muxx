@@ -9,8 +9,9 @@
 	.text
 
 _startup:
-	CREPRC 	$NPTHND,$DRV_TASK,$_ptphnd,$TSK_IOPRV
-	mov	r0,r3
+//	CREPRC 	$NPTHND,$DRV_TASK,$_ptphnd,$TSK_IOPRV
+//	mov	r0,r3
+	clr	r3
 	jsr	pc,_ptpdesc
 	mov	r0,r2
 	DRVREG 	$NPTPDRV,r2,r3
@@ -19,12 +20,17 @@ _startup:
 	DRVSTART $NPTPDRV
 	tst	r0
 	bmi	error2
-//	CREPRC 	$NTASKB,$(USR_TASK + TSZ_BIG),$_taskb,$0
-//	CREPRC 	$NTASKA,$(USR_TASK + TSZ_MED),$_taska,$0	
-loop:	
-	mov	$MSG,-(sp)
-	jsr	pc,_putstrzl
-	add	$2,sp
+	
+	LOADPRC $NTASKA,$(USR_TASK + TSZ_MED), $FTASKA,$0
+	LOADPRC $NTASKB,$(USR_TASK + TSZ_BIG), $FTASKB,$0
+	LOADPRC $NTASKC,$(USR_TASK + TSZ_SMALL), $FTASKC,$0
+
+
+loop:
+//	mov	$1,-(sp)
+//	mov	$DOT,-(sp)
+//	jsr	pc,_putstr
+//	add	$4,sp
 
 	YIELD
 
@@ -52,7 +58,12 @@ NPTPDRV:.ASCII  "PTPDRV  "
 NPTHND:	.ASCII  "PTPHND  "
 NTASKA:	.ASCII	"TASKA   "
 NTASKB:	.ASCII 	"TASKB   "
+NTASKC:	.ASCII 	"TASKC   "
+FTASKA:	.ASCIZ  "PT      "
+FTASKB:	.ASCIZ  "PT      "
+FTASKC:	.ASCIZ  "PT      "	
 MSG:	.ASCIZ	"Idle task\n"
+DOT:	.ASCII  "."
 ERRMSG1:	.ASCIZ	"Error DRVREG, rc="
 ERRMSG2:	.ASCIZ	"Error DRVSTART, rc=" 
 	.END

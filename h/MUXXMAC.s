@@ -66,7 +66,7 @@
 	mov	\type,6(sp)
 	mov	\name,8(sp)
 	mov	sp,r0
-	trap	$SRV_CREPRC
+	trap	$SRV_LOADPRC
 	add	$10,sp
 	.endm
 

@@ -14,13 +14,17 @@
 int muxx_svc_xcopy(ADDRESS fp, WORD dstpid, WORD dstaddr, WORD srcpid, WORD srcaddr, WORD size){
   int rc = EOK;
   PTCB srctcb,dsttcb;
-  WORD *pdr5,*pdr6,*par5,*par6;
-  WORD oldpdr5,oldpdr6,oldpar5,oldpar6;
+  WORD *pdr4,*pdr5,*par4,*par5;
+  WORD oldpdr4,oldpdr5,oldpar4,oldpar5;
   WORD oldpsw;
-  WORD spagenum,dpagenum;
-  WORD soffset,doffset;
+  WORD spagenum=0,dpagenum=0;
+  WORD soffset=0,doffset=0;
+  LONGWORD sphy,dphy;
   int n;
   BYTE *sbyte, *dbyte;
+
+  // kprintf("srcpid=%o, srcaddr=%o\n", srcpid, srcaddr);
+  // kprintf("dstpid=%o, dstaddr=%o\n", dstpid, dstaddr);
 
   if (size == 0) return rc;             // Nothing to do
 
@@ -30,15 +34,15 @@ int muxx_svc_xcopy(ADDRESS fp, WORD dstpid, WORD dstaddr, WORD srcpid, WORD srca
    
   oldpsw = setpl7();
   
+  pdr4 = (WORD *) MMU_KISDR4;
   pdr5 = (WORD *) MMU_KISDR5;
-  pdr6 = (WORD *) MMU_KISDR6;
+  par4 = (WORD *) MMU_KISAR4;
   par5 = (WORD *) MMU_KISAR5;
-  par6 = (WORD *) MMU_KISAR6;
 
+  oldpdr4 = *pdr4;
   oldpdr5 = *pdr5;
-  oldpdr6 = *pdr6;
+  oldpar4 = *par4;
   oldpar5 = *par5;
-  oldpar6 = *par6;
 
   if (srcpid == 0) {
     srctcb = curtcb;
@@ -75,27 +79,36 @@ int muxx_svc_xcopy(ADDRESS fp, WORD dstpid, WORD dstaddr, WORD srcpid, WORD srca
 
   if (rc == EOK) {
 
-    spagenum = ( srcaddr & 0xC000 ) >> 14;
-    soffset  = ( srcaddr & 0x3FFF );
-    *par5 = spagenum;
+    spagenum = ( srcaddr & 0xE000 ) >> 13;
+    soffset  = ( srcaddr & 0x1FFF );
+    *par4 = srctcb->mmuState.upar[spagenum];
     
-    dpagenum = ( dstaddr & 0xC000 ) >> 14;
-    doffset  = ( dstaddr & 0x3FFF );
-    *par6 = dpagenum;
+    dpagenum = ( dstaddr & 0xE000 ) >> 13;
+    doffset  = ( dstaddr & 0x1FFF );
+    *par5 = dsttcb->mmuState.upar[dpagenum];
     
-    *pdr5 = PDR_ACC_RW | PDR_SIZ_8K | PDR_DIR_UP;
-    *pdr6 = *pdr5;
+    *pdr4 = PDR_ACC_RW | PDR_SIZ_8K | PDR_DIR_UP;
+    *pdr5 = *pdr4;
+   
+    // kprintf("spag=%o, dpag=%o\n", *par4, *par5);
+ 
+    // sphy = (LONGWORD) *par4 * 64 + soffset;
+    // dphy = (LONGWORD) *par5 * 64 + doffset;
+    // kprintf("spagenum=%o, soffset=%o, sphys=%O\ndpagenum=%o, doffset=%o, dphys=%O\n",
+    //	    spagenum, soffset, sphy,
+    //	    dpagenum, doffset, dphy);
     
-    sbyte = (BYTE *) (WORD) (5*PAGESIZE + soffset);
-    dbyte = (BYTE *) (WORD) (6*PAGESIZE + doffset);
+    sbyte = (BYTE *) (WORD) (4*PAGESIZE + soffset);
+    dbyte = (BYTE *) (WORD) (5*PAGESIZE + doffset);
+    // kprintf("sbyte=%o, dbyte=%o\n", sbyte, dbyte);
     for (n=0; n<size; n++) {
       if (soffset >= 8192) {
-	par5    += 0200;
+	par4    += 0200;
 	soffset -= 8192;
 	sbyte = (BYTE *) (WORD) (5*PAGESIZE + soffset);
       }
       if (doffset >= 8192) {
-	par6    += 0200;
+	par5    += 0200;
 	doffset -= 8192;
 	dbyte = (BYTE *) (WORD) (6*PAGESIZE + doffset);
       }
@@ -104,10 +117,10 @@ int muxx_svc_xcopy(ADDRESS fp, WORD dstpid, WORD dstaddr, WORD srcpid, WORD srca
       doffset++;
     }
     
+    *par4 = oldpar4;
     *par5 = oldpar5;
-    *par6 = oldpar6;
+    *pdr4 = oldpdr4;
     *pdr5 = oldpdr5;
-    *pdr6 = oldpdr6;
   }
   
   setpl(oldpsw);

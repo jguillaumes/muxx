@@ -23,7 +23,8 @@ start:
 	mov	_curtcb,r0
 	mov	TCB.TASKTUCB(r0),r1
 
-	mov	$(TUCB_ADJSIZE),r2
+	mov	$(TUCB_ADJSIZE),r2	// R2: Bytes to clear
+	asr	r2			// R2: Words to clear
 10$:	clr	(r1)+
 	sob	r2,10$
 

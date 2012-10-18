@@ -41,7 +41,7 @@ PTCB muxx_qGetTask(PTQUEUE);
 PTCB muxx_qRemoveTask(PTQUEUE,PTCB);
 
 int muxx_svc_creprc(ADDRESS, char *, int, ADDRESS, WORD);
-int muxx_svc_loadprc(ADDRESS, char *, int, ADDRESS, WORD);
+int muxx_svc_loadprc(ADDRESS, char *, int, char *, WORD);
 int muxx_svc_mutex(ADDRESS, WORD, WORD);
 int muxx_svc_alloc(ADDRESS, char *, WORD);
 PIOTE muxx_svc_open (ADDRESS, char *, WORD);

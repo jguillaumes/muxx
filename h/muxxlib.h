@@ -12,6 +12,7 @@ int putstrzl(char *);
 int putoct(WORD);
 
 void itoo(WORD const, char *);
+void itool(LONGWORD const, char *);
 void itoh(WORD const, char *);
 void itod(WORD const, char *);
 void itods(WORD const, char *);
