@@ -224,7 +224,8 @@ int muxx_systrap_handler(int numtrap, ADDRESS fp, WORD p1, WORD p2,
     {(SVC) muxx_unimpl, 0},	  // KRNL 05
     {(SVC) muxx_svc_conputc, 1},  // KRNL 06
     {(SVC) muxx_unimpl, 0},       // KRNL 07
-    {(SVC) muxx_svc_xcopy, 5}     // KRNL 078
+    {(SVC) muxx_svc_xcopy, 5},    // KRNL 08
+    {(SVC) muxx_svc_protmem, 3}   // KRNL 09
   };	
   
   static int trap_table_entries = sizeof(trap_table)/sizeof(void *());	
@@ -303,6 +304,9 @@ int muxx_systrap_handler(int numtrap, ADDRESS fp, WORD p1, WORD p2,
   case KRN_XCOPY:
     rc = muxx_svc_xcopy(fp, (WORD) p1, (WORD) p2, 
 			    (WORD) p3, (WORD) p4, (WORD) p5);
+    break;
+  case KRN_PROTMEM:
+    rc = muxx_svc_protmem(fp, (WORD) p1, (WORD) p2, (WORD) p3);
     break;
   default:
     kprintf("Called unimplemented SYSCALL %d\n", numtrap);

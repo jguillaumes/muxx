@@ -18,6 +18,6 @@ main() {
     printf("TASKB - Top of code: %06o, top of task: %06o\n", endcode, toptask);
     gettpi(0, &mytcb);
     printf("Ticks: %ld\n", mytcb.clockTicks);
-    sleep(1);
+    sleep(2);
   }
 }

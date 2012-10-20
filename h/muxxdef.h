@@ -47,6 +47,7 @@
 #define KRN_PUTCON   (SRV_LAST+6)    // Put character to system console
 #define KRN_GETCON   (SRV_LAST+7)    // Get character from system console
 #define KRN_XCOPY    (SRV_LAST+8)    // Copy memory between processes
+#define KRN_PROTMEM  (SRV_LAST+9)    // Change memory page protection
 
 /*
 ** Task types

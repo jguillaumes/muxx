@@ -49,6 +49,7 @@ KRN_BUGCHECK = (SRV_LAST+5)		// Cause a bugcheck error
 KRN_PUTCON = (SRV_LAST+6)		// Put character to system console
 KRN_GETCON = (SRV_LAST+7)		// Get character from system console
 KRN_XCOPY = (SRV_LAST+8)		// Copy memory between processes
+KRN_PROTMEM = (SRV_LAST+9)		// Change memory page protection
 /*
 ** Task types
 */

@@ -66,7 +66,8 @@
 	CLK.PL		= 06		// Interrupt priority
 
 	/*
-	** Paper tape read/punch registers and constants	*/
+	** Paper tape read/punch registers and constants
+	*/
 	PTP.PRS		= 0177550	// Paper Read status register
 	PTP.PRB		= 0177552	// Paper read buffer
 	PTP.PPS		= 0177554	// Paper Punch status register
@@ -74,6 +75,14 @@
 	PTP.RVEC	= 070		// Paper reader interrupt vector
 	PTP.PVEC	= 074		// Paper punch interrupt vector
 	PTP.PL		= 04		// Interrupt priority
+	
+	/*
+	** Line printer registers and constants
+	*/
+	LPT.LPS		= 0177514	// Printer status register
+	LPT.LPB		= 0177516	// Printer buffer
+	LPT.LPVEC	= 0200		// Printer interrupt vector
+	LPT.PL		= 04		// Interrupt priority
 	
 	/*
 	** CPU registers

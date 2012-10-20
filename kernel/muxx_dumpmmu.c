@@ -3,6 +3,10 @@
 #include "muxx.h"
 #include "externals.h"
 
+LONGWORD muxx_vtop(WORD virtual, WORD par) {
+  return (virtual & 0x3FFF) + par * 64;  
+}
+
 void muxx_dumpmmu(MMUSTATE *mmu) {
   int i=0;
 
@@ -41,6 +45,8 @@ void muxx_dumpmemsvc() {
       kprintf(" NEXT=%o PREV=%o", 
 	     mmcbtaddr->mmcbt[i].nextBlock,
 	     mmcbtaddr->mmcbt[i].prevBlock);
+      kprintf(" PHY=%O:%O",(LONGWORD) mmcbtaddr->mmcbt[i].blockAddr*64, 
+	      (LONGWORD) (mmcbtaddr->mmcbt[i].blockAddr+mmcbtaddr->mmcbt[i].blockSize)*64-1);
       if (mmcbtaddr->mmcbt[i].mmcbFlags.flags.sharedBlock) {
 	kprintf(" SHR");
       }
@@ -64,3 +70,4 @@ void muxx_dumpmemsvc() {
   }
   kprintf("---\n");
 }
+

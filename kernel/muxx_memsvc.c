@@ -93,6 +93,7 @@ int muxx_mem_init() {
   pmmcbt->mmcbt[0].mmcbFlags.flags.fixedBlock = 1;
   pmmcbt->mmcbt[0].mmcbFlags.flags.privBlock = 1;
   pmmcbt->mmcbt[0].mmcbFlags.flags.iopage = 0;
+  pmmcbt->mmcbt[0].mmcbFlags.flags.stack = 0;
 
   pmmcbt->mmcbt[1].blockAddr = 0200;     // Next block of physical memory
   pmmcbt->mmcbt[1].blockSize = 0200;
@@ -104,6 +105,7 @@ int muxx_mem_init() {
   pmmcbt->mmcbt[1].mmcbFlags.flags.fixedBlock = 1;
   pmmcbt->mmcbt[1].mmcbFlags.flags.privBlock = 1;
   pmmcbt->mmcbt[1].mmcbFlags.flags.iopage = 0;
+  pmmcbt->mmcbt[1].mmcbFlags.flags.stack = 0;
 
   pmmcbt->mmcbt[2].blockAddr = 0400;     // Next block of physical memory
   pmmcbt->mmcbt[2].blockSize = 0200;
@@ -115,9 +117,10 @@ int muxx_mem_init() {
   pmmcbt->mmcbt[2].mmcbFlags.flags.fixedBlock = 1;
   pmmcbt->mmcbt[2].mmcbFlags.flags.privBlock = 1;
   pmmcbt->mmcbt[2].mmcbFlags.flags.iopage = 0;
+  pmmcbt->mmcbt[2].mmcbFlags.flags.stack = 0;
 
   /*
-  ** Stack block
+  ** Stack block 
   */
   pmmcbt->mmcbt[3].blockAddr = 0600;     // Next block of physical memory
   pmmcbt->mmcbt[3].blockSize = 0100;     // 4 KB for stack
@@ -144,6 +147,7 @@ int muxx_mem_init() {
   pmmcbt->mmcbt[4].mmcbFlags.flags.fixedBlock = 0;
   pmmcbt->mmcbt[4].mmcbFlags.flags.privBlock = 0;
   pmmcbt->mmcbt[4].mmcbFlags.flags.iopage = 0;
+  pmmcbt->mmcbt[4].mmcbFlags.flags.stack = 0;
 
   /*
   ** IOSPACE mapping
@@ -283,12 +287,22 @@ int muxx_setup_taskmem (PTCB task) {
   /*
   ** Task stack space
   ** The stack size options should be evaluated and applied here
+  ** Since the stack grows downward, the PAR contains Addr - Size 
+  ** so the physical addresses are properly calculated without
+  ** overlapping.
+  **
+  ** Example: Base virtual address: 0140000
+  **          Top of stack:         0157777 (0120000 + 020000 - 1)
+  **          Bottom of stack:      0150000 (0120000 + 010000 )
+  **          PAR value:            0500
+  **          Size:                 0100 (4K)
+  **          Physical range:       060000:067777   
   */
   mcb = muxx_mem_getblock(task, 0100, MMCB_FLG_STK, 6);
   if (mcb != NULL) {
-    task->mmuState.upar[6] = mcb->blockAddr;
+    task->mmuState.upar[6] = mcb->blockAddr-0100;
     task->mmuState.updr[6] = PDR_ACC_RW | PDR_SIZ_4K | PDR_DIR_DN;
-    task->mmuState.kpar[6] = mcb->blockAddr;
+    task->mmuState.kpar[6] = mcb->blockAddr-0100;
     task->mmuState.kpdr[6] = PDR_ACC_RW | PDR_SIZ_4K | PDR_DIR_DN;
   } else {
     return (ENOMEM);
@@ -334,7 +348,7 @@ int muxx_setup_taskmem (PTCB task) {
 
 
 void muxx_mem_freeblock(WORD firstBlock, WORD blocks) {
-
+  
 }
 
 int findFreeMMCB() {

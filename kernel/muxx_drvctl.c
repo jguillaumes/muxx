@@ -44,7 +44,7 @@ int muxx_locate_pdev(char *devname, PIOTE iote) {
 
   KDPRINTF("Searching dev [%s], length=%d\n", wdev,l);
 
-  for(i=0; i<MAX_DRV && driver==NULL; i++) {
+  for(i=0; i<MAX_DRV && found==0; i++) {
     if (!(drvcbtaddr->drvcbt[i].flags.free)) {    // DRVCB is not free...
       driver = &(drvcbtaddr->drvcbt[i]);          // ... so check this one
 

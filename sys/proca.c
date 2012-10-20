@@ -6,7 +6,7 @@
 
 static char msga[] = ">>> CCC - This is task C - CCC <<<"; 
 
-main() {
+proca() {
   int n=0;
   WORD toptask,endcode;
 
@@ -14,7 +14,7 @@ main() {
   endcode = curtcb->taskTUCB->endcode;
 
   for(;;) {
-    printf("TASKC - Top of code: %06o, top of task: %06o\n", endcode, toptask); 
-    sleep(3);
+    printf("TASKA - Top of code: %06o, top of task: %06o\n", endcode, toptask); 
+    sleep(1);
   }
 }

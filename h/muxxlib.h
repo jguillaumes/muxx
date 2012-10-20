@@ -36,6 +36,7 @@ int close(int);
 int read(int, WORD, char *);
 int write(int, WORD, char *);
 int load(char *, ADDRESS, ADDRESS *);
+int protmem(WORD, WORD, WORD);
 
 void *alloca(int);
 

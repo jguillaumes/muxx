@@ -3,57 +3,57 @@
 #include "errno.h"
 
 void perror(char *msg) {
-  if (msg != NULL) printf("%s: ", msg);
+  if (msg != NULL) putstrl("%s: ", msg);
 
   switch(errno) {
   case ENOMEM:
-    printf("ENOMEM\n");
+    putstrl("ENOMEM\n");
     break;
   case EMAXTASK:
-    printf("EMAXTASK\n");
+    putstrl("EMAXTASK\n");
     break;
   case ENOPID:
-    printf("ENOPID\n");
+    putstrl("ENOPID\n");
     break;
   case ETCTFULL:
-    printf("ETCTFULL\n");
+    putstrl("ETCTFULL\n");
     break;
   case EILLINST:
-    printf("EILLINST\n");
+    putstrl("EILLINST\n");
     break;
   case EINVVAL:
-    printf("EINVVAL\n");
+    putstrl("EINVVAL\n");
     break;
   case ENOPRIV:
-    printf("ENOPRIV\n");
+    putstrl("ENOPRIV\n");
     break;
   case ELOCKED:
-    printf("ELOCKED\n");
+    putstrl("ELOCKED\n");
     break;
   case ENOAVAIL:
-    printf("ENOAVAIL\n");
+    putstrl("ENOAVAIL\n");
     break;
   case ENOTALLOC:
-    printf("ENOTALLOC\n");
+    putstrl("ENOTALLOC\n");
     break;
   case ENOTFOUND:
-    printf("ENOTFOUND\n");
+    putstrl("ENOTFOUND\n");
     break;
   case ERRDEV:
-    printf("ERRDEV\n");
+    putstrl("ERRDEV\n");
     break;
   case EOFFLINE:
-    printf("EOFFLINE\n");
+    putstrl("EOFFLINE\n");
     break;
   case ENOSYSRES:
-    printf("ENOSYSRES\n");
+    putstrl("ENOSYSRES\n");
     break;
   case ENOTOPEN:
-    printf("ENOTOPEN\n");
+    putstrl("ENOTOPEN\n");
   case EEOF:
-    printf("EEOF\n");
+    putstrl("EEOF\n");
   default:
-    printf("ERRNO: %d\n", errno);
+    putstrl("ERRNO: %d\n", errno);
     break;
   }
 }

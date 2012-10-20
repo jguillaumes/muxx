@@ -59,6 +59,7 @@ int muxx_locate_dev(char *, PIOTE);
 int muxx_srv_mutex(ADDRESS, WORD, WORD);
 
 int muxx_svc_xcopy(ADDRESS, WORD, WORD, WORD, WORD, WORD);
+int muxx_svc_protmem(ADDRESS, WORD, WORD, WORD);
 
 int muxx_yield();
 void muxx_schedule();

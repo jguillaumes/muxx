@@ -55,8 +55,9 @@ mmu_initialize:
 	sob	r3,10$			// Decrement counter and branch
 
 	/*
-	** Set up page 6 to next physical 4KB block
+	** Set up page 6 to next physical 4KB block minus 4K (stack descends)
 	*/
+	sub	$0100,r2
 	mov	r2, MMU.UISAR0+014
 	mov	r2, MMU.KISAR0+014
 

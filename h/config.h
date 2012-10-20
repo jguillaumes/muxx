@@ -27,6 +27,10 @@
 #define PTP_RVEC		070
 #define PTP_PVEC		074
 #define PTP_PL		04
+#define LPT_LPS		0177514
+#define LPT_LPB		0177516
+#define LPT_LPVEC		0200
+#define LPT_PL		04
 #define CPU_LOWER		0177760
 #define CPU_UPPER		0177762
 #define CPU_SYSID		0177764

@@ -11,7 +11,8 @@ LDFLAGS=-M --cref --traditional
 CFLAGS=-c -Os -ffreestanding -I../h -fomit-frame-pointer
 ASMFLAGS=-aghls -am -I../h 
 MACROS=../h/SCB.s ../h/MUXXDEF.s ../h/MACLIB.s ../h/MUXXMAC.s
-TASKS=taska.out taskb.out taskc.out
+TASKS=taska.out taskb.out taskc.out taskd.out
+KTASKS=startup.o 
 
 .out.lda:	
 	$(BIN2LOAD) -a -f $< -o $@
@@ -29,23 +30,13 @@ mrproper:
 
 muxx.o:	muxx.s $(MACROS)
 
-muxx.out:	muxx.o startup.o ../lib/libmuxx.a ../kernel/libkmuxx.a ../shell/libshell.a
-	$(LD) -T ldkern.cmd $(LDFLAGS) muxx.o startup.o -o $@ --start-group $(LIBS) --end-group > muxx.map
+muxx.out:	muxx.o $(KTASKS) ../lib/libmuxx.a ../kernel/libkmuxx.a ../shell/libshell.a
+	$(LD) -T ldkern.cmd $(LDFLAGS) muxx.o $(KTASKS) -o $@ --start-group $(LIBS) --end-group > muxx.map
 	$(STRIP) $@
 	$(SIZE) $@ --format=sysv -o 
 
-taskc.out:	taskc.o ../lib/libmuxx.a ../kernel/libkmuxx.a
-	$(LD) -T ldtask.cmd $(LDFLAGS) $^ -o $@ $(LIBS) > taskc.map
-	$(STRIP) $@
-	$(SIZE) $@ --format=sysv -o 
-
-taska.out:	taska.o ../lib/libmuxx.a ../kernel/libkmuxx.a
-	$(LD) -T ldtask.cmd $(LDFLAGS) $^ -o $@ $(LIBS) > taska.map
-	$(STRIP) $@
-	$(SIZE) $@ --format=sysv -o 
-
-taskb.out:	taskb.o ../lib/libmuxx.a ../kernel/libkmuxx.a
-	$(LD) -T ldtask.cmd $(LDFLAGS) $^ -o $@ $(LIBS) > taska.map
+.o.out:
+	$(LD) -T ldtask.cmd $(LDFLAGS) $^ -o $@ $(LIBS) > $@.map
 	$(STRIP) $@
 	$(SIZE) $@ --format=sysv -o 
 

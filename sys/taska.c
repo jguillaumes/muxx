@@ -2,7 +2,7 @@
 #include "muxx.h"
 #include "muxxlib.h"
 #include "externals.h"
-
+#include "muxxdef.h"
 
 static char msga[] = ">>> CCC - This is task C - CCC <<<"; 
 
@@ -12,6 +12,8 @@ main() {
 
   toptask = curtcb->taskTUCB->toptask;
   endcode = curtcb->taskTUCB->endcode;
+
+  printf("TASKA - TCB: %o, TUCB: %o\n", curtcb, curtcb->taskTUCB);
 
   for(;;) {
     printf("TASKA - Top of code: %06o, top of task: %06o\n", endcode, toptask); 

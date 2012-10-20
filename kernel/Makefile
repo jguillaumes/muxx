@@ -17,7 +17,7 @@ OBJECTS=muxx_mmu.o muxx_cputrap.o muxx_kconio.o muxx_systrap.o muxx_tctinit.o \
 	muxx_taskqueues.o muxx_switch.o muxx_dumptcb.o muxx_dumpmmu.o \
 	muxx_kconio1.o muxx_yield.o muxx_schedule.o kprintf.o muxx_drvinit.o \
 	muxx_drvctl.o muxx_drvctl_a.o muxx_channels.o muxx_readwrite_svc.o \
-	muxx_task_svc.o muxx_xcopy_svc.o
+	muxx_task_svc.o muxx_xcopy_svc.o muxx_protmem_svc.o
 
 .out.lda:	
 	$(BIN2LOAD) -a -f $< -o $@

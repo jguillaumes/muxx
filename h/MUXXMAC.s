@@ -249,4 +249,15 @@
 	add	$12,sp
 	.endm
 	
+	.macro PROTMEM pid=0, page, prot
+	sub	$8,sp
+	mov	$3,(sp)
+	mov	\prot,2(sp)
+	mov	\page,4(sp)
+	mov	\pid,6(sp)
+	mov	sp,r0
+	trap	$KRN_PROTMEM
+	add	$8,sp
+	.endm
+	
 	.LIST

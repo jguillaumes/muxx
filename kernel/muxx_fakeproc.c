@@ -35,16 +35,17 @@ void muxx_fakeproc() {
   tcb->privileges.prvflags.auditprv = 1;
 
   mmu = &(tcb->mmuState);
+  memset((ADDRESS) mmu, 0, sizeof(TCB));
 
   mmu->upar[0] = 0;
   mmu->upar[1] = 0200;
   mmu->upar[2] = 0400;
-  mmu->upar[6] = 0600;
+  mmu->upar[6] = 0600-0100;   // Stack
   mmu->upar[7] = 07600; 
   mmu->kpar[0] = 0;
   mmu->kpar[1] = 0200;
   mmu->kpar[2] = 0400;
-  mmu->kpar[6] = 0600;
+  mmu->kpar[6] = 0600-0100;   // Stack
   mmu->kpar[7] = 07600; 
   
   mmu->updr[0] = 0x7F06;  
@@ -57,6 +58,8 @@ void muxx_fakeproc() {
   mmu->kpdr[2] = 0x7F06;  
   mmu->kpdr[6] = 0x400E;
   mmu->kpdr[7] = 0x7F06;
+
+  tcb->taskTUCB = 8192*3 - 64;
 
   curtcb = tcb;
 }
