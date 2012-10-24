@@ -29,6 +29,8 @@ void muxx_dumpmmu(MMUSTATE *mmu) {
 
 void muxx_dumpmemsvc() {
   int i;
+  LONGWORD pstart, pend;
+
   kprintf("\n*** Memory Management Control Blocks (MMCBs):\n");
   for(i=0;i<MEM_NMCBS; i++) {
     if (mmcbtaddr->mmcbt[i].ownerPID != -1) {
@@ -45,8 +47,11 @@ void muxx_dumpmemsvc() {
       kprintf(" NEXT=%o PREV=%o", 
 	     mmcbtaddr->mmcbt[i].nextBlock,
 	     mmcbtaddr->mmcbt[i].prevBlock);
-      kprintf(" PHY=%O:%O",(LONGWORD) mmcbtaddr->mmcbt[i].blockAddr*64, 
-	      (LONGWORD) (mmcbtaddr->mmcbt[i].blockAddr+mmcbtaddr->mmcbt[i].blockSize)*64-1);
+
+      pstart = (LONGWORD) mmcbtaddr->mmcbt[i].blockAddr * 64;
+      pend   = pstart + (LONGWORD) mmcbtaddr->mmcbt[i].blockSize*64 - 1;
+      kprintf(" PHY=%O:%O", pstart, pend); 
+
       if (mmcbtaddr->mmcbt[i].mmcbFlags.flags.sharedBlock) {
 	kprintf(" SHR");
       }

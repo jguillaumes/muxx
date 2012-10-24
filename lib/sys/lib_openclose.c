@@ -16,7 +16,6 @@ int open(char *filename, WORD mode) {
   ptucb = curtcb->taskTUCB;
   errno = EOK;
   for (i=0; i<IOT_TENTRIES && fd==-1; i++) {
-    printf("%d: %o\n", i, ptucb->iote[i]);
     if (ptucb->iote[i] == NULL) {
       fd = i;
     }

@@ -6,10 +6,10 @@
 #include "externals.h"
 #include "kernfuncs.h"
 
-extern void *startup();
+extern void *init();
 
 /*
-** Build the TCB and the MMU status for the STARTUP process
+** Build the TCB and the MMU status for the INIT process
 */
 
 void muxx_fakeproc() {
@@ -17,14 +17,14 @@ void muxx_fakeproc() {
   PTCB tcb = &(tct->tctTable[0]);
   
   memset(tcb,0,sizeof(TCB));
-  memcpy(tcb->taskname,"STARTUP ",8);
+  memcpy(tcb->taskname,"INIT    ",8);
   tcb->pid = 1;
   tcb->ppid = 0;
   tcb->uic = 1;
   topspid = 1;
 
   tcb->status = TSK_INIT;
-  tcb->cpuState.pc  = (WORD) startup;
+  tcb->cpuState.pc  = (WORD) init;
   tcb->cpuState.psw = (WORD) 0xC000;
   tcb->cpuState.sp  = (WORD) ustackt;
   tcb->cpuState.usp = (WORD) ustackt;

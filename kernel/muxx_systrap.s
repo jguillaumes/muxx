@@ -75,6 +75,28 @@ noparms:
 	add	$2,sp			// Toss interrupt frame 
 	rts	pc			// Return from trap
 
+	.GLOBAL	_syscall_rt
+
+
+	/*
+	** Syscall dispatcher
+	**   rc = syscall_rt(svcimpl, fp, syssvc->nparams, p1, p2, p3, p4, p5, p6); 
+	*/
+_syscall_rt:				// NO FRAME!
+	mov	sp,r0			// R0: Initial stack pointer
+	mov	2(r0),r1		// R1: syssvc routine address
+	mov	18(r0),-(sp)		// p6
+	mov	16(r0),-(sp)		// p5
+	mov	14(r0),-(sp)		// p4
+	mov	12(r0),-(sp)		// p3
+	mov	10(r0),-(sp)		// p2
+	mov	 8(r0),-(sp)		// p1
+	mov	 4(r0),-(sp)		// fp (we don't use the nparms at this moment)	
+
+	jsr	pc,(r1)			// Indirect call to syscall handler
+	add	$14,sp			// Toss pushed parms
+	rts	pc
+
 	.data
 	
 kmodet:	.ASCIZ "SYSCALL from kernel mode"
