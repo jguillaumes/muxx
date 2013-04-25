@@ -2,7 +2,7 @@
 
 BIN2LOAD=/home/jguillaumes/retroutils/bin2load/bin2load
 AS=pdp11-aout-as
-CC=pdp11-aout-gcc-4.6.3
+CC=pdp11-aout-gcc
 LD=pdp11-aout-ld
 AR=pdp11-aout-ar
 LDFLAGS=-T ldkern.cmd -M --cref --traditional -lgcc -lpdp11
