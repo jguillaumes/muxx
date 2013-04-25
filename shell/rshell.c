@@ -13,7 +13,8 @@ int rshell() {
   MAINPROG pgm = NULL;
   int rc = 0;
 
-  printf("Loading from device %8s... ", parm);
+
+  printf("Loading from device %8s...\n", parm);
   rc = load(parm, parm, &entry);
   while (rc == ENOAVAIL || rc == ENOSYSRES) {
     printf("Device not available (%d), sleeping and retrying...\n", rc);

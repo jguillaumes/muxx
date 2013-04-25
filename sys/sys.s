@@ -7,15 +7,14 @@
 	.INCLUDE "MUXXMAC.s"
 	.INCLUDE "ERRNO.s"
 	.INCLUDE "SCB.s"
-	
+
 	.GLOBAL sysstart
-	
+
 	.text
 
 sysstart:
 	SCB
 
-	
 	reset					// Reset machine
 	mov	$tempstackt,sp			// Temporary stack
 	jsr	pc,mmu_initialize		// Memory mapping
@@ -36,18 +35,18 @@ sysstart:
 	jsr	pc,_muxx_clock_enable		// ... and enable it
 
 	jsr	pc,_muxx_switch			// Switch to INIT task
-	
+
 loop:	br	loop				// Endless loop...
-	
+
 	SYSHALT					// HALT syscall
-	
+
 	.data
 initmsg:
 	.ASCII	"Muxx starting up..."
 	linitmsg = . - initmsg
 	.even
 long:	.LONG	123456789
-long2	= long+2		
+long2	= long+2
 buffer:	.space	10
 stup:	.ASCIZ  "INIT   "
 stupf:	.ASCIZ  "PT     "

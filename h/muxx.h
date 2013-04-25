@@ -354,5 +354,17 @@ struct IOTT_S {
 typedef struct IOTT_S IOTT;
 typedef struct IOTT_S *PIOTT;
 
+struct IPCMSG_S {
+  WORD spid;
+  WORD dpid;
+  BYTE msg_type;
+  BYTE msg_length;
+  BYTE msg_text[0];
+};
+
+typedef struct IPCMSG_S IPCMSG;
+typedef struct IPCMSF_S *PIPCMSG;  
+
+
 #define _MUXX_H
 #endif
