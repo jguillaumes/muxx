@@ -21,5 +21,4 @@ int printf(char *fmt,...) {
   args = (void *) (&(fmt)+1);
   doprnt(fmt, args, stdout);
   return 0;
-
 }

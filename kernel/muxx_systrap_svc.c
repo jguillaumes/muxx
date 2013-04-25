@@ -243,77 +243,10 @@ int muxx_systrap_handler(int numtrap, ADDRESS fp, WORD p1, WORD p2,
  
   // Temporary fix for gas assembler bug (it does not assemble
   // correctly JSR PC,@(R0) ).
+
   svcimpl = syssvc->svc;
   rc = syscall_rt(svcimpl, fp, syssvc->nparams, p1, p2, p3, p4, p5, p6); 
 
-  /*
-  switch(numtrap) {
-  case SRV_OPEN:
-    rc= muxx_svc_open(fp, (char *) p1, (WORD) p2);
-    break;
-  case SRV_CLOSE:
-    rc = muxx_svc_close(fp, (PIOTE) p1);
-    break;
-  case SRV_WRITE:
-    rc = muxx_svc_write(fp, (PIOTE) p1, (int) p2, (char *) p3);
-    break;
-  case SRV_READ:
-    rc = muxx_svc_read(fp, (PIOTE) p1, (int) p2, (char *) p3);
-    break;
-  case SRV_EXIT:
-    rc = muxx_svc_exit(fp, (WORD) p1);
-    break;
-  case SRV_ABORT:
-    rc = muxx_svc_abort(fp, (WORD) p1);
-    break;
-  case KRN_HALT:
-    rc = muxx_svc_muxxhlt(fp);
-    break;
-  case KRN_PUTCON:
-    rc = muxx_svc_conputc(fp, (char) p1);
-    break;
-  case SRV_CREPRC:
-    rc = muxx_svc_creprc(fp, (char *) p1,(int) p2,(ADDRESS) p3,(WORD) p4);
-    break;
-  case SRV_LOADPRC:
-    rc = muxx_svc_loadprc(fp, (char *) p1,(int) p2,(ADDRESS) p3,(WORD) p4);
-    break;
-  case SRV_SUSPEND:
-    rc = muxx_svc_suspend(fp, (PTCB) p1);
-    break;
-  case SRV_YIELD:
-    rc = muxx_svc_yield(fp);
-    break;
-  case SRV_GETTPI:
-    rc = muxx_svc_gettpi(fp, (WORD) p1, (PTCB) p2);
-    break;
-  case SRV_MUTEX:
-    rc = muxx_svc_mutex(fp, (WORD) p1, (WORD) p2);
-    break;
-  case SRV_ALLOC:
-    rc = muxx_svc_alloc(fp, (char *) p1, (WORD) p2);
-    break;
-  case KRN_DRVREG:
-    rc = muxx_svc_drvreg(fp, (char *) p1, (ADDRESS) p2, (PTCB) p3);
-    break;    
-  case KRN_DRVSTART:
-    rc = muxx_svc_drvstart(fp, (char *) p1);
-    break;
-  case KRN_DRVSTOP:
-    rc = muxx_svc_drvstop(fp, (PDRVCB) p1);
-    break;
-  case KRN_XCOPY:
-    rc = muxx_svc_xcopy(fp, (WORD) p1, (WORD) p2, 
-			    (WORD) p3, (WORD) p4, (WORD) p5);
-    break;
-  case KRN_PROTMEM:
-    rc = muxx_svc_protmem(fp, (WORD) p1, (WORD) p2, (WORD) p3);
-    break;
-  default:
-    kprintf("Called unimplemented SYSCALL %d\n", numtrap);
-    rc = muxx_unimpl(fp);
-  }
-  */
   return rc;
 }
 

@@ -33,7 +33,7 @@ PIOBUF muxx_allocate_iobuffer(int size) {
 
 int muxx_deallocate_iobuffer(PIOBUF pbuf) {
     errno = ENOIMPL;
-    kprintf("Channe buffer allocation not yet implemented\n");
+    kputstrzl("Channel buffer allocation not implemented");
     return ENOIMPL;
 }
 
@@ -91,8 +91,8 @@ PIOTE muxx_svc_open (ADDRESS fp, char *device, WORD flags) {
   }
   rc1 = muxx_svc_mutex(fp, MUT_CHAN, MUT_DEALLOC);
   if (rc1 != EOK) {
-    kprintf("Error deallocating CHAN: %d\n", rc1);
-    panic("muxx_svc_open: dealloc CHAN mutex");
+    kprintf("panic - CHAN: %d\n", rc1);
+    panic("muxx_svc_open: dealloc mutex");
   }
   if (rc == EOK) {
     return io;
@@ -107,22 +107,13 @@ int muxx_svc_close(ADDRESS fp, PIOTE io) {
   int rc = EOK, rc1=EOK;
   int i=0;
 
-  /*
-  kprintf("Regs before:\n");
-  for(i=0;i<MAX_TASKS;i++) {
-    if (tct->tctTable[i].pid != 0) {
-      muxx_dumpregs(&(tct->tctTable[i].cpuState));
-    }
-  }
-  */
-
   rc = muxx_svc_mutex(fp, MUT_CHAN, MUT_ALLOC);
   if (rc==EOK) {
     if (io->status.flags.open) {
       if (io->status.flags.dealloc) {
 	rc = muxx_svc_alloc(fp, io->driver->drvname, DRV_DEALLOC);
 	if (rc != EOK) {
-	  kprintf("Error deallocating device on close: %d\n", rc);
+	  kprintf("close: %d\n", rc);
 	  panic("muxx_svc_close");
 	} 
       }
@@ -143,18 +134,9 @@ int muxx_svc_close(ADDRESS fp, PIOTE io) {
   } 
   rc1 = muxx_svc_mutex(fp, MUT_CHAN, MUT_DEALLOC);
   if (rc1 != EOK) {
-    kprintf("Error deallocating CHAN: %d\n", rc1);
-    panic("muxx_svc_close: dealloc CHAN mutex");
+    kprintf("panic - CHAN: %d\n", rc1);
+    panic("muxx_svc_close: dealloc mutex");
   }
-
-  /*
-  kprintf("Regs after:\n");
-  for(i=0;i<MAX_TASKS;i++) {
-    if (tct->tctTable[i].pid != 0) {
-      muxx_dumpregs(&(tct->tctTable[i].cpuState));
-    }
-  }
-  */
 
   errno = rc;
   return rc;

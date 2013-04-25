@@ -1,6 +1,6 @@
 #include "types.h"
 #include "muxxlib.h"
-#include <string.h>
+// #include <string.h>
  
 static char CRLF[]="\r\n";
 

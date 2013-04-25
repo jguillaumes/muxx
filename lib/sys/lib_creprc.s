@@ -1,12 +1,11 @@
 	.TITLE lib_syscalls - C bindindings for system calls
 	.GLOBAL _creprc,_loadprc
-	
+
 	.INCLUDE "MACLIB.s"
 	.INCLUDE "MUXXDEF.s"
 	.INCLUDE "MUXXMAC.s"
-	
-	.text
 
+	.text
 
 _creprc:
 	procentry saver2=no,saver3=no,saver4=no
