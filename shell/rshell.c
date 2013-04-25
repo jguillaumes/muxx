@@ -1,10 +1,11 @@
-#include <string.h>
+// #include <string.h>
 #include "config.h"
 #include "muxxlib.h"
 #include "muxxdef.h"
 #include "errno.h"
 
 typedef int (*MAINPROG)(int, char **, char **);
+#define NULL	0x0
 
 int rshell() {
   char *parm = (char *) TASK_BASE;

@@ -2,7 +2,7 @@
 * Very basic printf() implementation for kernel/basic OS output
 */
 
-#include <string.h>
+// #include <string.h>
 #include <limits.h>
 #include <stdarg.h>
 #include "types.h"

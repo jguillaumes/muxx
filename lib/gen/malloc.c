@@ -1,10 +1,11 @@
 /*	@(#)malloc.c	2.3	(2.11BSD) 1999/1/18 */
 
-#include <unistd.h>
+// #include <unistd.h>
 
 #ifdef debug
 #include <sys/types.h>
 #include <sys/uio.h>
+
 
 #define ASSERT(p) if(!(p))botch("p")
 
@@ -59,6 +60,7 @@ char *s;
 #define	NALIGN		1
 #define	WORD		sizeof(union store)
 #define	BLOCK		1024	/* a multiple of WORD */
+#define	NULL		0x0
 
 #define	BUSY		1
 

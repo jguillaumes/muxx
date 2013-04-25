@@ -1,4 +1,4 @@
-#include <string.h>
+// #include <string.h>
 #include "types.h"
 #include "muxx.h"
 #include "queues.h"

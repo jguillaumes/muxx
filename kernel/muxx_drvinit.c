@@ -2,7 +2,7 @@
 #include "muxxdef.h"
 #include "externals.h"
 #include "kernfuncs.h"
-#include <string.h>
+// #include <string.h>
 
 /*
 ** Initialization of the device driver table (DRVCBT)

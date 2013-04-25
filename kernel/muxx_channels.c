@@ -1,4 +1,4 @@
-#include <string.h>
+// #include <string.h>
 #include "kernfuncs.h"
 #include "externals.h"
 #include "errno.h"

@@ -1,5 +1,5 @@
 #include "types.h"
-#include <strings.h>
+//#include <strings.h>
 #include "muxx.h"
 #include "kernfuncs.h"
 #include "muxxlib.h"

@@ -5,7 +5,7 @@
 #include "kernfuncs.h"
 #include "muxxlib.h"
 #include "externals.h"
-#include <string.h>
+// #include <string.h>
 
 PTCB muxx_findtcb(WORD pid) {
   int i=0;

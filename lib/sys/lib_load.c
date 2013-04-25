@@ -1,4 +1,4 @@
-#include <string.h>
+// #include <string.h>
 #include "a.out.h"
 #include "muxxlib.h"
 #include "errno.h"

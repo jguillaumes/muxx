@@ -5,7 +5,7 @@
 #include "kernfuncs.h"
 #include "muxxlib.h"
 #include "externals.h"
-#include <string.h>
+// #include <string.h>
 
 typedef int (*SVC)(int, ADDRESS, ...);
 typedef int (*DRV)(int, void *);

@@ -1,4 +1,5 @@
 .SUFFIXES: .lda .out .o .s .c
+	$(AS) $(ASMFLAGS) $< -o $@ -ald > $*.lst
 
 BIN2LOAD=bin2load
 AS=pdp11-aout-as
@@ -6,7 +7,7 @@ CC=pdp11-aout-gcc
 LD=pdp11-aout-ld
 SIZE=pdp11-aout-size
 STRIP=pdp11-aout-strip
-LIBS=-L../lib -lmuxx -L../kernel -lkmuxx -L../drivers -lmuxxdrv -L../shell -lshell -lgcc -lpdp11 
+LIBS=-L../lib -lmuxx -L../kernel -lkmuxx -L../drivers -lmuxxdrv -L../shell -lshell  -L /usr/local/lib/gcc/pdp11-aout/4.7.4 -lgcc
 LDFLAGS=-M --cref --traditional 
 CFLAGS=-c -Os -ffreestanding -I../h -fomit-frame-pointer
 ASMFLAGS=-aghls -am -I../h 
@@ -28,10 +29,11 @@ clean:
 mrproper:
 	-@rm *.o *.out *.lda *.map *.lst *.tap *~
 
-muxx.o:	muxx.s $(MACROS)
-
-muxx.out:	muxx.o $(KTASKS) ../lib/libmuxx.a ../kernel/libkmuxx.a ../shell/libshell.a
-	$(LD) -T ldkern.cmd $(LDFLAGS) muxx.o $(KTASKS) -o $@ --start-group $(LIBS) --end-group > muxx.map
+sys.o:	sys.s $(MACROS)
+	$(AS) $(ASMFLAGS) $< -o $@ -ald > $*.lst
+	
+muxx.out:	sys.o $(KTASKS) ../lib/libmuxx.a ../kernel/libkmuxx.a ../shell/libshell.a
+	$(LD) -T ldkern.cmd $(LDFLAGS) sys.o $(KTASKS) -o $@ --start-group $(LIBS) --end-group > muxx.map
 	$(STRIP) $@
 	$(SIZE) $@ --format=sysv -o 
 

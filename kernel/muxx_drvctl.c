@@ -1,4 +1,4 @@
-#include <string.h>
+//#include <string.h>
 #include <ctype.h>
 #include "muxx.h"
 #include "muxxdef.h"
