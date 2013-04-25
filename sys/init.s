@@ -4,13 +4,13 @@
 	.INCLUDE "MUXXMAC.s"
 	.INCLUDE "MUXXDEF.s"
 	
-	.GLOBAL _startup
+	.GLOBAL _init
 	
 	.text
 
-_startup:
-//	CREPRC 	$NPTHND,$DRV_TASK,$_ptphnd,$TSK_IOPRV
-//	mov	r0,r3
+_init:
+	CREPRC 	$NPTPHND,$DRV_TASK,$_ptphnd,$TSK_IOPRV
+	mov	r0,r3
 	clr	r3
 	jsr	pc,_ptpdesc
 	mov	r0,r2
@@ -21,6 +21,8 @@ _startup:
 	tst	r0
 	bmi	error2
 	
+	CREPRC 	$NLPTHND,$DRV_TASK,$_lpthnd,$TSK_IOPRV
+	mov	r0,r3
 	clr 	r3
 	jsr	pc,_lptdesc
 	mov	r0,r2
@@ -31,21 +33,9 @@ _startup:
 	tst	r0
 	bmi	error4
 	
-//	CREPRC $NTASKA,$(USR_TASK + TSZ_SMALL),$_proca,$0
-	LOADPRC $NTASKA,$(USR_TASK + TSZ_SMALL),$FTASKA,$0
-	LOADPRC $NTASKB,$(USR_TASK + TSZ_SMALL),$FTASKB,$0
-	LOADPRC $NTASKC,$(USR_TASK + TSZ_SMALL),$FTASKC,$0
-	LOADPRC $NTASKD,$(USR_TASK + TSZ_MED),$FTASKD,$0
-//	CREPRC  $NTASKD,$(USR_TASK + TSZ_MED),$_procd,$0	
+	LOADPRC $NSTART,$(SYS_TASK + TSZ_SMALL),$FSTART,$TSK_OPERPRV
 
-loop:
-//	mov	$1,-(sp)
-//	mov	$DOT,-(sp)
-//	jsr	pc,_putstr
-//	add	$4,sp
-
-	YIELD
-
+loop:	SUSPEND	$0
 	br loop
 
 error1:
@@ -68,20 +58,14 @@ error4:
 h:	SYSHALT
 
 	.data
+NSTART: .ASCII  "STARTUP  "
+FSTART:	.ASCIZ  "PT      "
 NPTPDRV: .ASCII  "PTPDRV  "
 NLPTDRV: .ASCII  "LPTDRV  "	
-NPTPHND: .ASCII  "<PTPHND  "
+NPTPHND: .ASCII  "PTPHND  "
 NLPTHND: .ASCII  "LPTHND  "
 NTASKA:	.ASCII	"TASKA   "
-NTASKB:	.ASCII 	"TASKB   "
-NTASKC:	.ASCII 	"TASKC   "
-NTASKD:	.ASCII 	"TASKD   "
-FTASKA:	.ASCIZ  "PT      "
-FTASKB:	.ASCIZ  "PT      "
-FTASKC:	.ASCIZ  "PT      "
-FTASKD:	.ASCIZ  "PT      "	
-MSG:	.ASCIZ	"Idle task\n"
-DOT:	.ASCII  "."
+
 ERRMSG1:	.ASCIZ	"Error DRVREG, rc="
 ERRMSG2:	.ASCIZ	"Error DRVSTART, rc=" 
 	.END

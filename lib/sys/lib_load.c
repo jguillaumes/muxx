@@ -37,8 +37,6 @@ int load(char *dev, ADDRESS laddr, ADDRESS *entry) {
 	space = PAGE_SIZE;
       }
       imgsize = stext+sdata+sbss;
-      printf("Loading task from %s, code=%d, data=%d, bss=%d, entry=%o\n",
-	     dev,stext,sdata,sbss,*entry);
       if (imgsize > space) {
 	rc = ENOMEM;
 	errno = ENOMEM;
@@ -62,6 +60,7 @@ int load(char *dev, ADDRESS laddr, ADDRESS *entry) {
     }
   }
   close(fd);
+
   if (rc == EOK) 
     return imgsize;
   else

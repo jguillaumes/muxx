@@ -230,8 +230,8 @@ int muxx_systrap_handler(int numtrap, ADDRESS fp, WORD p1, WORD p2,
   
   static int trap_table_entries = sizeof(trap_table)/sizeof(void *());	
 
-  //  struct SVC_S *syssvc;
-  // int (*svcimpl)();
+  struct SVC_S *syssvc;
+  int (*svcimpl)();
   int rc=0;
 
  
@@ -239,13 +239,14 @@ int muxx_systrap_handler(int numtrap, ADDRESS fp, WORD p1, WORD p2,
     return(EINVVAL);
   }
 
-  // syssvc = &(trap_table[numtrap]);
+  syssvc = &(trap_table[numtrap]);
  
   // Temporary fix for gas assembler bug (it does not assemble
   // correctly JSR PC,@(R0) ).
-  // svcimpl = syssvc->svc;
-  // rc = (*svcimpl)(syssvc->nparams, args);
+  svcimpl = syssvc->svc;
+  rc = syscall_rt(svcimpl, fp, syssvc->nparams, p1, p2, p3, p4, p5, p6); 
 
+  /*
   switch(numtrap) {
   case SRV_OPEN:
     rc= muxx_svc_open(fp, (char *) p1, (WORD) p2);
@@ -312,6 +313,7 @@ int muxx_systrap_handler(int numtrap, ADDRESS fp, WORD p1, WORD p2,
     kprintf("Called unimplemented SYSCALL %d\n", numtrap);
     rc = muxx_unimpl(fp);
   }
+  */
   return rc;
 }
 

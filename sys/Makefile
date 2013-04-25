@@ -12,8 +12,8 @@ LDFLAGS=-M --cref --traditional
 CFLAGS=-c -Os -ffreestanding -I../h -fomit-frame-pointer
 ASMFLAGS=-aghls -am -I../h 
 MACROS=../h/SCB.s ../h/MUXXDEF.s ../h/MACLIB.s ../h/MUXXMAC.s
-TASKS=taska.out taskb.out taskc.out taskd.out
-KTASKS=startup.o 
+TASKS=startup.out taska.out taskb.out taskc.out taskd.out
+KTASKS=init.o 
 
 .out.lda:	
 	$(BIN2LOAD) -a -f $< -o $@
@@ -24,10 +24,10 @@ KTASKS=startup.o
 all: muxx.lda tasks.tap
 
 clean:
-	-@rm *.o *.out *.lda *.map *.lst *.tap
+	-@rm *.o *.out *.lda *.map *.lst *.tap printer.txt
 
 mrproper:
-	-@rm *.o *.out *.lda *.map *.lst *.tap *~
+	-@rm *.o *.out *.lda *.map *.lst *.tap *~ printer.txt
 
 sys.o:	sys.s $(MACROS)
 	$(AS) $(ASMFLAGS) $< -o $@ -ald > $*.lst

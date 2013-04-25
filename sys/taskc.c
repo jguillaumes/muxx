@@ -12,9 +12,10 @@ main() {
 
   toptask = curtcb->taskTUCB->toptask;
   endcode = curtcb->taskTUCB->endcode;
+    printf("TASKC - Top of code: %06o, top of task: %06o\n", endcode, toptask); 
 
   for(;;) {
-    printf("TASKC - Top of code: %06o, top of task: %06o\n", endcode, toptask); 
+    printf("This is TASKC\n");
     sleep(3);
   }
 }

@@ -28,15 +28,14 @@ sysstart:
 	mov	$initmsg,-(sp)
 	jsr	pc,_kputstrl
 
-	
 	jsr	pc,_muxx_tctinit		// Initialize task table
 	jsr	pc,_muxx_drvinit		// Init. device driver table
 	jsr	pc,_muxx_iottinit		// Init. channel table
-	jsr	pc,_muxx_fakeproc		// Set up STARTUP task
+	jsr	pc,_muxx_fakeproc		// Set up INIT task
 	jsr	pc,_muxx_clock_setup		// Setup clock interrupt..
 	jsr	pc,_muxx_clock_enable		// ... and enable it
 
-	jsr	pc,_muxx_switch			// Switch to STARTUP task
+	jsr	pc,_muxx_switch			// Switch to INIT task
 	
 loop:	br	loop				// Endless loop...
 	
@@ -50,7 +49,7 @@ initmsg:
 long:	.LONG	123456789
 long2	= long+2		
 buffer:	.space	10
-stup:	.ASCIZ  "STARTUP"
+stup:	.ASCIZ  "INIT   "
 stupf:	.ASCIZ  "PT     "
-	
+
 	.END

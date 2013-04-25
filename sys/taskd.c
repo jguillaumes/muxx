@@ -9,8 +9,7 @@ main() {
   int n=0,fd=-1;
   WORD pid;
   char buffer[10];
-
-  // protmem(0,3,PDR_ACC_RO);
+  TCB mytcb;
 
   pid = getpid();
   printf("Starting task D, PID=%06o\n", pid);
@@ -34,17 +33,19 @@ main() {
       sleep(3);
 
       printf("Channel opened, fd=%d\n", fd);
-      n = write(fd, 12, "Test line.\n");
+
+      gettpi(0, &mytcb);
+
+      n = write(fd, 10, "Test line\n"); // , mytcb.clockTicks);
       if (n>0) {
 	printf("Writen %d bytes\n",n);
-	if (n<12) {
+	if (n<10) {
 	  printf("Incomplete write."); perror("reason ");
 	}
       } else {
 	printf("Error writing: %d\n", errno);
 	perror("TASKD-WRITE");
       }
-
     }
 
     close(fd);

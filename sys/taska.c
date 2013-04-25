@@ -14,9 +14,10 @@ main() {
   endcode = curtcb->taskTUCB->endcode;
 
   printf("TASKA - TCB: %o, TUCB: %o\n", curtcb, curtcb->taskTUCB);
+  printf("TASKA - Top of code: %06o, top of task: %06o\n", endcode, toptask); 
 
   for(;;) {
-    printf("TASKA - Top of code: %06o, top of task: %06o\n", endcode, toptask); 
+    printf("This is TASKA\n");
     sleep(1);
   }
 }

@@ -13,11 +13,11 @@ main() {
 
   toptask = curtcb->taskTUCB->toptask;
   endcode = curtcb->taskTUCB->endcode;
+  printf("TASKB - Top of code: %06o, top of task: %06o\n", endcode, toptask);
 
   for(;;) {
-    printf("TASKB - Top of code: %06o, top of task: %06o\n", endcode, toptask);
     gettpi(0, &mytcb);
-    printf("Ticks: %ld\n", mytcb.clockTicks);
+    printf("This is TASKB - Ticks: %ld\n", mytcb.clockTicks);
     sleep(2);
   }
 }

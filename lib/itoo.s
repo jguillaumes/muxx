@@ -78,7 +78,7 @@ _itool:	procentry
 	movb	r4,-(r2)		// Store converted digit
 
 	mov	$5,r3			// 5 more groups to go
-	asl	r1			// Shift past already done bit...
+	ash	$-2,r1			// Shift past already done bits...
 20$:	mov	r1,r4			// ... and proceed
 	bic	$0b1111111111111000,r4
 	add	$azero,r4
