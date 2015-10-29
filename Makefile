@@ -1,4 +1,6 @@
 MAKE=make
+export GCCPATH=/opt/pdp11
+export GCCVERSION=4.9.2
 DIRS= h kernel drivers lib shell sys 
 
 all:
