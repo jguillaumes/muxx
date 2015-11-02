@@ -20,49 +20,49 @@ int load(char *dev, ADDRESS laddr, ADDRESS *entry) {
     rc = errno;
   } else {
     if (ex.a_magic != A_MAGIC1 &&
-	ex.a_magic != A_MAGIC2) {
-      rc = EINVLOAD;
-    } else {
-      *entry = (ADDRESS) ex.a_entry;
-      stext = ex.a_text;
-      sdata = ex.a_data;
-      sbss  = ex.a_bss;
-      gettpi(0,&tcb);
-      dest = (ADDRESS) TASK_BASE;
-      if (tcb.taskType & TSZ_BIG) {
-	space = 3 * PAGE_SIZE;
-      } else if (tcb.taskType & TSZ_MED) {
-	space = 2 * PAGE_SIZE;
-      } else {                                // SMALL task
-	space = PAGE_SIZE;
-      }
-      imgsize = stext+sdata+sbss;
-      if (imgsize > space) {
-	rc = ENOMEM;
-	errno = ENOMEM;
+      ex.a_magic != A_MAGIC2) {
+        rc = EINVLOAD;
       } else {
-	n = read(fd, stext, dest);
-	if (n<stext) {
-	  rc = errno;
-	} else {
-	  dest += stext;
-	  n = read(fd, sdata, dest);
-	  if (n<sdata) {
-	    rc = errno;
-	  } else {
-	    dest += sdata;
-	    if (sbss > 0) {
-	      memset(dest, 0, sbss);
-	    } 
-	  }
-	}
+        *entry = (ADDRESS) ex.a_entry;
+        stext = ex.a_text;
+        sdata = ex.a_data;
+        sbss  = ex.a_bss;
+        gettpi(0,&tcb);
+        dest = (ADDRESS) TASK_BASE;
+        if (tcb.taskType & TSZ_BIG) {
+          space = 3 * PAGE_SIZE;
+        } else if (tcb.taskType & TSZ_MED) {
+          space = 2 * PAGE_SIZE;
+        } else {                                // SMALL task
+          space = PAGE_SIZE;
+        }
+        imgsize = stext+sdata+sbss;
+        if (imgsize > space) {
+          rc = ENOMEM;
+          errno = ENOMEM;
+        } else {
+          n = read(fd, stext, dest);
+          if (n<stext) {
+            rc = errno;
+          } else {
+            dest += stext;
+            n = read(fd, sdata, dest);
+            if (n<sdata) {
+              rc = errno;
+            } else {
+              dest += sdata;
+              if (sbss > 0) {
+                memset(dest, 0, sbss);
+              }
+            }
+          }
+        }
       }
     }
-  }
-  close(fd);
+    close(fd);
 
-  if (rc == EOK) 
+    if (rc == EOK)
     return imgsize;
-  else
+    else
     return 0;
-} 
+  }

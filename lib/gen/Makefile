@@ -1,15 +1,11 @@
 .SUFFIXES: .lda .out .o .s .c
 
+include ../../def.mk
 MUXXBASE=../../
 MUXXH=$(MUXXBASE)/h
-BIN2LOAD=/home/jguillaumes/retroutils/bin2load/bin2load
-AS=pdp11-aout-as
-CC=pdp11-aout-gcc
-LD=pdp11-aout-ld
-AR=pdp11-aout-ar
 LDFLAGS=-T ldkern.cmd -M --cref --traditional -lgcc -lpdp11
 CFLAGS=-c -Wall -I $(MUXXH) -Os -fomit-frame-pointer -ffreestanding
-ASMFLAGS=-acmghlsd -I $(MUXXH) 
+ASMFLAGS=-acmghlsd -I $(MUXXH)
 
 OBJECTS=malloc.o calloc.o sleep.o ctype_.o perror.o strlen.o alloca.o
 
@@ -23,5 +19,4 @@ all:	done
 done:	$(OBJECTS)
 
 clean:
-	-@rm *.a *.o *.lst done
-
+	-rm *.a *.o *.lst done
