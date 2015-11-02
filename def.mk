@@ -1,0 +1,9 @@
+GCCPATH=/opt/pdp11
+GCCVERSION=4.6.4
+AS=pdp11-aout-as
+CC=pdp11-aout-gcc-$(GCCVERSION)
+LD=pdp11-aout-ld
+AR=pdp11-aout-ar
+SIZE=pdp11-aout-size
+STRIP=pdp11-aout-strip
+BIN2LOAD=bin2load

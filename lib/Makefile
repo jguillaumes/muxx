@@ -5,7 +5,7 @@ AS=pdp11-aout-as
 CC=pdp11-aout-gcc
 LD=pdp11-aout-ld
 AR=pdp11-aout-ar
-LDFLAGS=-T ldkern.cmd -M --cref --traditional -lgcc -lpdp11
+LDFLAGS=-T ldkern.cmd -M --cref --traditional -lgcc -lpdp11 
 CFLAGS=-c -Wall -I../h -Os -ffreestanding -fomit-frame-pointer
 ASMFLAGS=-acmghlsd -I../h 
 

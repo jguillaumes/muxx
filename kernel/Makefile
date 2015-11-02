@@ -1,13 +1,9 @@
 .SUFFIXES: .lda .out .o .s .c
+include ../def.mk
 
-BIN2LOAD=/home/jguillaumes/retroutils/bin2load/bin2load
-AS=pdp11-aout-as
-CC=pdp11-aout-gcc
-LD=pdp11-aout-ld
-AR=pdp11-aout-ar
 LDFLAGS=-T ldaout.cmd -M --cref --traditional -lgcc -lpdp11
 CFLAGS=-c -Wall -I../h -Os -ffreestanding -fomit-frame-pointer -fno-builtin-alloca
-ASMFLAGS=-acmghlsd -I../h 
+ASMFLAGS=-acmghlsd -I../h
 
 TARGETS=libkmuxx.a
 OBJECTS=muxx_mmu.o muxx_cputrap.o muxx_kconio.o muxx_systrap.o muxx_tctinit.o \
@@ -19,7 +15,7 @@ OBJECTS=muxx_mmu.o muxx_cputrap.o muxx_kconio.o muxx_systrap.o muxx_tctinit.o \
 	muxx_drvctl.o muxx_drvctl_a.o muxx_channels.o muxx_readwrite_svc.o \
 	muxx_task_svc.o muxx_xcopy_svc.o muxx_protmem_svc.o
 
-.out.lda:	
+.out.lda:
 	$(BIN2LOAD) -a -f $< -o $@
 
 .s.o:
@@ -29,13 +25,13 @@ OBJECTS=muxx_mmu.o muxx_cputrap.o muxx_kconio.o muxx_systrap.o muxx_tctinit.o \
 all:	$(TARGETS)
 
 clean:
-	@rm *.a *.o *.lst &>/dev/null
+	-rm *.a *.o *.lst &>/dev/null
 
 mrproper:
-	@rm *.a *.o *.lst *~ \#*\# &>/dev/null
+	-rm *.a *.o *.lst *~ \#*\# &>/dev/null
 
 libkmuxx.a:	$(OBJECTS)
-	$(AR) rs $@ $^ 
+	$(AR) rs $@ $^
 
 #kprintf.o:	../lib/stdio/printf.c
 #	$(CC) $(CFLAGS) -DMUXX_KERNEL -c -o $@  $<

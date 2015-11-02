@@ -1,7 +1,9 @@
+include ../def.mk
+
 all:	MUXXDEF.s ERRORS.s config.h
 
 clean:
-	rm MUXXDEF.s ERRORS.s config.h
+	-rm MUXXDEF.s ERRORS.s config.h
 
 mrproper:
 	-@rm *~

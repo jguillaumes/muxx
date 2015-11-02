@@ -1,7 +1,5 @@
 OUTPUT_FORMAT("a.out-pdp11")
 OUTPUT_ARCH(pdp11)
-SEARCH_DIR("/usr/local/pdp11-aout/lib");
-SEARCH_DIR("/usr/local/lib/gcc/pdp11-aout/4.6.4/");
 STARTUP("../lib/crt0/crt0.o");
 ENTRY(start)
 phys  =  3 * 8192;
@@ -28,4 +26,3 @@ SECTIONS
   PROVIDE(end = .);
   PROVIDE(_end = .);
 }
-
