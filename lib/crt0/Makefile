@@ -15,7 +15,13 @@ OBJECTS=crt0.o
 .S.o:
 	$(CC) $(CFLAGS) $< -o $@
 
-all:	$(OBJECTS)
+all:	done
+	touch done
+
+done:	$(OBJECTS)		
 
 clean:
+	-rm *.a *.o *.lst
+
+mrproper:
 	-rm *.a *.o *.lst

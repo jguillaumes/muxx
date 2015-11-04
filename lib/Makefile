@@ -13,9 +13,9 @@ TARGETS=libmuxx.a
 
 OBJECTS=memblocks.o itoo.o itoh.o itod.o conio.o
 
-DIRS= gen machine stdio sys
+DIRS= gen machine stdio sys crt0
 ADIRS= crt0
-SUBDIRS=gen/done machine/done stdio/done sys/done
+SUBDIRS=gen/done machine/done stdio/done sys/done crt0/done
 
 .s.o:
 	$(AS) $(ASMFLAGS) $< -o $@ > $*.lst
