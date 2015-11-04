@@ -21,7 +21,7 @@ all:	done
 done:	$(OBJECTS)		
 
 clean:
-	-rm *.a *.o *.lst
+	-rm *.a *.o *.lst done
 
 mrproper:
-	-rm *.a *.o *.lst
+	-rm *.a *.o *.lst done
